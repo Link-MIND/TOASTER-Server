@@ -19,15 +19,12 @@ jobs:
       with:
         distribution: 'corretto'
         java-version: '17'
-        
-    - name: resource 폴더 생성
-      run: |
-          cd src/main
-          mkdir resources
 
     - name: application.yaml 생성
       run: | 
-          cd src/main/resources
+          cd src/main
+          mkdir resources
+          cd resources
           echo "${{ secrets.APPLICATION }}" > ./application.yaml
       working-directory: ${{ env.working-directory }}
 
