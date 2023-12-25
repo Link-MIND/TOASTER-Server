@@ -1,6 +1,6 @@
-package com.app.linkmind.exception.model;
+package com.app.toaster.exception.model;
 
-import com.app.linkmind.exception.Error;
+import com.app.toaster.exception.Error;
 
 public class NotFoundException extends CustomException {
 	public NotFoundException(Error error, String message) {

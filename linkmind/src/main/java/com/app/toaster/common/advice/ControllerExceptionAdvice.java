@@ -1,12 +1,12 @@
-package com.app.linkmind.common.advice;
+package com.app.toaster.common.advice;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.app.linkmind.common.dto.ApiResponse;
-import com.app.linkmind.exception.model.CustomException;
+import com.app.toaster.common.dto.ApiResponse;
+import com.app.toaster.exception.model.CustomException;
 
 import lombok.NoArgsConstructor;
 
