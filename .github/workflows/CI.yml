@@ -19,6 +19,11 @@ jobs:
       with:
         distribution: 'corretto'
         java-version: '17'
+        
+    - name: resource 폴더 생성
+      run: |
+          cd src/main
+          mkdir resources
 
     - name: application.yaml 생성
       run: | 
