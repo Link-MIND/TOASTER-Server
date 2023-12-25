@@ -43,8 +43,8 @@ jobs:
 
     - name: docker image 빌드 및 푸시
       run: |
-        docker build --platform linux/amd64 -t {dockerhub계정id}/do-sopt-seminar .
-        docker push {dockerhub계정id}/do-sopt-seminar
+        docker build --platform linux/amd64 -t mmihye/toaster .
+        docker push mmihye/toaster
       working-directory: ${{ env.working-directory }}
 
   deploy-cd:      
