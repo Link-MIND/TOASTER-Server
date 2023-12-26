@@ -28,6 +28,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	//implementation 'org.springframework.boot:spring-boot-starter-security'
 	//testImplementation 'org.springframework.security:spring-security-test'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	runtimeOnly 'com.mysql:mysql-connector-j'
