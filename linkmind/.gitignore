@@ -37,7 +37,7 @@ out/
 .vscode/
 application-dev.yaml
 application-main.yaml
-/src/main/resources/
-/src/test/resources/
 /src/test/resources/application-dev.yml
 /src/test/resources/application-local.yml
+/src/main/resources/application-dev.yml
+/src/main/resources/application-local.yml
