@@ -34,4 +34,8 @@ public class Toast {
 		this.title = title;
 		this.linkUrl = linkUrl;
 	}
+
+	public void updateTitle(String title){
+		this.title = title;
+	}
 }
