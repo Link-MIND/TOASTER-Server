@@ -1,4 +1,4 @@
-package com.app.linkmind.exception;
+package com.app.toaster.exception;
 
 import org.springframework.http.HttpStatus;
 

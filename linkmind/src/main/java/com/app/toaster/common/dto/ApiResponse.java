@@ -1,7 +1,7 @@
-package com.app.linkmind.common.dto;
+package com.app.toaster.common.dto;
 
-import com.app.linkmind.exception.Error;
-import com.app.linkmind.exception.Success;
+import com.app.toaster.exception.Error;
+import com.app.toaster.exception.Success;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
