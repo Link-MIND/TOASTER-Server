@@ -1,4 +1,4 @@
-package com.app.linkmind.domain;
+package com.app.toaster.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

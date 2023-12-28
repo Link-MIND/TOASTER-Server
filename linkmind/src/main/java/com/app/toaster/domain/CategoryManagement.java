@@ -1,4 +1,4 @@
-package com.app.linkmind.domain;
+package com.app.toaster.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
