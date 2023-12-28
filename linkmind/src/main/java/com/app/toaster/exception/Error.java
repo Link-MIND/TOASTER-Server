@@ -14,9 +14,7 @@ public enum Error {
 	 * 404 NOT FOUND
 	 */
 	DUMMY_NOT_FOUND(HttpStatus.NOT_FOUND, "더미에 데이터가 덜 들어간 것 같아요"),
-
 	RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "예약정보를 찾지 못했어요"),
-
 	NOT_FOUND_USER_EXCEPTION(HttpStatus.NOT_FOUND, "찾을 수 없는 유저입니다."),
 
 	/**
@@ -34,7 +32,6 @@ public enum Error {
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 서버 에러가 발생했습니다"),
 	INVALID_ENCRYPT_COMMUNICATION(HttpStatus.INTERNAL_SERVER_ERROR, "ios 통신 증명 과정 중 문제가 발생했습니다."),
 	CREATE_PUBLIC_KEY_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "publickey 생성 과정 중 문제가 발생했습니다."),
-
 	;
 
 	private final HttpStatus httpStatus;

@@ -28,15 +28,10 @@ public class Reminder {
 	@JoinColumn(name = "category")
 	private Category category;
 
-	private String title;
-
 	@Builder
-	public Reminder(User user, Category category, String title){
+	public Reminder(User user, Category category, String title) {
 		this.user = user;
 		this.category = category;
-		this.title = title;
 	}
-
-
 
 }
