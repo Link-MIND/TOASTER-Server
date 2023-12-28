@@ -28,14 +28,21 @@ public class Toast {
 
 	private String linkUrl;
 
+	private Boolean isRead;
+
 	@Builder
-	public Toast(User user, String title, String linkUrl){
-		this.user= user;
+	public Toast(User user, String title, String linkUrl) {
+		this.user = user;
 		this.title = title;
 		this.linkUrl = linkUrl;
+		this.isRead = false;
 	}
 
-	public void updateTitle(String title){
+	public void updateTitle(String title) {
 		this.title = title;
+	}
+
+	public void updateIsRead(Boolean isRead) {
+		this.isRead = isRead;
 	}
 }
