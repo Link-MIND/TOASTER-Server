@@ -12,7 +12,7 @@ public enum Success {
 	/**
 	 * 201 CREATED
 	 */
-	CREATE_RESERVATION_SUCCESS(HttpStatus.CREATED, "예약 사이트로 이동 중 입니다."),
+	CREATE_TOAST_SUCCESS(HttpStatus.CREATED, "토스트 저장이 완료 되었습니다."),
 
 
 	/**

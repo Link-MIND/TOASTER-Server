@@ -10,10 +10,12 @@ import jakarta.persistence.ManyToOne;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
 @Getter
+@Setter
 public class CategoryManagement {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long managedId;

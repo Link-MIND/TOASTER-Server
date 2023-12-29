@@ -1,5 +1,9 @@
 package com.app.toaster.domain;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -7,14 +11,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
 public class Toast {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +31,10 @@ public class Toast {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	private User user;
+
+	@OneToMany(mappedBy = "toast", cascade = CascadeType.ALL)
+	private List<CategoryManagement> categoryManagements = new ArrayList<>();
+
 
 	private String title;
 
@@ -45,4 +57,7 @@ public class Toast {
 	public void updateIsRead(Boolean isRead) {
 		this.isRead = isRead;
 	}
+
+	public void updateCategories(List<CategoryManagement> newCategories){
+		this.categoryManagements = newCategories; }
 }
