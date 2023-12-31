@@ -21,7 +21,7 @@ public class Toast {
 	private Long Id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "toast_id")
+	@JoinColumn(name = "user_id")
 	private User user;
 
 	private String title;
