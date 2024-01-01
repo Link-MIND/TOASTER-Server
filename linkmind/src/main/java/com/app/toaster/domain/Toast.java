@@ -22,7 +22,6 @@ import lombok.Setter;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Setter
 public class Toast {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +31,7 @@ public class Toast {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@OneToMany(mappedBy = "toast", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "toast", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CategoryManagement> categoryManagements = new ArrayList<>();
 
 
@@ -58,6 +57,6 @@ public class Toast {
 		this.isRead = isRead;
 	}
 
-	public void updateCategories(List<CategoryManagement> newCategories){
+	public void updateToastIds(List<CategoryManagement> newCategories){
 		this.categoryManagements = newCategories; }
 }

@@ -14,8 +14,15 @@ public enum Error {
 	 * 404 NOT FOUND
 	 */
 	DUMMY_NOT_FOUND(HttpStatus.NOT_FOUND, "더미에 데이터가 덜 들어간 것 같아요"),
-	RESERVATION_NOT_FOUND(HttpStatus.NOT_FOUND, "예약정보를 찾지 못했어요"),
 	NOT_FOUND_USER_EXCEPTION(HttpStatus.NOT_FOUND, "찾을 수 없는 유저입니다."),
+	NOT_FOUND_CATEGORY_EXCEPTION(HttpStatus.NOT_FOUND, "찾을 수 없는 카테고리 입니다."),
+	NOT_FOUND_TOAST_EXCEPTION(HttpStatus.NOT_FOUND, "찾을 수 없는 토스트 입니다."),
+
+	/**
+	 * 400 BAD REQUEST EXCEPTION
+	 */
+	BAD_REQUEST_ISREAD(HttpStatus.BAD_REQUEST, "isRead 값이 잘못요청 되었습니다."),
+	BAD_REQUEST_VALIDATION(HttpStatus.BAD_REQUEST, "유효한 값으로 요청을 다시 보내주세요."),
 
 	/**
 	 * 401 UNAUTHORIZED EXCEPTION
@@ -24,6 +31,7 @@ public enum Error {
 	INVALID_APPLE_PUBLIC_KEY(HttpStatus.UNAUTHORIZED, "유효하지않은 애플 퍼블릭 키 입니다."),
 	EXPIRED_APPLE_IDENTITY_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 아이덴티티 토큰입니다."),
 	INVALID_APPLE_IDENTITY_TOKEN(HttpStatus.UNAUTHORIZED, "잘못된 아이덴티티 토큰입니다."),
+	INVALID_USER_ACCESS(HttpStatus.UNAUTHORIZED, "접근 권한이 없는 유저입니다."),
 
 	UNPROCESSABLE_ENTITY_DELETE_EXCEPTION(HttpStatus.UNPROCESSABLE_ENTITY, "서버에서 요청을 이해해 삭제하려는 도중 문제가 생겼습니다."),
 	/**

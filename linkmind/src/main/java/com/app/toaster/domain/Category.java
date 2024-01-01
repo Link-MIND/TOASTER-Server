@@ -30,4 +30,8 @@ public class Category {
 	public Category(String title) {
 		this.title = title;
 	}
+
+	public void updateCategoryIds(List<CategoryManagement> newCategories){
+		this.categoryManagements = newCategories; }
+
 }
