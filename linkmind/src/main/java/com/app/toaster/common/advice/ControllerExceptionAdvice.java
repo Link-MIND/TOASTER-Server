@@ -3,6 +3,7 @@ package com.app.toaster.common.advice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,7 +37,8 @@ public class ControllerExceptionAdvice {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	protected ResponseEntity<ApiResponse> handleConstraintDefinitionException(final MethodArgumentNotValidException e) {
+		FieldError fieldError = e.getBindingResult().getFieldError();
 		return ResponseEntity.status(e.getStatusCode())
-			.body(ApiResponse.error(Error.BAD_REQUEST_VALIDATION, e.getMessage()));
+			.body(ApiResponse.error(Error.BAD_REQUEST_VALIDATION, fieldError.getDefaultMessage()));
 	}
 }
