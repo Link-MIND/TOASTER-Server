@@ -13,6 +13,7 @@ public enum Success {
 	 * 201 CREATED
 	 */
 	CREATE_TOAST_SUCCESS(HttpStatus.CREATED, "토스트 저장이 완료 되었습니다."),
+	CREATE_CATEGORY_SUCCESS(HttpStatus.CREATED, "새 카테고리 추가 성공"),
 
 
 	/**
