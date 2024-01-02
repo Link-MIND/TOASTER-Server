@@ -25,6 +25,7 @@ public enum Success {
 	SIGNOUT_SUCCESS(HttpStatus.OK, "로그아웃 성공"),
 	DELETE_USER_SUCCESS(HttpStatus.OK, "유저 삭제 성공"),
 	DELETE_TOAST_SUCCESS(HttpStatus.OK, "토스트 삭제 성공"),
+	SEARCH_SUCCESS(HttpStatus.OK, "검색 성공"),
 
 
 	UPDATE_ISREAD_SUCCESS(HttpStatus.OK, "열람여부 수정 완료"),
@@ -33,6 +34,7 @@ public enum Success {
 	/**
 	 * 204 NO_CONTENT
 	 */
+	SEARCH_SUCCESS_BUT_IS_EMPTY(HttpStatus.NO_CONTENT, "검색에 성공했지만 조회된 내용이 없습니다.")
 
 	;
 
