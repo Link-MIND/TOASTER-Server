@@ -2,6 +2,7 @@ package com.app.toaster.controller;
 
 import com.app.toaster.common.dto.ApiResponse;
 import com.app.toaster.controller.request.category.CreateCategoryDto;
+import com.app.toaster.controller.request.category.DeleteCategoryDto;
 import com.app.toaster.controller.request.toast.IsReadDto;
 import com.app.toaster.controller.request.toast.SaveToastDto;
 import com.app.toaster.exception.Success;
@@ -27,5 +28,15 @@ public class CategoryController {
     ){
         categoryService.createCategory(userId, createCategoryDto);
         return ApiResponse.success(Success.CREATE_CATEGORY_SUCCESS);
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse deleteCategory(
+            @RequestHeader("userId") Long userId,
+            @RequestBody DeleteCategoryDto deleteCategoryDto
+    ){
+        categoryService.deleteCategory(userId, deleteCategoryDto);
+        return ApiResponse.success(Success.DELETE_CATEGORY_SUCCESS);
     }
 }

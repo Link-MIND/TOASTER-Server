@@ -8,4 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import com.app.toaster.domain.Category;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
+
+    Long deleteByCategoryId(Long categoryId);
 }

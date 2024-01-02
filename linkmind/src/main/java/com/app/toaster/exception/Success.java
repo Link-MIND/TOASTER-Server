@@ -26,7 +26,7 @@ public enum Success {
 	SIGNOUT_SUCCESS(HttpStatus.OK, "로그아웃 성공"),
 	DELETE_USER_SUCCESS(HttpStatus.OK, "유저 삭제 성공"),
 	DELETE_TOAST_SUCCESS(HttpStatus.OK, "토스트 삭제 성공"),
-
+	DELETE_CATEGORY_SUCCESS(HttpStatus.OK, "카테고리 삭제 성공"),
 
 	UPDATE_ISREAD_SUCCESS(HttpStatus.OK, "열람여부 수정 완료"),
 
