@@ -20,6 +20,7 @@ public enum Success {
 	 * 200 OK
 	 */
 	GET_MAIN_SUCCESS(HttpStatus.OK, "메인 페이지 조회 성공"),
+	GET_CATEORIES_SUCCESS(HttpStatus.OK, "전체 카테고리 조회 성공"),
 
   	LOGIN_SUCCESS(HttpStatus.OK, "로그인 성공"),
 	RE_ISSUE_TOKEN_SUCCESS(HttpStatus.OK, "토큰 재발급 성공"),
