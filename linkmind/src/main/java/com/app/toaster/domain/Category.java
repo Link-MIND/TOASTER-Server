@@ -23,15 +23,10 @@ public class Category {
 	private Long categoryId;
 
 	private String title;
-	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-	private List<CategoryManagement> categoryManagements = new ArrayList<>();
 
 	@Builder
 	public Category(String title) {
 		this.title = title;
 	}
-
-	public void updateCategoryIds(List<CategoryManagement> newCategories){
-		this.categoryManagements = newCategories; }
 
 }

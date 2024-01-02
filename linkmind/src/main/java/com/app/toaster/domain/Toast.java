@@ -31,8 +31,10 @@ public class Toast {
 	@JoinColumn(name = "user_id")
 	private User user;
 
-	@OneToMany(mappedBy = "toast", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<CategoryManagement> categoryManagements = new ArrayList<>();
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "category_id")
+	private Category category;
+
 
 
 	private String title;
@@ -42,7 +44,8 @@ public class Toast {
 	private Boolean isRead;
 
 	@Builder
-	public Toast(User user, String title, String linkUrl) {
+	public Toast(User user, Category category, String title, String linkUrl) {
+		this.category = category;
 		this.user = user;
 		this.title = title;
 		this.linkUrl = linkUrl;
@@ -57,6 +60,6 @@ public class Toast {
 		this.isRead = isRead;
 	}
 
-	public void updateToastIds(List<CategoryManagement> newCategories){
-		this.categoryManagements = newCategories; }
+	public void updateCategory(Category category){ this.category = category;}
+
 }

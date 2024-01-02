@@ -5,5 +5,5 @@ import java.util.List;
 import com.app.toaster.controller.valid.Severity;
 import com.app.toaster.controller.valid.TitleValid;
 
-public record SaveToastDto(String linkUrl, @TitleValid(message = "hi zz", payload = Severity.Error.class) String title, List<Long> categoryIds) {
+public record SaveToastDto(String linkUrl, @TitleValid(payload = Severity.Error.class) String title, Long categoryId) {
 }
