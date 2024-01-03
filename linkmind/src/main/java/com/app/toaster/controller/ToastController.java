@@ -34,7 +34,7 @@ public class ToastController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ApiResponse createToast(
 		@RequestHeader("userId") Long userId,
-		@RequestBody @Valid SaveToastDto requestDto
+		@RequestBody SaveToastDto requestDto
 	) {
 		toastService.createToast(userId, requestDto);
 		return ApiResponse.success(Success.CREATE_TOAST_SUCCESS);
