@@ -50,6 +50,8 @@ public class AuthService {
 
 		User user = userRepository.findBySocialIdAndSocialType(socialId, socialType)
 			.orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
+		System.out.println(user);
+		System.out.println(user.getUserId());
 
 		// jwt 발급 (액세스 토큰, 리프레쉬 토큰)
 		String accessToken = jwtService.issuedToken(String.valueOf(user.getUserId()), TOKEN_EXPIRATION_TIME_ACCESS);
@@ -80,6 +82,8 @@ public class AuthService {
 
 	@Transactional
 	public void signOut(Long userId) {
+		System.out.println("여기???");
+		System.out.println(userId);
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
 		user.updateRefreshToken(null);

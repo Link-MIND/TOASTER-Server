@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.toaster.common.dto.ApiResponse;
+// import com.app.toaster.config.UserId;
 import com.app.toaster.config.UserId;
 import com.app.toaster.controller.request.auth.SignInRequestDto;
 import com.app.toaster.controller.response.auth.SignInResponseDto;
@@ -43,6 +44,7 @@ public class AuthController {
 	@PostMapping("/sign-out")
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse signOut(@UserId Long userId) {
+		System.out.println(userId);
 		authService.signOut(userId);
 		return ApiResponse.success(Success.SIGNOUT_SUCCESS);
 	}
