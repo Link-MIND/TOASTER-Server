@@ -31,6 +31,7 @@ public class AuthService {
 	private final Long TOKEN_EXPIRATION_TIME_ACCESS = 1 * 60 * 1000L;
 	private final Long TOKEN_EXPIRATION_TIME_REFRESH = 3 * 60 * 1000L;
 
+
 	@Transactional
 	public SignInResponseDto signIn(String socialAccessToken, SignInRequestDto requestDto) {
 		SocialType socialType = SocialType.valueOf(requestDto.socialType());
