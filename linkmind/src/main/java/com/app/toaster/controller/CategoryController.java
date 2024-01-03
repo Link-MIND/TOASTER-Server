@@ -1,18 +1,17 @@
 package com.app.toaster.controller;
 
 import com.app.toaster.common.dto.ApiResponse;
-import com.app.toaster.controller.request.category.EditCategoryDto;
-import com.app.toaster.controller.request.category.CreateCategoryDto;
-import com.app.toaster.controller.request.category.DeleteCategoryDto;
-import com.app.toaster.controller.request.category.EditCategoryListDto;
+import com.app.toaster.controller.request.category.*;
+import com.app.toaster.controller.response.toast.ToastFilter;
 import com.app.toaster.controller.response.category.CategoriesReponse;
+import com.app.toaster.controller.response.category.GetCategoryResponseDto;
 import com.app.toaster.exception.Success;
 import com.app.toaster.service.category.CategoryService;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -56,5 +55,15 @@ public class CategoryController {
     ){
         categoryService.editCategories(userId, editCategoryListDto);
         return ApiResponse.success(Success.UPDATE_CATEGORY_TITLE_SUCCESS);
+    }
+
+    @GetMapping("/{categoryId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<GetCategoryResponseDto> getCategory(
+            @RequestHeader("userId") Long userId,
+            @PathVariable Long categoryId,
+            @RequestParam("filter") ToastFilter filter
+    ){
+        return ApiResponse.success(Success.GET_CATEORY_SUCCESS,categoryService.getCategory(userId, categoryId, filter));
     }
 }

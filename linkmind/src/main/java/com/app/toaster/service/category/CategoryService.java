@@ -1,11 +1,12 @@
 package com.app.toaster.service.category;
 
-import com.app.toaster.controller.request.category.EditCategoryDto;
-import com.app.toaster.controller.request.category.CreateCategoryDto;
-import com.app.toaster.controller.request.category.DeleteCategoryDto;
-import com.app.toaster.controller.request.category.EditCategoryListDto;
+import com.app.toaster.controller.request.category.*;
+import com.app.toaster.controller.response.toast.ToastDto;
+import com.app.toaster.controller.response.toast.ToastFilter;
 import com.app.toaster.controller.response.category.CategoriesReponse;
+import com.app.toaster.controller.response.category.GetCategoryResponseDto;
 import com.app.toaster.domain.Category;
+import com.app.toaster.domain.Toast;
 import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.NotFoundException;
@@ -86,6 +87,37 @@ public class CategoryService {
             category.updateCategoryName(editCategoryDto.newTitle());
         }
     }
+
+
+    public GetCategoryResponseDto getCategory(Long userId, Long categoryId, ToastFilter filter){
+        User presentUser = findUser(userId);
+
+        Category category = categoryRepository.findById(categoryId).orElseThrow(
+                () -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage())
+        );
+
+        ArrayList<Toast> toasts = toastRepository.getAllByCategory(category);
+        List<ToastDto> toastListDto = new ArrayList<>();
+
+        if(filter == ToastFilter.ALL){
+            toastListDto = toasts.stream()
+                    .map(ToastDto::of)
+                    .toList();
+        } else if (filter == ToastFilter.READ) {
+            toastListDto = toastRepository.findByIsReadAndCategory(true,category)
+                    .stream()
+                    .map(ToastDto::of)
+                    .toList();
+        } else if(filter == ToastFilter.UNREAD){
+            toastListDto = toastRepository.findByIsReadAndCategory(false,category)
+                    .stream()
+                    .map(ToastDto::of)
+                    .toList();
+        }
+
+        return GetCategoryResponseDto.builder().allToastNum(toasts.size()).toastListDto(toastListDto).build();
+    }
+
 
     //해당 유저 탐색
     private User findUser(Long userId){
