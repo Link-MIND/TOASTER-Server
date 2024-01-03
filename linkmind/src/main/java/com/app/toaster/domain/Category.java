@@ -30,5 +30,6 @@ public class Category {
 		this.user = user;
 	}
 
+	public void updateCategoryName(String newTitle){ this.title = newTitle;}
 }
 

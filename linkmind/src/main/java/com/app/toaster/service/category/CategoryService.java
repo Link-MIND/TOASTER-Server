@@ -1,11 +1,11 @@
 package com.app.toaster.service.category;
 
+import com.app.toaster.controller.request.category.EditCategoryDto;
 import com.app.toaster.controller.request.category.CreateCategoryDto;
 import com.app.toaster.controller.request.category.DeleteCategoryDto;
-import com.app.toaster.controller.request.toast.SaveToastDto;
+import com.app.toaster.controller.request.category.EditCategoryListDto;
 import com.app.toaster.controller.response.category.CategoriesReponse;
 import com.app.toaster.domain.Category;
-import com.app.toaster.domain.Toast;
 import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.NotFoundException;
@@ -44,8 +44,6 @@ public class CategoryService {
     public void deleteCategory(Long userId, DeleteCategoryDto deleteCategoryDto){
         User presentUser = findUser(userId);
 
-
-        //카테고리 삭제
         for(Long categoryId : deleteCategoryDto.deleteCategoryList()){
             Category category = categoryRepository.findById(categoryId).orElseThrow(
                     () -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage())
@@ -70,6 +68,23 @@ public class CategoryService {
                         .toastNum(toastRepository.getAllByCategory(category).size()).build()
                 ).collect(Collectors.toList());
 
+    }
+
+    @Transactional
+    public void editCategories(Long userId, EditCategoryListDto editCategoryListDto){
+        User presentUser = findUser(userId);
+
+        for(EditCategoryDto editCategoryDto : editCategoryListDto.editCategoryListDto()){
+            Category category = categoryRepository.findById(editCategoryDto.categoryId()).orElseThrow(
+                    () -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage())
+            );
+            //접속 유저가 만든 카테고리가 아닌 경우
+            if (!presentUser.equals(category.getUser())){
+                throw new UnauthorizedException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
+            }
+
+            category.updateCategoryName(editCategoryDto.newTitle());
+        }
     }
 
     //해당 유저 탐색
