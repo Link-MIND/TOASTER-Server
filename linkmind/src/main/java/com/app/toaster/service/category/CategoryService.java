@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +57,7 @@ public class CategoryService {
 
             categoryRepository.deleteByCategoryId(categoryId);
         }
+
     }
 
     public List<CategoriesReponse> getCategories(Long userId){
@@ -88,41 +90,42 @@ public class CategoryService {
         }
     }
 
-
-    public GetCategoryResponseDto getCategory(Long userId, Long categoryId, ToastFilter filter){
+    public GetCategoryResponseDto getCategory(Long userId, Long categoryId, ToastFilter filter) {
         User presentUser = findUser(userId);
 
-        Category category = categoryRepository.findById(categoryId).orElseThrow(
-                () -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage())
-        );
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
 
         ArrayList<Toast> toasts = toastRepository.getAllByCategory(category);
-        List<ToastDto> toastListDto = new ArrayList<>();
-
-        if(filter == ToastFilter.ALL){
-            toastListDto = toasts.stream()
-                    .map(ToastDto::of)
-                    .toList();
-        } else if (filter == ToastFilter.READ) {
-            toastListDto = toastRepository.findByIsReadAndCategory(true,category)
-                    .stream()
-                    .map(ToastDto::of)
-                    .toList();
-        } else if(filter == ToastFilter.UNREAD){
-            toastListDto = toastRepository.findByIsReadAndCategory(false,category)
-                    .stream()
-                    .map(ToastDto::of)
-                    .toList();
-        }
+        List<ToastDto> toastListDto = mapToToastDtoList(toasts, filter, category);
 
         return GetCategoryResponseDto.builder().allToastNum(toasts.size()).toastListDto(toastListDto).build();
     }
-
 
     //해당 유저 탐색
     private User findUser(Long userId){
         return userRepository.findByUserId(userId).orElseThrow(
                 ()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage())
         );
+    }
+
+    private List<ToastDto> mapToToastDtoList(List<Toast> toasts, ToastFilter filter, Category category) {
+        Stream<Toast> toastStream;
+
+        switch (filter) {
+            case ALL:
+                toastStream = toasts.stream();
+                break;
+            case READ:
+                toastStream = toastRepository.findByIsReadAndCategory(true, category).stream();
+                break;
+            case UNREAD:
+                toastStream = toastRepository.findByIsReadAndCategory(false, category).stream();
+                break;
+            default:
+                throw new NotFoundException(Error.NOT_FOUND_TOAST_FILTER, Error.NOT_FOUND_TOAST_FILTER.getMessage());
+        }
+
+        return toastStream.map(ToastDto::of).toList();
     }
 }
