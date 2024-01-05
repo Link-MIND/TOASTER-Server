@@ -44,8 +44,8 @@ public class CategoryService {
 
     @Transactional
     public void deleteCategory(Long userId, DeleteCategoryDto deleteCategoryDto){
-        User presentUser = findUser(userId);
 
+        toastRepository.updateCategoryIdsToNull(deleteCategoryDto.deleteCategoryList());
         categoryRepository.deleteALLByCategoryIdInQuery(deleteCategoryDto.deleteCategoryList());
 
     }

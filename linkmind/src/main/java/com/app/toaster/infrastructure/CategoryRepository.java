@@ -19,6 +19,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("delete from Category c where c.categoryId in :ids")
     void deleteALLByCategoryIdInQuery(@Param("ids") List<Long> categoryIds);
 
+
     ArrayList<Category> findAllByUser(User user);
 
 }
