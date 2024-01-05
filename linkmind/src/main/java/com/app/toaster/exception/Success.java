@@ -26,6 +26,7 @@ public enum Success {
 	DELETE_USER_SUCCESS(HttpStatus.OK, "유저 삭제 성공"),
 	DELETE_TOAST_SUCCESS(HttpStatus.OK, "토스트 삭제 성공"),
 	SEARCH_SUCCESS(HttpStatus.OK, "검색 성공"),
+	PARSING_OG_SUCCESS(HttpStatus.OK, "og 데이터 파싱 결과입니다. 크롤링을 막은 페이지는 기본이미지가 나옵니다."),
 
 
 	UPDATE_ISREAD_SUCCESS(HttpStatus.OK, "열람여부 수정 완료"),

@@ -1,5 +1,7 @@
 package com.app.toaster.common.advice;
 
+import java.net.MalformedURLException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -41,4 +43,9 @@ public class ControllerExceptionAdvice {
 		return ResponseEntity.status(e.getStatusCode())
 			.body(ApiResponse.error(Error.BAD_REQUEST_VALIDATION, fieldError.getDefaultMessage()));
 	}
+	@ExceptionHandler(MalformedURLException.class)
+	protected ApiResponse handleConstraintDefinitionException(final MalformedURLException e) {
+		return ApiResponse.error(Error.MALFORMED_URL_EXEPTION, Error.MALFORMED_URL_EXEPTION.getMessage());
+	}
+
 }
