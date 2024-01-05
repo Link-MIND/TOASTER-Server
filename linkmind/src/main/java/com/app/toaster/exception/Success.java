@@ -31,7 +31,7 @@ public enum Success {
 	DELETE_CATEGORY_SUCCESS(HttpStatus.OK, "카테고리 삭제 성공"),
 
 	UPDATE_ISREAD_SUCCESS(HttpStatus.OK, "열람여부 수정 완료"),
-	UPDATE_CATEGORY_TITLE_SUCCESS(HttpStatus.OK, "카테고리 제목 수정 완료"),
+	UPDATE_CATEGORY_TITLE_SUCCESS(HttpStatus.OK, "카테고리 수정 완료"),
 
 
 	/**

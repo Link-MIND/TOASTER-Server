@@ -51,9 +51,9 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse editCategories(
             @RequestHeader("userId") Long userId,
-            @RequestBody EditCategoryListDto editCategoryListDto
+            @RequestBody EditCategoryRequestDto editCategoryRequestDto
     ){
-        categoryService.editCategories(userId, editCategoryListDto);
+        categoryService.editCategories(userId, editCategoryRequestDto);
         return ApiResponse.success(Success.UPDATE_CATEGORY_TITLE_SUCCESS);
     }
 

@@ -3,6 +3,7 @@ package com.app.toaster.infrastructure;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.app.toaster.controller.request.category.ChangeCateoryTitleDto;
 import com.app.toaster.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -23,5 +24,23 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     int findMaxPriority();
 
     ArrayList<Category> findAllByUserOrderByPriority(User user);
+
+    @Modifying
+    @Query("UPDATE Category c SET c.title = :newTitle WHERE c.categoryId = :categoryId")
+    void updateCategoryTitle(@Param("categoryId") Long categoryId, @Param("newTitle") String newTitle);
+
+    @Modifying
+    @Query("UPDATE Category c SET c.priority = c.priority - 1 " +
+            "WHERE c.categoryId != :categoryId AND c.priority > :currentPriority AND c.priority <= :newPriority")
+    void decreasePriorityByOne(@Param("categoryId") Long categoryId,
+                               @Param("currentPriority") int currentPriority,
+                               @Param("newPriority") int newPriority);
+
+    @Modifying
+    @Query("UPDATE Category c SET c.priority = c.priority + 1 " +
+            "WHERE c.categoryId != :categoryId AND c.priority >= :newPriority AND c.priority < :currentPriority")
+    void increasePriorityByOne(@Param("categoryId") Long categoryId,
+                               @Param("currentPriority") int currentPriority,
+                               @Param("newPriority") int newPriority);
 
 }

@@ -31,6 +31,13 @@ public class Category {
 		this.priority = priority;
 	}
 
+	public int getPriority(){
+		return priority;
+	}
+
 	public void updateCategoryName(String newTitle){ this.title = newTitle;}
+
+	public void updateCategoryPriority(int newPriority){
+		this.priority = newPriority;}
 }
 

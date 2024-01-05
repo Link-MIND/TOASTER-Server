@@ -20,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -69,20 +71,29 @@ public class CategoryService {
     }
 
     @Transactional
-    public void editCategories(Long userId, EditCategoryListDto editCategoryListDto){
-        User presentUser = findUser(userId);
+    public void editCategories(Long userId, EditCategoryRequestDto editCategoryRequestDto){
+        //제목 업데이트
+        editCategoryRequestDto.changeCategoryTitleList().forEach(request ->
+                categoryRepository.updateCategoryTitle(request.categoryId(), request.newTitle()));
 
-        for(EditCategoryDto editCategoryDto : editCategoryListDto.editCategoryListDto()){
-            Category category = categoryRepository.findById(editCategoryDto.categoryId()).orElseThrow(
-                    () -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage())
-            );
-            //접속 유저가 만든 카테고리가 아닌 경우
-            if (!presentUser.equals(category.getUser())){
-                throw new UnauthorizedException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
-            }
+        //순서 업데이트
+        for (ChangeCateoryPriorityDto changeCateoryPriorityDto : editCategoryRequestDto.changeCategoryPriorityList()) {
+            Long categoryId = changeCateoryPriorityDto.categoryId();
+            int newPriority = changeCateoryPriorityDto.newPriority();
 
-            category.updateCategoryName(editCategoryDto.newTitle());
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
+
+            int currentPriority = category.getPriority();
+            category.updateCategoryPriority(changeCateoryPriorityDto.newPriority());
+            categoryRepository.save(category);
+
+            categoryRepository.decreasePriorityByOne(categoryId, currentPriority, newPriority);
+            categoryRepository.increasePriorityByOne(categoryId, currentPriority, newPriority);
+
+
         }
+
     }
 
     public GetCategoryResponseDto getCategory(Long userId, Long categoryId, ToastFilter filter) {
