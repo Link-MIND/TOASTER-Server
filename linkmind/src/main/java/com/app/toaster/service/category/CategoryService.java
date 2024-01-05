@@ -58,7 +58,7 @@ public class CategoryService {
     public List<CategoriesReponse> getCategories(Long userId){
         User presentUser = findUser(userId);
 
-        return categoryRepository.findAllByUser(presentUser)
+        return categoryRepository.findAllByUserOrderByPriority(presentUser)
                 .stream()
                 .map(category -> CategoriesReponse.builder()
                         .CategoryId(category.getCategoryId())

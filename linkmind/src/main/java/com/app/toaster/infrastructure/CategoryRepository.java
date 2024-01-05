@@ -22,6 +22,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("SELECT COALESCE(MAX(c.priority), 0) FROM Category c")
     int findMaxPriority();
 
-    ArrayList<Category> findAllByUser(User user);
+    ArrayList<Category> findAllByUserOrderByPriority(User user);
 
 }
