@@ -88,8 +88,10 @@ public class CategoryService {
             category.updateCategoryPriority(changeCateoryPriorityDto.newPriority());
             categoryRepository.save(category);
 
-            categoryRepository.decreasePriorityByOne(categoryId, currentPriority, newPriority);
-            categoryRepository.increasePriorityByOne(categoryId, currentPriority, newPriority);
+            if(currentPriority < newPriority)
+                categoryRepository.decreasePriorityByOne(categoryId, currentPriority, newPriority);
+            else if (currentPriority > newPriority)
+                categoryRepository.increasePriorityByOne(categoryId, currentPriority, newPriority);
 
 
         }
