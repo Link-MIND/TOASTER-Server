@@ -22,12 +22,13 @@ public class Category {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
 
-
+	private int priority;
 
 	@Builder
-	public Category(String title, User user) {
+	public Category(String title, User user, int priority) {
 		this.title = title;
 		this.user = user;
+		this.priority = priority;
 	}
 
 	public void updateCategoryName(String newTitle){ this.title = newTitle;}

@@ -34,11 +34,16 @@ public class CategoryService {
     public void createCategory(Long userId, CreateCategoryDto createCategoryDto){
         User presentUser = findUser(userId);
 
+        // 현재 최대 우선순위를 가져와서 새로운 우선순위를 설정
+        int maxPriority = categoryRepository.findMaxPriority();
+
         //카테고리 생성
         Category newCategory = Category.builder()
                 .title(createCategoryDto.categoryTitle())
                 .user(presentUser)
+                .priority(maxPriority + 1)
                 .build();
+
         categoryRepository.save(newCategory);
     }
 
