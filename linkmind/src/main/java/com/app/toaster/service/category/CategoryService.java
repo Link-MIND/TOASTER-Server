@@ -46,17 +46,7 @@ public class CategoryService {
     public void deleteCategory(Long userId, DeleteCategoryDto deleteCategoryDto){
         User presentUser = findUser(userId);
 
-        for(Long categoryId : deleteCategoryDto.deleteCategoryList()){
-            Category category = categoryRepository.findById(categoryId).orElseThrow(
-                    () -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage())
-            );
-            //접속 유저가 만든 카테고리가 아닌 경우
-            if (!presentUser.equals(category.getUser())){
-                throw new UnauthorizedException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
-            }
-
-            categoryRepository.deleteByCategoryId(categoryId);
-        }
+        categoryRepository.deleteALLByCategoryIdInQuery(deleteCategoryDto.deleteCategoryList());
 
     }
 
