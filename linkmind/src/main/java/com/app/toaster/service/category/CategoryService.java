@@ -53,6 +53,13 @@ public class CategoryService {
     public void deleteCategory(Long userId, DeleteCategoryDto deleteCategoryDto){
 
         toastRepository.updateCategoryIdsToNull(deleteCategoryDto.deleteCategoryList());
+        for (Long categoryId : deleteCategoryDto.deleteCategoryList()) {
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
+
+            categoryRepository.decreasePriorityNextDeleteCategory(categoryId, category.getPriority());
+        }
+
         categoryRepository.deleteALLByCategoryIdInQuery(deleteCategoryDto.deleteCategoryList());
 
     }
@@ -86,7 +93,6 @@ public class CategoryService {
 
             int currentPriority = category.getPriority();
             category.updateCategoryPriority(changeCateoryPriorityDto.newPriority());
-            categoryRepository.save(category);
 
             if(currentPriority < newPriority)
                 categoryRepository.decreasePriorityByOne(categoryId, currentPriority, newPriority);
