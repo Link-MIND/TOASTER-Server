@@ -2,11 +2,11 @@ package com.app.toaster.controller;
 
 import com.app.toaster.common.dto.ApiResponse;
 import com.app.toaster.controller.request.timer.CreateTimerRequestDto;
-import com.app.toaster.controller.request.timer.UpdateCategoryDateTimeDto;
+import com.app.toaster.controller.request.timer.UpdateTimerCommentDto;
+import com.app.toaster.controller.request.timer.UpdateTimerDateTimeDto;
 import com.app.toaster.controller.response.timer.GetTimerResponseDto;
 import com.app.toaster.exception.Success;
 import com.app.toaster.service.Timer.TimerService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -42,10 +42,21 @@ public class TimerController {
     public ApiResponse updateTimerDatetime(
             @RequestHeader("userId") Long userId,
             @PathVariable Long timerId,
-            @RequestBody UpdateCategoryDateTimeDto updateCategoryDateTimeDto){
+            @RequestBody UpdateTimerDateTimeDto updateTimerDateTimeDto){
 
-        timerService.updateTimerDatetime(userId,timerId, updateCategoryDateTimeDto);
+        timerService.updateTimerDatetime(userId,timerId, updateTimerDateTimeDto);
         return ApiResponse.success(Success.UPDATE_TIMER_DATETIME_SUCCESS);
+    }
+
+    @PatchMapping("/comment/{timerId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse updateTimerComment(
+            @RequestHeader("userId") Long userId,
+            @PathVariable Long timerId,
+            @RequestBody UpdateTimerCommentDto updateTimerCommentDto){
+
+        timerService.updateTimerComment(userId,timerId, updateTimerCommentDto);
+        return ApiResponse.success(Success.UPDATE_TIMER_COMMENT_SUCCESS);
     }
 
     @DeleteMapping("/{timerId}")
@@ -56,4 +67,5 @@ public class TimerController {
         timerService.deleteTimer(userId,timerId);
         return ApiResponse.success(Success.UPDATE_TIMER_DATETIME_SUCCESS);
     }
+
 }

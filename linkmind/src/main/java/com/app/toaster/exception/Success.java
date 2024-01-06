@@ -36,6 +36,7 @@ public enum Success {
 	UPDATE_ISREAD_SUCCESS(HttpStatus.OK, "열람여부 수정 완료"),
 	UPDATE_CATEGORY_TITLE_SUCCESS(HttpStatus.OK, "카테고리 수정 완료"),
 	UPDATE_TIMER_DATETIME_SUCCESS(HttpStatus.OK, "타이머 시간/날짜 수정 완료"),
+	UPDATE_TIMER_COMMENT_SUCCESS(HttpStatus.OK, "타이머 코멘트 수정 완료"),
 
 
 	/**

@@ -53,4 +53,8 @@ public class Reminder {
 		this.remindDates = remindDates;
 	}
 
+	public void updateComment(String comment){
+		this.comment = comment;
+	}
+
 }
