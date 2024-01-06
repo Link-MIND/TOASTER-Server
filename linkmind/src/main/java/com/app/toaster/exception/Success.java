@@ -14,7 +14,7 @@ public enum Success {
 	 */
 	CREATE_TOAST_SUCCESS(HttpStatus.CREATED, "토스트 저장이 완료 되었습니다."),
 	CREATE_CATEGORY_SUCCESS(HttpStatus.CREATED, "새 카테고리 추가 성공"),
-
+	CREATE_TIMER_SUCCESS(HttpStatus.CREATED, "새 타이머 생성 성공"),
 
 	/**
 	 * 200 OK
