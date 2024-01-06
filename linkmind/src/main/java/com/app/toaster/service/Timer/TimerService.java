@@ -9,9 +9,11 @@ import com.app.toaster.domain.Reminder;
 import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.NotFoundException;
+import com.app.toaster.exception.model.UnauthorizedException;
 import com.app.toaster.infrastructure.CategoryRepository;
 import com.app.toaster.infrastructure.TimerRepository;
 import com.app.toaster.infrastructure.UserRepository;
+import com.app.toaster.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,8 +29,7 @@ public class TimerService {
 
     @Transactional
     public void createTimer(Long userId, CreateTimerRequestDto createTimerRequestDto){
-        User presentUser = userRepository.findByUserId(userId).orElseThrow(
-                ()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
+        User presentUser = findUser(userId);
 
         Category category = categoryRepository.findById(createTimerRequestDto.categoryId())
                 .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
@@ -55,12 +56,38 @@ public class TimerService {
     }
 
     @Transactional
-    public void updateCategoryDatetime(Long userId, Long timerId, UpdateCategoryDateTimeDto updateCategoryDateTimeDto){
+    public void updateTimerDatetime(Long userId, Long timerId, UpdateCategoryDateTimeDto updateCategoryDateTimeDto){
+        User presentUser = findUser(userId);
+
         Reminder reminder = timerRepository.findById(timerId)
                 .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_TIMER, Error.NOT_FOUND_TIMER.getMessage()));
 
+        if (!presentUser.equals(reminder.getUser())){
+            throw new UnauthorizedException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
+        }
         reminder.updateRemindDates(updateCategoryDateTimeDto.remindDate());
         reminder.updateRemindTime(updateCategoryDateTimeDto.remindTime());
 
+    }
+
+    @Transactional
+    public void deleteTimer(Long userId, Long timerId){
+        User presentUser = findUser(userId);
+
+        Reminder reminder = timerRepository.findById(timerId)
+                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_TIMER, Error.NOT_FOUND_TIMER.getMessage()));
+
+        if (!presentUser.equals(reminder.getUser())){
+            throw new UnauthorizedException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
+        }
+
+        timerRepository.delete(reminder);
+    }
+
+    //해당 유저 탐색
+    private User findUser(Long userId){
+        return userRepository.findByUserId(userId).orElseThrow(
+                ()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage())
+        );
     }
 }

@@ -39,12 +39,21 @@ public class TimerController {
 
     @PatchMapping("/datetime/{timerId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse updateCategoryDatetime(
+    public ApiResponse updateTimerDatetime(
             @RequestHeader("userId") Long userId,
             @PathVariable Long timerId,
             @RequestBody UpdateCategoryDateTimeDto updateCategoryDateTimeDto){
 
-        timerService.updateCategoryDatetime(userId,timerId, updateCategoryDateTimeDto);
+        timerService.updateTimerDatetime(userId,timerId, updateCategoryDateTimeDto);
+        return ApiResponse.success(Success.UPDATE_TIMER_DATETIME_SUCCESS);
+    }
+
+    @DeleteMapping("/{timerId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse deleteTimer(
+            @RequestHeader("userId") Long userId,
+            @PathVariable Long timerId){
+        timerService.deleteTimer(userId,timerId);
         return ApiResponse.success(Success.UPDATE_TIMER_DATETIME_SUCCESS);
     }
 }
