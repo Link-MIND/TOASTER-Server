@@ -9,5 +9,5 @@ import java.util.List;
 public record CreateTimerRequestDto(
      Long categoryId,
      String remindTime,
-     ArrayList<String> remindDates){
+     ArrayList<Integer> remindDates){
 }

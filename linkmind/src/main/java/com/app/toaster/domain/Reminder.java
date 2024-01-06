@@ -28,15 +28,15 @@ public class Reminder {
 
 	private LocalTime remindTime;
 
-	@Convert(converter = StringListConverter.class)
-	private ArrayList<String> remindDates;
+	@Convert(converter = IntegerListConverter.class)
+	private ArrayList<Integer> remindDates;
 
 	private String comment;
 
 	private Boolean isAlarm;
 
 	@Builder
-	public Reminder(User user, Category category, String comment, LocalTime remindTime, ArrayList<String> remindDates, Boolean isAlarm) {
+	public Reminder(User user, Category category, String comment, LocalTime remindTime, ArrayList<Integer> remindDates, Boolean isAlarm) {
 		this.user = user;
 		this.category = category;
 		this.comment = comment;
@@ -49,7 +49,7 @@ public class Reminder {
 		this.remindTime = LocalTime.parse(remindTime);
 	}
 
-	public void updateRemindDates(ArrayList<String> remindDates){
+	public void updateRemindDates(ArrayList<Integer> remindDates){
 		this.remindDates = remindDates;
 	}
 
