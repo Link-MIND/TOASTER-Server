@@ -66,4 +66,11 @@ public class CategoryController {
     ){
         return ApiResponse.success(Success.GET_CATEORY_SUCCESS,categoryService.getCategory(userId, categoryId, filter));
     }
+
+
+    @GetMapping("/search")
+    public ApiResponse searchProducts(@RequestHeader Long userId ,@RequestParam("query") String query){
+      return searchService.searchCategoryTitle(userId,query);
+    }
+
 }

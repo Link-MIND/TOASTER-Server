@@ -1,7 +1,10 @@
 package com.app.toaster.infrastructure;
 
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 
 import com.app.toaster.controller.request.category.ChangeCateoryTitleDto;
 import com.app.toaster.domain.User;
@@ -47,5 +50,11 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("UPDATE Category c SET c.priority = c.priority - 1 " +
             "WHERE c.categoryId != :categoryId AND c.priority > :currentPriority")
     void decreasePriorityNextDeleteCategory(@Param("categoryId") Long categoryId, @Param("currentPriority") int currentPriority);
+
+    @Query("SELECT c FROM Category c WHERE " +
+      "c.user.userId = :userId and " +
+      "c.title LIKE CONCAT('%',:query, '%')"
+    )
+    List<Category> searchCategoriesByQuery(Long userId,String query);
 
 }
