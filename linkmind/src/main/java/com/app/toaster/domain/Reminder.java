@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.cglib.core.Local;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -42,6 +43,14 @@ public class Reminder {
 		this.remindDates = remindDates;
 		this.remindTime = remindTime;
 		this.isAlarm = isAlarm;
+	}
+
+	public void updateRemindTime(String remindTime){
+		this.remindTime = LocalTime.parse(remindTime);
+	}
+
+	public void updateRemindDates(ArrayList<String> remindDates){
+		this.remindDates = remindDates;
 	}
 
 }

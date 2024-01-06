@@ -1,6 +1,9 @@
 package com.app.toaster.service.Timer;
 
 import com.app.toaster.controller.request.timer.CreateTimerRequestDto;
+import com.app.toaster.controller.request.timer.UpdateCategoryDateTimeDto;
+import com.app.toaster.controller.response.timer.GetTimerResponseDto;
+import com.app.toaster.controller.response.toast.ToastDto;
 import com.app.toaster.domain.Category;
 import com.app.toaster.domain.Reminder;
 import com.app.toaster.domain.User;
@@ -11,6 +14,7 @@ import com.app.toaster.infrastructure.TimerRepository;
 import com.app.toaster.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 
@@ -21,6 +25,7 @@ public class TimerService {
     private final CategoryRepository categoryRepository;
     private final TimerRepository timerRepository;
 
+    @Transactional
     public void createTimer(Long userId, CreateTimerRequestDto createTimerRequestDto){
         User presentUser = userRepository.findByUserId(userId).orElseThrow(
                 ()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
@@ -40,5 +45,22 @@ public class TimerService {
 
 
         timerRepository.save(reminder);
+    }
+
+    public GetTimerResponseDto getTimer(Long userId, Long timerId){
+        Reminder reminder = timerRepository.findById(timerId)
+                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_TIMER, Error.NOT_FOUND_TIMER.getMessage()));
+
+        return GetTimerResponseDto.of(reminder);
+    }
+
+    @Transactional
+    public void updateCategoryDatetime(Long userId, Long timerId, UpdateCategoryDateTimeDto updateCategoryDateTimeDto){
+        Reminder reminder = timerRepository.findById(timerId)
+                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_TIMER, Error.NOT_FOUND_TIMER.getMessage()));
+
+        reminder.updateRemindDates(updateCategoryDateTimeDto.remindDate());
+        reminder.updateRemindTime(updateCategoryDateTimeDto.remindTime());
+
     }
 }
