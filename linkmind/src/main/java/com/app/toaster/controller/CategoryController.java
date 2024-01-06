@@ -7,6 +7,7 @@ import com.app.toaster.controller.response.category.CategoriesReponse;
 import com.app.toaster.controller.response.category.GetCategoryResponseDto;
 import com.app.toaster.exception.Success;
 import com.app.toaster.service.category.CategoryService;
+import com.app.toaster.service.search.SearchService;
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final SearchService searchService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
