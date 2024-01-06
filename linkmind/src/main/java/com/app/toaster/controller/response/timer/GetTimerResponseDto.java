@@ -10,7 +10,7 @@ import java.util.List;
 
 public record GetTimerResponseDto (String categoryName,
                                        String remindTime,
-                                       ArrayList<String> remindDates) {
+                                       ArrayList<Integer> remindDates) {
     public static GetTimerResponseDto of(Reminder reminder){
         return new GetTimerResponseDto(reminder.getCategory().getTitle(), reminder.getRemindTime().toString(), reminder.getRemindDates());
     }

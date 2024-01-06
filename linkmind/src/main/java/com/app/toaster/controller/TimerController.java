@@ -67,5 +67,10 @@ public class TimerController {
         timerService.deleteTimer(userId,timerId);
         return ApiResponse.success(Success.UPDATE_TIMER_DATETIME_SUCCESS);
     }
-
+    @GetMapping("/main")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse getTimerPage(
+            @RequestHeader("userId") Long userId){
+        return ApiResponse.success(Success.GET_TIMER_PAGE_SUCCESS, timerService.getTimerPage(userId));
+    }
 }
