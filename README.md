@@ -19,7 +19,7 @@
 | Category | Used |
 | --- | --- |
 | Java version | Java 17 |
-| Spring version | 3.1.7 |
+| Spring version | 3.2.0 |
 | Cloud Computing |	AWS EC2 (Ubuntu 22.04 LTS) |
 | Database | AWS RDS (MySQL 8.0.33) |
 | File Upload | AWS S3 |
