@@ -21,10 +21,12 @@
 | Java version | Java 17 |
 | Spring version | 3.1.7 |
 | Cloud Computing |	AWS EC2 (Ubuntu 22.04 LTS) |
-| Database | MYSQL, AWS RDS (MySQL 8.0.33), Redis |
+| Database | AWS RDS (MySQL 8.0.33) |
 | File Upload | AWS S3 |
-| API Docs | Notion |
 | CI/CD | Github Actions, Docker, Nginx |
+| Notification | Firebase Cloud Messaging |
+| Monitoring  | Sentry, Slack |
+| API Docs | Swagger, Notion |
 
 <br>
 
@@ -33,14 +35,58 @@
 <br><br>
 
 ## 📦 ERD
+<img width="752" alt="스크린샷 2024-01-08 오전 12 27 24" src="https://github.com/Link-MIND/TOASTER-Server/assets/92644651/2c749077-5136-4578-9002-c1d244b7cab7">
+
 <br><br>
 
 ## 🧬 Architecture
+![image](https://github.com/Link-MIND/TOASTER-Server/assets/92644651/45b842c7-f1d2-49a5-94f3-3bad54944116)
 
 <br><br>
 
 ## 📂 폴더 구조도
+```
+├── 📂.github
+├── 📂 main
+	├── 📂 java
+		├── 📂 com.app.toaster
+			├── 📂 controller(컨트롤러 파일)
+				├── 🗂️ dto
+					 ├──🗂️ request
+					 ├──🗂️ response
+					 ├──🗂️ valid(valid custom어노테이션 관리 폴더)
 
+			├── 📂 domain(엔티티 파일)
+			
+			├── 📂 infrastructure(레포지토리 폴더)
+			
+			├── 📂 service(서비스 파일)
+				├── 🗂️ auth
+				├── 🗂️ parse
+				├── 🗂️ search
+				├── 🗂️ toast
+				├── 🗂️ timer
+			
+			├── 📂 exception(Exception enum, Exception class 파일)
+				├── 🗂️ model
+			
+			├── 📂 external(서비스 파일)
+				├── 🗂️ slack
+				├── 🗂️ client.aws
+					├── 🗂️ AWSConfig
+					├── 🗂️ S3Service
+			
+			├── 📂 common(공용 클래스 관리)
+				├──🗂️ advice
+				├──🗂️ dto	
+			
+			├── 📂 config(공용 클래스 설정 관리)
+				├──🗂️ user
+				├──🗂️ jwt			
+
+		├── 🗂️ resources
+			├── 📕 application.yml
+```
 <br><br>
 
 ## 🤝 Code Convention
@@ -104,11 +150,8 @@ Branch 전략은 Git-flow를 준수합니다.
 
 [우린 Git-flow를 사용하고 있어요 | 우아한형제들 기술블로그](https://techblog.woowahan.com/2553/)
 
-branch 이름: 관련브랜치 분류/#[Issue tracker]-작업 내용
-
-작업 내용은 영어로 카멜 케이스를 사용합니다.
-
- ex) feature/#1-userLogin
+branch 이름: 관련브랜치 분류/#[Issue tracker]
+ ex) feature/#1
  
 
 ### Commit
