@@ -44,7 +44,6 @@ public class AuthController {
 	@PostMapping("/sign-out")
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse signOut(@UserId Long userId) {
-		System.out.println(userId);
 		authService.signOut(userId);
 		return ApiResponse.success(Success.SIGNOUT_SUCCESS);
 	}
