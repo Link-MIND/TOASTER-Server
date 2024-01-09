@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.app.toaster.common.dto.ApiResponse;
 // import com.app.toaster.config.UserId;
+import com.app.toaster.config.UserId;
 import com.app.toaster.controller.request.toast.IsReadDto;
 import com.app.toaster.controller.request.toast.OgRequestDto;
 import com.app.toaster.controller.request.toast.SaveToastDto;
@@ -51,7 +52,7 @@ public class ToastController {
 	@PostMapping("/save")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ApiResponse createToast(
-		@RequestHeader("userId") Long userId,
+		@UserId Long userId,
 		@RequestPart MultipartFile image,
 		@Valid SaveToastDto requestDto
 	) {
@@ -62,7 +63,7 @@ public class ToastController {
 	@PatchMapping("/is-read")
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse<IsReadResponse> updateIsRead(
-		@RequestHeader("userId") Long userId,
+		@UserId Long userId,
 		@RequestBody IsReadDto requestDto
 	){
 		return ApiResponse.success(Success.UPDATE_ISREAD_SUCCESS, toastService.readToast(userId,requestDto));
@@ -71,7 +72,7 @@ public class ToastController {
 	@DeleteMapping("/delete")
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse deleteToast(		//나중에 softDelete로 변경
-		@RequestHeader("userId") Long userId,
+		@UserId Long userId,
 		@RequestParam Long toastId
 	) throws IOException {
 		toastService.deleteToast(userId, toastId);

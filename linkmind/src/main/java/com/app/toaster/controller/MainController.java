@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.toaster.common.dto.ApiResponse;
+import com.app.toaster.config.UserId;
 import com.app.toaster.service.UserService;
 import com.app.toaster.service.search.SearchService;
 import com.app.toaster.service.toast.ToastService;
@@ -22,7 +23,7 @@ public class MainController {
 	private final UserService userService;
 
 	@GetMapping("/search")
-	public ApiResponse searchProducts(@RequestHeader Long userId ,@RequestParam("query") String query){
+	public ApiResponse searchProducts(@UserId Long userId ,@RequestParam("query") String query){
 		return searchService.searchMain(userId,query);
 	}
 }

@@ -1,6 +1,7 @@
 package com.app.toaster.controller;
 
 import com.app.toaster.common.dto.ApiResponse;
+import com.app.toaster.config.UserId;
 import com.app.toaster.controller.request.category.*;
 import com.app.toaster.controller.response.toast.ToastFilter;
 import com.app.toaster.controller.response.category.CategoriesReponse;
@@ -26,7 +27,7 @@ public class CategoryController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse createCateory(
-            @RequestHeader("userId") Long userId,
+            @UserId Long userId,
             @RequestBody CreateCategoryDto createCategoryDto
     ){
         categoryService.createCategory(userId, createCategoryDto);
@@ -36,7 +37,7 @@ public class CategoryController {
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse deleteCategory(
-            @RequestHeader("userId") Long userId,
+            @UserId Long userId,
             @RequestBody DeleteCategoryDto deleteCategoryDto
     ){
         categoryService.deleteCategory(userId, deleteCategoryDto);
@@ -45,14 +46,14 @@ public class CategoryController {
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<CategoriesReponse>> getCategories(@RequestHeader("userId") Long userId){
+    public ApiResponse<List<CategoriesReponse>> getCategories(@UserId Long userId){
         return ApiResponse.success(Success.GET_CATEORIES_SUCCESS, categoryService.getCategories(userId));
     }
 
     @PatchMapping("/edit")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse editCategories(
-            @RequestHeader("userId") Long userId,
+            @UserId Long userId,
             @RequestBody EditCategoryRequestDto editCategoryRequestDto
     ){
         categoryService.editCategories(userId, editCategoryRequestDto);
@@ -62,7 +63,7 @@ public class CategoryController {
     @GetMapping("/{categoryId}")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<GetCategoryResponseDto> getCategory(
-            @RequestHeader("userId") Long userId,
+            @UserId Long userId,
             @PathVariable Long categoryId,
             @RequestParam("filter") ToastFilter filter
     ){
@@ -71,7 +72,7 @@ public class CategoryController {
 
 
     @GetMapping("/search")
-    public ApiResponse searchProducts(@RequestHeader Long userId ,@RequestParam("query") String query){
+    public ApiResponse searchProducts(@UserId Long userId ,@RequestParam("query") String query){
       return searchService.searchMain(userId,query);
     }
 

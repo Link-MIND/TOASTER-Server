@@ -39,12 +39,12 @@ public class UserController {
 	}
 
 	@GetMapping("/my-page")
-	public ApiResponse getMyPage(@RequestHeader Long userId){
+	public ApiResponse getMyPage(@UserId Long userId){
 		return ApiResponse.success(Success.GET_MYPAGE_SUCCESS,userService.getMyPage(userId));
 	}
 
 	@GetMapping("/settings")
-	public ApiResponse getSettings(@RequestHeader Long userId){
+	public ApiResponse getSettings(@UserId Long userId){
 		return ApiResponse.success(Success.GET_SETTINGS_SUCCESS,userService.getSettings(userId));
 	}
 }
