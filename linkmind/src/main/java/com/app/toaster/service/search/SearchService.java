@@ -10,6 +10,7 @@ import com.app.toaster.controller.response.search.CategoryResult;
 import com.app.toaster.controller.response.search.SearchCategoryResult;
 import com.app.toaster.controller.response.search.SearchMainResult;
 import com.app.toaster.controller.response.search.ToastResult;
+import com.app.toaster.controller.response.toast.ToastDto;
 import com.app.toaster.domain.Category;
 import com.app.toaster.domain.Toast;
 import com.app.toaster.domain.User;
@@ -31,22 +32,6 @@ public class SearchService {
 	private final UserRepository userRepository;
 	private final CategoryRepository categoryRepository;
 
-	public ApiResponse<SearchCategoryResult> searchCategoryTitle(Long userId, String searchParam){
-		User presentUser =  userRepository.findByUserId(userId).orElseThrow(
-			()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage())
-		);
-		List<Category> searchCategoryList = categoryRepository.searchCategoriesByQuery(userId, searchParam);
-
-		if (searchCategoryList.isEmpty()){
-			return ApiResponse.success(Success.SEARCH_SUCCESS_BUT_IS_EMPTY,null);
-		}
-
-		return ApiResponse.success(Success.SEARCH_SUCCESS, SearchCategoryResult.of(
-			searchCategoryList.stream().map(
-				category -> CategoryResult.of(category.getCategoryId(), category.getTitle()))
-				.collect(Collectors.toList())));
-	}
-
 	public ApiResponse<SearchMainResult> searchMain(Long userId, String searchParam){
 		User presentUser =  userRepository.findByUserId(userId).orElseThrow(
 			()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage())
@@ -59,10 +44,10 @@ public class SearchService {
 		}
 		return ApiResponse.success(Success.SEARCH_SUCCESS, SearchMainResult.of(
 			searchToastList.stream().map(
-					toast -> ToastResult.of(toast.getId(), toast.getTitle()))
+					toast -> ToastDto.of(toast))
 				.collect(Collectors.toList()),
 			searchCategoryList.stream().map(
-					category -> CategoryResult.of(category.getCategoryId(), category.getTitle()))
+					category -> CategoryResult.of(category.getCategoryId(), category.getTitle(),toastRepository.countAllByUser(presentUser)))
 				.collect(Collectors.toList())
 			));
 	}

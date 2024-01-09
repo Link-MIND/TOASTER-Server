@@ -72,7 +72,7 @@ public class CategoryController {
 
     @GetMapping("/search")
     public ApiResponse searchProducts(@RequestHeader Long userId ,@RequestParam("query") String query){
-      return searchService.searchCategoryTitle(userId,query);
+      return searchService.searchMain(userId,query);
     }
 
 }
