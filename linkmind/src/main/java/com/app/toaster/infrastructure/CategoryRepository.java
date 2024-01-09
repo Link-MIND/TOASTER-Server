@@ -28,6 +28,10 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     ArrayList<Category> findAllByUserOrderByPriority(User user);
 
+    ArrayList<Category> findAllByUser(User user);
+
+    ArrayList<Category> findTop3ByUserOrderByLatestReadTimeDesc(User user);
+
     @Modifying
     @Query("UPDATE Category c SET c.title = :newTitle WHERE c.categoryId = :categoryId")
     void updateCategoryTitle(@Param("categoryId") Long categoryId, @Param("newTitle") String newTitle);

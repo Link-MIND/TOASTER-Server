@@ -1,4 +1,4 @@
-package com.app.toaster.service.Timer;
+package com.app.toaster.service.timer;
 
 import com.app.toaster.controller.request.fcm.FCMPushRequestDto;
 import com.app.toaster.controller.request.timer.CreateTimerRequestDto;

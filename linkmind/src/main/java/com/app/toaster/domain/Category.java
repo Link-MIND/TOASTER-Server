@@ -1,5 +1,6 @@
 package com.app.toaster.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Category {
+public class Category{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long categoryId;
@@ -24,6 +25,8 @@ public class Category {
 	private User user;
 
 	private int priority;
+
+	private LocalDateTime latestReadTime;
 
 	@Builder
 	public Category(String title, User user, int priority) {
