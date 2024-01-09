@@ -27,6 +27,7 @@ import com.app.toaster.exception.Success;
 import com.app.toaster.service.parse.ParsingService;
 import com.app.toaster.service.toast.ToastService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -52,7 +53,7 @@ public class ToastController {
 	public ApiResponse createToast(
 		@RequestHeader("userId") Long userId,
 		@RequestPart MultipartFile image,
-		SaveToastDto requestDto
+		@Valid SaveToastDto requestDto
 	) {
 		toastService.createToast(userId, requestDto, image);
 		return ApiResponse.success(Success.CREATE_TOAST_SUCCESS);

@@ -93,23 +93,9 @@ public class ToastService {
 		toastRepository.deleteById(toastId);
 	}
 
-
-// 나중에 user 생성 로직에 이거를 비슷하게 해서 옮기기.
-	private Category createDefaultCategory(){
-		if (categoryRepository.count()==0){
-			Category category = Category.builder()
-				.title("기본 카테고리")
-				.build();
-			categoryRepository.save(category);
-			return category;
-		}
-		return categoryRepository.findAll().stream().findFirst().get(); // 흠냐 ㅠ limit 왜 안먹지 원래 쿼리문 이렇게 박았던거같은데 ㅠ 수정 예정
-	}
-
 	private void checkCategoryIsEmpty(Toast toast, Long categoryId){
 		if (categoryId == null) {
-			Category newCategory = createDefaultCategory();	//만약에 카테고리 id가 존재하지 않으면 전체 카테고리에 넣음.>> 미혜로직, 회원가입시에 전체카테고리로 하나 만들어주기.
-			toast.updateCategory(newCategory);
+			toast.updateCategory(null);
 		} else { //원래 있던 곳에서 카테고리 고르면 카테고리 아이디로 검색 후 그것을 넣음.
 			Category foundCategory = categoryRepository.findById(categoryId).orElseThrow(
 				() -> new CustomException(Error.NOT_FOUND_CATEGORY_EXCEPTION,
