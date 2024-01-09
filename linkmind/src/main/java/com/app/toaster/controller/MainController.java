@@ -1,5 +1,6 @@
 package com.app.toaster.controller;
 
+import com.app.toaster.config.UserId;
 import com.app.toaster.controller.response.main.MainPageResponseDto;
 import com.app.toaster.controller.response.timer.GetTimerResponseDto;
 import com.app.toaster.exception.Success;
@@ -29,7 +30,7 @@ public class MainController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse<MainPageResponseDto> getTimer(
-			@RequestHeader("userId") Long userId) {
+			@UserId Long userId) {
 
 		return ApiResponse.success(Success.GET_TIMER_SUCCESS,mainService.getMainPage(userId) );
 	}
