@@ -26,6 +26,11 @@ jobs:
           echo "${{ secrets.APPLICATION }}" > ./application.yaml
       working-directory: ${{ env.working-directory }}
 
+    - name: toaster-firebase-admin-sdk.json 생성
+      run: |
+          cd src/main/resources
+          echo "${{ secrets.TOASTER_FIREBASE_ADMIN_SDK }}" > ./toaster-firebase-admin-sdk.json
+      working-directory: ${{ env.working-directory }}
     - name: 빌드
       run: |
           chmod +x gradlew
