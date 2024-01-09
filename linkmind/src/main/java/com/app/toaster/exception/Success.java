@@ -19,6 +19,8 @@ public enum Success {
 	 * 200 OK
 	 */
 	GET_MAIN_SUCCESS(HttpStatus.OK, "메인 페이지 조회 성공"),
+	GET_MYPAGE_SUCCESS(HttpStatus.OK, "마이 페이지 조회 성공"),
+	GET_SETTINGS_SUCCESS(HttpStatus.OK, "설정 페이지 조회 성공"),
 
   	LOGIN_SUCCESS(HttpStatus.OK, "로그인 성공"),
 	RE_ISSUE_TOKEN_SUCCESS(HttpStatus.OK, "토큰 재발급 성공"),
@@ -27,7 +29,7 @@ public enum Success {
 	DELETE_TOAST_SUCCESS(HttpStatus.OK, "토스트 삭제 성공"),
 	SEARCH_SUCCESS(HttpStatus.OK, "검색 성공"),
 	PARSING_OG_SUCCESS(HttpStatus.OK, "og 데이터 파싱 결과입니다. 크롤링을 막은 페이지는 기본이미지가 나옵니다."),
-
+	UPDATE_PUSH_ALLOWED_SUCCESS(HttpStatus.OK, "푸시알림 수정 성공"),
 
 	UPDATE_ISREAD_SUCCESS(HttpStatus.OK, "열람여부 수정 완료"),
 

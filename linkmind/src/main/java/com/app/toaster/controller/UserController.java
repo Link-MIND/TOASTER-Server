@@ -1,0 +1,50 @@
+package com.app.toaster.controller;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.app.toaster.common.dto.ApiResponse;
+import com.app.toaster.config.UserId;
+import com.app.toaster.controller.request.user.UpdateAllowedPush;
+import com.app.toaster.exception.Success;
+import com.app.toaster.service.UserService;
+
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/user")
+public class UserController {
+	private final UserService userService;
+
+	@PatchMapping("/notification")
+	@ResponseStatus(HttpStatus.OK)
+	public ApiResponse updateAllowedNotification (@UserId Long userId, @RequestBody @Valid final UpdateAllowedPush requestDto) {
+		Map<String, Boolean> result = new HashMap<String, Boolean>() {
+			{
+				put("isAllowed", userService.allowedPushNotification(userId, requestDto.allowedPush()));
+			}
+		};
+		return ApiResponse.success(Success.UPDATE_PUSH_ALLOWED_SUCCESS, result);
+	}
+
+	@GetMapping("/my-page")
+	public ApiResponse getMyPage(@RequestHeader Long userId){
+		return ApiResponse.success(Success.GET_MYPAGE_SUCCESS,userService.getMyPage(userId));
+	}
+
+	@GetMapping("/settings")
+	public ApiResponse getSettings(@RequestHeader Long userId){
+		return ApiResponse.success(Success.GET_SETTINGS_SUCCESS,userService.getSettings(userId));
+	}
+}

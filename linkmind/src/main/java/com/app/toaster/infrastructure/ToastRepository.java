@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.app.toaster.domain.Category;
 import com.app.toaster.domain.Toast;
+import com.app.toaster.domain.User;
 
 public interface ToastRepository extends JpaRepository<Toast, Long> {
 
@@ -15,4 +16,10 @@ public interface ToastRepository extends JpaRepository<Toast, Long> {
 		"t.title LIKE CONCAT('%',:query, '%')"
 	)
 	List<Toast> searchToastsByQuery(Long userId, String query);
+
+	Long countAllByUser(User user);
+
+	Long countALLByUserAndIsReadTrue(User user);
+
+	Long countAllByUserAndIsReadFalse(User user);
 }

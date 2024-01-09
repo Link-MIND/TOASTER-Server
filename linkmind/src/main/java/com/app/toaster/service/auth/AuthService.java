@@ -1,5 +1,6 @@
 package com.app.toaster.service.auth;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,11 +11,13 @@ import com.app.toaster.controller.response.auth.TokenResponseDto;
 import com.app.toaster.domain.SocialType;
 import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
+import com.app.toaster.exception.model.BadRequestException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.exception.model.UnprocessableEntityException;
 import com.app.toaster.infrastructure.UserRepository;
 import com.app.toaster.service.auth.apple.AppleSignInService;
 import com.app.toaster.service.auth.kakao.KakaoSignInService;
+import com.app.toaster.service.auth.kakao.LoginResult;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,13 +33,16 @@ public class AuthService {
 
 	private final Long TOKEN_EXPIRATION_TIME_ACCESS = 1 * 60 * 1000L;
 	private final Long TOKEN_EXPIRATION_TIME_REFRESH = 3 * 60 * 1000L;
-
+	@Value("${static-image.url}")
+	private String BASIC_THUMBNAIL;
 
 	@Transactional
 	public SignInResponseDto signIn(String socialAccessToken, SignInRequestDto requestDto) {
 		SocialType socialType = SocialType.valueOf(requestDto.socialType());
-		String socialId = login(socialType, socialAccessToken);
-
+		LoginResult loginResult = login(socialType, socialAccessToken);
+		String socialId = loginResult.id();
+		String profileImage = loginResult.profile();
+		System.out.println(profileImage);
 		Boolean isRegistered = userRepository.existsBySocialIdAndSocialType(socialId, socialType);
 
 		if (!isRegistered) {
@@ -60,8 +66,11 @@ public class AuthService {
 
 		user.updateRefreshToken(refreshToken);
 		user.updateFcmToken(fcmToken);
+		user.updateProfile(profileImage == null ? BASIC_THUMBNAIL : profileImage);
 
-		return SignInResponseDto.of(user.getUserId(), accessToken, refreshToken, fcmToken, isRegistered,user.getFcmIsAllowed());
+
+		return SignInResponseDto.of(user.getUserId(), accessToken, refreshToken, fcmToken, isRegistered,user.getFcmIsAllowed(),
+			user.getProfile());
 	}
 
 	@Transactional
@@ -82,23 +91,22 @@ public class AuthService {
 
 	@Transactional
 	public void signOut(Long userId) {
-		System.out.println("여기???");
-		System.out.println(userId);
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
 		user.updateRefreshToken(null);
 		user.updateFcmToken(null);
 	}
 
-	private String login(SocialType socialType, String socialAccessToken) {
+	private LoginResult login(SocialType socialType, String socialAccessToken) {
 		if (socialType.toString() == "APPLE") {
 			return appleSignInService.getAppleId(socialAccessToken);
 		}
 		else if (socialType.toString() == "KAKAO") {
+
 			return kakaoSignInService.getKaKaoId(socialAccessToken);
 		}
 		else{
-			return "ads";
+			return LoginResult.of("test", "뭔가 로직에 문제가 있음.");
 		}
 	}
 

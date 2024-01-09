@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.toaster.common.dto.ApiResponse;
+import com.app.toaster.service.UserService;
 import com.app.toaster.service.search.SearchService;
 import com.app.toaster.service.toast.ToastService;
 
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/main")
 public class MainController {
 	private final SearchService searchService;
+	private final UserService userService;
 
 	@GetMapping("/search")
 	public ApiResponse searchProducts(@RequestHeader Long userId ,@RequestParam("query") String query){

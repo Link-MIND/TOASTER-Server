@@ -10,6 +10,8 @@ import org.springframework.web.client.RestClient;
 import com.app.toaster.service.auth.apple.response.ApplePublicKeys;
 import com.app.toaster.service.auth.apple.verify.AppleJwtParser;
 import com.app.toaster.service.auth.apple.verify.PublicKeyGenerator;
+import com.app.toaster.service.auth.kakao.LoginResult;
+import com.mysql.cj.log.Log;
 
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +24,7 @@ public class AppleSignInService {
 	private static AppleJwtParser appleJwtParser;
 	private static PublicKeyGenerator publicKeyGenerator;
 
-	public String getAppleId(String identityToken) {
+	public LoginResult getAppleId(String identityToken) {
 		Map<String, String> headers = appleJwtParser.parseHeaders(identityToken);
 
 		ResponseEntity<ApplePublicKeys> result = restClient.get()
@@ -33,6 +35,6 @@ public class AppleSignInService {
 		PublicKey publicKey = publicKeyGenerator.generatePublicKey(headers, result.getBody());
 
 		Claims claims = appleJwtParser.parsePublicKeyAndGetClaims(identityToken, publicKey);
-		return claims.getSubject();
+		return LoginResult.of(claims.getSubject(),null);
 	}
 }

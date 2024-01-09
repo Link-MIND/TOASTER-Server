@@ -42,6 +42,9 @@ public class User {
 	@Column(nullable = true)
 	private Boolean fcmIsAllowed = true;
 
+	@Column(nullable = true)
+	private String profile;
+
 	@Builder
 	public User(String nickname, String socialId, SocialType socialType) {
 		this.nickname = nickname;
@@ -66,5 +69,9 @@ public class User {
 			return this.fcmToken;
 		}
 		return null;
+	}
+
+	public void updateProfile(String profile){
+		this.profile = profile;
 	}
 }
