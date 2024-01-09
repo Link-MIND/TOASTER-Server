@@ -1,5 +1,7 @@
 package com.app.toaster.service.auth;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,9 +13,11 @@ import com.app.toaster.controller.response.auth.TokenResponseDto;
 import com.app.toaster.domain.SocialType;
 import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
+import com.app.toaster.exception.Success;
 import com.app.toaster.exception.model.BadRequestException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.exception.model.UnprocessableEntityException;
+import com.app.toaster.external.client.slack.SlackApi;
 import com.app.toaster.infrastructure.UserRepository;
 import com.app.toaster.service.auth.apple.AppleSignInService;
 import com.app.toaster.service.auth.kakao.KakaoSignInService;
@@ -30,6 +34,8 @@ public class AuthService {
 
 	private final UserRepository userRepository;
 
+	private final SlackApi slackApi;
+
 
 	private final Long TOKEN_EXPIRATION_TIME_ACCESS = 24 * 60 * 60 * 1000L; //1일
 	private final Long TOKEN_EXPIRATION_TIME_REFRESH = 3 * 24 * 60 * 60 * 1000L;	//3일
@@ -41,12 +47,11 @@ public class AuthService {
 
 
 	@Transactional
-	public SignInResponseDto signIn(String socialAccessToken, SignInRequestDto requestDto) {
+	public SignInResponseDto signIn(String socialAccessToken, SignInRequestDto requestDto) throws IOException {
 		SocialType socialType = SocialType.valueOf(requestDto.socialType());
 		LoginResult loginResult = login(socialType, socialAccessToken);
 		String socialId = loginResult.id();
 		String profileImage = loginResult.profile();
-		System.out.println(profileImage);
 		Boolean isRegistered = userRepository.existsBySocialIdAndSocialType(socialId, socialType);
 
 		if (!isRegistered) {
@@ -56,6 +61,7 @@ public class AuthService {
 				.socialType(socialType).build();
 			newUser.updateFcmIsAllowed(true); //신규 유저면 true박고
 			userRepository.save(newUser);
+			slackApi.sendSuccess(Success.LOGIN_SUCCESS);
 		}
 
 		User user = userRepository.findBySocialIdAndSocialType(socialId, socialType)

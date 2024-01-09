@@ -1,5 +1,6 @@
 package com.app.toaster.common.advice;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 
 import org.springframework.http.HttpStatus;
@@ -15,14 +16,19 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.app.toaster.common.dto.ApiResponse;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.CustomException;
+import com.app.toaster.external.client.slack.SlackApi;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintDefinitionException;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @RestControllerAdvice
 @Component
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class ControllerExceptionAdvice {
+	private final SlackApi slackApi;
+
 	/**
 	 * custom error
 	 */
@@ -46,6 +52,17 @@ public class ControllerExceptionAdvice {
 	@ExceptionHandler(MalformedURLException.class)
 	protected ApiResponse handleConstraintDefinitionException(final MalformedURLException e) {
 		return ApiResponse.error(Error.MALFORMED_URL_EXEPTION, Error.MALFORMED_URL_EXEPTION.getMessage());
+	}
+
+	/**
+	 * 500 Internal Server Error
+	 */
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(Exception.class)
+	protected ApiResponse<Object> handleException(final Exception error, final HttpServletRequest request) throws
+		IOException {
+		slackApi.sendAlert(error, request);
+		return ApiResponse.error(Error.INTERNAL_SERVER_ERROR);
 	}
 
 }
