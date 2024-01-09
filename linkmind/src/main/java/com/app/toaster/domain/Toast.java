@@ -35,8 +35,6 @@ public class Toast {
 	@JoinColumn(name = "category_id")
 	private Category category;
 
-
-
 	private String title;
 
 	private String linkUrl;

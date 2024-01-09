@@ -41,3 +41,5 @@ application-local.yml
 /src/test/resources/application-local.yml
 /src/main/resources/application-dev.yml
 /src/main/resources/application-local.yml
+/src/main/resources/toaster-firebase-admindk.json
+/src/main/resources/toaster-firebase-admin-sdk.json

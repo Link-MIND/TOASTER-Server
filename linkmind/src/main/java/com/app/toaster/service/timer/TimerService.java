@@ -1,5 +1,6 @@
-package com.app.toaster.service.Timer;
+package com.app.toaster.service.timer;
 
+import com.app.toaster.controller.request.fcm.FCMPushRequestDto;
 import com.app.toaster.controller.request.timer.CreateTimerRequestDto;
 import com.app.toaster.controller.request.timer.UpdateTimerCommentDto;
 import com.app.toaster.controller.request.timer.UpdateTimerDateTimeDto;
@@ -16,10 +17,12 @@ import com.app.toaster.exception.model.UnauthorizedException;
 import com.app.toaster.infrastructure.CategoryRepository;
 import com.app.toaster.infrastructure.TimerRepository;
 import com.app.toaster.infrastructure.UserRepository;
+import com.app.toaster.service.fcm.FCMService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -33,6 +36,9 @@ public class TimerService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final TimerRepository timerRepository;
+
+    // 푸시알림 활성화가 필요한 로직이라면, FCMService를 주입!
+    private final FCMService fcmService;
 
     private LocalDateTime now;
 
@@ -109,10 +115,12 @@ public class TimerService {
         timerRepository.delete(reminder);
     }
 
-    public GetTimerPageResponseDto getTimerPage(Long userId){
+    public GetTimerPageResponseDto getTimerPage(Long userId) throws IOException {
         User presentUser = findUser(userId);
         ArrayList<Reminder> reminders = timerRepository.findAllByUser(presentUser);
 
+        //== User 조회 API 호출 시 푸시 알림 전송! ==//
+        fcmService.pushAlarm(FCMPushRequestDto.sendTestPush(presentUser.getFcmToken()));
 
         List<CompletedTimerDto> completedTimerList = reminders.stream()
                 .filter(this::isCompletedTimer)

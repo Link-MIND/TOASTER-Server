@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -118,6 +119,8 @@ public class CategoryService {
 
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
+
+        category.updateLatestReadTime(LocalDateTime.now());
 
         ArrayList<Toast> toasts = toastRepository.getAllByCategory(category);
         List<ToastDto> toastListDto = mapToToastDtoList(toasts, filter, category);
