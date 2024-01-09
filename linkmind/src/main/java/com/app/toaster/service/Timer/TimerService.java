@@ -169,10 +169,14 @@ public class TimerService {
 
     // 대기중인 타이머 날짜,시간 포맷
     private WaitingTimerDto createWaitingTimerDto(Reminder reminder) {
-        String time = reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시"));
+        String time = (reminder.getRemindTime().getMinute() == 0)
+                ? reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시"))
+                : reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시 mm분"));
+
         String dates = reminder.getRemindDates().stream()
                 .map(this::mapIndexToDayString)
                 .collect(Collectors.joining(", "));
+
         return WaitingTimerDto.of(reminder, time, dates);
     }
 
