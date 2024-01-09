@@ -20,7 +20,7 @@ public class TimerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ApiResponse createCateory(
+    public ApiResponse createTimer(
             @RequestHeader("userId") Long userId,
             @RequestBody CreateTimerRequestDto createTimerRequestDto
             ){
@@ -30,7 +30,7 @@ public class TimerController {
 
     @GetMapping("/{timerId}")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<GetTimerResponseDto> getCategory(
+    public ApiResponse<GetTimerResponseDto> getTimer(
             @RequestHeader("userId") Long userId,
             @PathVariable Long timerId) {
 
