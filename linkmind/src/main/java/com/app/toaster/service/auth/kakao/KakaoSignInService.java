@@ -30,7 +30,6 @@ public class KakaoSignInService {
 		responseData = restTemplate.postForEntity(KAKAO_URL,httpEntity,Object.class);
 		ObjectMapper objectMapper = new ObjectMapper();
 		HashMap profileResponse = (HashMap)objectMapper.convertValue( responseData.getBody(),Map.class).get("properties");
-		System.out.println(profileResponse.get("profile_image").toString());
-		return LoginResult.of(objectMapper.convertValue(responseData.getBody(), Map.class).get("id").toString(), profileResponse.get("profile_image").toString()); //소셜 id만 가져오는듯.
+		return LoginResult.of(objectMapper.convertValue(responseData.getBody(), Map.class).get("id").toString(), profileResponse==null?null:profileResponse.get("profile_image").toString()); //프로필 이미지 허용 x시 null로 넘기기.
 	}
 }
