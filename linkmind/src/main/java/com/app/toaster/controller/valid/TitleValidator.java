@@ -39,7 +39,12 @@ public class TitleValidator implements ConstraintValidator<TitleValid, String> {
 			return false;
 		}
 
-		// 첫 글자가 공백인 경우
-		return !(title.charAt(0) == ' ');
+		if(title.length()>=15){
+			context.buildConstraintViolationWithTemplate("이름은 최대 15자까지 입력 가능해요")
+					.addConstraintViolation();
+			return false;
+		}
+
+		return true;
 	}
 }

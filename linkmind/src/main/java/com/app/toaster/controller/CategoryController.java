@@ -9,9 +9,11 @@ import com.app.toaster.controller.response.category.GetCategoryResponseDto;
 import com.app.toaster.exception.Success;
 import com.app.toaster.service.category.CategoryService;
 import com.app.toaster.service.search.SearchService;
+import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/category")
 @RequiredArgsConstructor
+@Validated
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -28,7 +31,7 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse createCateory(
             @UserId Long userId,
-            @RequestBody CreateCategoryDto createCategoryDto
+            @Valid @RequestBody CreateCategoryDto createCategoryDto
     ){
         categoryService.createCategory(userId, createCategoryDto);
         return ApiResponse.success(Success.CREATE_CATEGORY_SUCCESS);

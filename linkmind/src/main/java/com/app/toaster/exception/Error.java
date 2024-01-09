@@ -29,7 +29,7 @@ public enum Error {
 	BAD_REQUEST_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "파일형식이 잘못된 것 같습니다."),
 	BAD_REQUEST_FILE_SIZE(HttpStatus.BAD_REQUEST, "파일크기가 잘못된 것 같습니다. 최대 5MB"),
 	MALFORMED_URL_EXEPTION(HttpStatus.BAD_REQUEST, "url 링크가 잘못된 것 같습니다."),
-
+	BAD_REQUEST_REMIND_TIME(HttpStatus.BAD_REQUEST, "RemindTime 값이 잘못요청 되었습니다."),
 
 	/**
 	 * 401 UNAUTHORIZED EXCEPTION
@@ -40,14 +40,23 @@ public enum Error {
 	INVALID_APPLE_IDENTITY_TOKEN(HttpStatus.UNAUTHORIZED, "잘못된 아이덴티티 토큰입니다."),
 	INVALID_USER_ACCESS(HttpStatus.UNAUTHORIZED, "접근 권한이 없는 유저입니다."),
 
+	/**
+	 * 422 UNPROCESSABLE_ENTITY
+	 */
 	UNPROCESSABLE_ENTITY_DELETE_EXCEPTION(HttpStatus.UNPROCESSABLE_ENTITY, "서버에서 요청을 이해해 삭제하려는 도중 문제가 생겼습니다."),
+	UNPROCESSABLE_ENTITY_CEEATE_TIMER_EXCEPTION(HttpStatus.UNPROCESSABLE_ENTITY, "타이머는 최대 5개까지만 등록가능합니다."),
+	UNPROCESSABLE_ENTITY_CEEATE_CLIP_EXCEPTION(HttpStatus.UNPROCESSABLE_ENTITY, "클립은 최대 50개까지만 등록가능합니다."),
+
+
 	/**
 	 * 500 INTERNAL_SERVER_ERROR
 	 */
 	INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 서버 에러가 발생했습니다"),
 	INVALID_ENCRYPT_COMMUNICATION(HttpStatus.INTERNAL_SERVER_ERROR, "ios 통신 증명 과정 중 문제가 발생했습니다."),
 	CREATE_PUBLIC_KEY_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "publickey 생성 과정 중 문제가 발생했습니다."),
-	FAIL_TO_SEND_PUSH_ALARM(HttpStatus.INTERNAL_SERVER_ERROR, "다수기기 푸시메시지 전송 실패");
+	FAIL_TO_SEND_PUSH_ALARM(HttpStatus.INTERNAL_SERVER_ERROR, "다수기기 푸시메시지 전송 실패"),
+
+
 	CREATE_TOAST_PROCCESS_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "토스트 저장 중 문제가 발생했습니다. 카테고리 또는 s3 관련 문제로 예상됩니다.")
 	;
 
