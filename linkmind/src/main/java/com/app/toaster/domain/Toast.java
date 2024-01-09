@@ -41,13 +41,16 @@ public class Toast {
 
 	private Boolean isRead;
 
+	private String thumbnailUrl;
+
 	@Builder
-	public Toast(User user, Category category, String title, String linkUrl) {
+	public Toast(User user, Category category, String title, String linkUrl, String thumbnailUrl) {
 		this.category = category;
 		this.user = user;
 		this.title = title;
 		this.linkUrl = linkUrl;
 		this.isRead = false;
+		this.thumbnailUrl = thumbnailUrl;
 	}
 
 	public void updateTitle(String title) {
@@ -60,6 +63,8 @@ public class Toast {
 
 	public void updateCategory(Category category){ this.category = category;}
 
-
+	public void updateThumbnail(String thumbnailUrl){
+		this.thumbnailUrl = thumbnailUrl;
+	}
 
 }
