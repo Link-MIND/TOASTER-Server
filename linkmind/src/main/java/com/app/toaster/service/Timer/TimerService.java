@@ -24,9 +24,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -115,15 +113,23 @@ public class TimerService {
         User presentUser = findUser(userId);
         ArrayList<Reminder> reminders = timerRepository.findAllByUser(presentUser);
 
+
         List<CompletedTimerDto> completedTimerList = reminders.stream()
                 .filter(this::isCompletedTimer)
                 .map(this::createCompletedTimerDto)
+                .sorted(Comparator.comparing(CompletedTimerDto::remindTime))
                 .collect(Collectors.toList());
+
 
         List<WaitingTimerDto> waitingTimerList = reminders.stream()
                 .filter(reminder -> !isCompletedTimer(reminder))
                 .map(this::createWaitingTimerDto)
+                .sorted(
+                        Comparator.comparing(WaitingTimerDto::isAlarm)
+                                .thenComparing(WaitingTimerDto::updateAt).reversed()
+                )
                 .collect(Collectors.toList());
+
 
         return GetTimerPageResponseDto.builder()
                 .completedTimerList(completedTimerList)
@@ -154,14 +160,14 @@ public class TimerService {
         return false;
     }
 
-    // 완료된 타이머 날짜/시간 포맷
+    // 완료된 타이머 날짜,시간 포맷
     private CompletedTimerDto createCompletedTimerDto(Reminder reminder) {
         String time = reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a hh:mm"));
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("E요일"));
         return CompletedTimerDto.of(reminder, time, date);
     }
 
-    // 대기중인 타이머 날짜/시간 포맷
+    // 대기중인 타이머 날짜,시간 포맷
     private WaitingTimerDto createWaitingTimerDto(Reminder reminder) {
         String time = reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시"));
         String dates = reminder.getRemindDates().stream()
