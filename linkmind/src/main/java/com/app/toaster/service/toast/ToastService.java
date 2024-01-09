@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +36,9 @@ public class ToastService {
 	private final S3Service s3Service;
 	private static final String TOAST_IMAGE_FOLDER_NAME = "toast/";
 
+	@Value("${static-image.root}")
+	private String BASIC_ROOT;
+
 
 	@Transactional
 	public void createToast(Long userId, SaveToastDto saveToastDto, MultipartFile image){
@@ -49,7 +53,7 @@ public class ToastService {
 				.user(presentUser)
 				.linkUrl(saveToastDto.linkUrl())
 				.title(saveToastDto.title())
-				.thumbnailUrl(imageUrl)
+				.thumbnailUrl(BASIC_ROOT+imageUrl)
 				.build();
 			// 만약 유저에게 만들어져있는 카테고리가 없는지 확인하고
 			checkCategoryIsEmpty(toast, saveToastDto.categoryId());

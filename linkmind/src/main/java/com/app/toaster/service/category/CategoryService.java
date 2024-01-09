@@ -107,13 +107,25 @@ public class CategoryService {
     public GetCategoryResponseDto getCategory(Long userId, Long categoryId, ToastFilter filter) {
         User presentUser = findUser(userId);
 
+        if (categoryId ==0){
+            List<Toast> toastAllList = toastRepository.findAll();
+            List<ToastDto> toastListDto = mapToToastDtoList(toastAllList, filter, null);
+            return GetCategoryResponseDto.builder()
+                .allToastNum(toastAllList.size())
+                .toastListDto(toastListDto)
+                .build();
+        }
+
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
 
         ArrayList<Toast> toasts = toastRepository.getAllByCategory(category);
         List<ToastDto> toastListDto = mapToToastDtoList(toasts, filter, category);
 
-        return GetCategoryResponseDto.builder().allToastNum(toasts.size()).toastListDto(toastListDto).build();
+        return GetCategoryResponseDto.builder()
+            .allToastNum(toasts.size())
+            .toastListDto(toastListDto)
+            .build();
     }
 
     //해당 유저 탐색

@@ -33,8 +33,12 @@ public class AuthService {
 
 	private final Long TOKEN_EXPIRATION_TIME_ACCESS = 1 * 60 * 1000L;
 	private final Long TOKEN_EXPIRATION_TIME_REFRESH = 3 * 60 * 1000L;
+	@Value("${static-image.root}")
+	private String BASIC_ROOT;
+
 	@Value("${static-image.url}")
 	private String BASIC_THUMBNAIL;
+
 
 	@Transactional
 	public SignInResponseDto signIn(String socialAccessToken, SignInRequestDto requestDto) {
@@ -66,7 +70,7 @@ public class AuthService {
 
 		user.updateRefreshToken(refreshToken);
 		user.updateFcmToken(fcmToken);
-		user.updateProfile(profileImage == null ? BASIC_THUMBNAIL : profileImage);
+		user.updateProfile(profileImage == null ? BASIC_ROOT+BASIC_THUMBNAIL : profileImage);
 
 
 		return SignInResponseDto.of(user.getUserId(), accessToken, refreshToken, fcmToken, isRegistered,user.getFcmIsAllowed(),
