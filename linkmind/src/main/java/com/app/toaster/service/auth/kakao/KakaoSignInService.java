@@ -1,5 +1,6 @@
 package com.app.toaster.service.auth.kakao;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +21,7 @@ public class KakaoSignInService {
 	@Value("${jwt.KAKAO_URL}")
 	private String KAKAO_URL;
 
-	public String getKaKaoId(String accessToken) {
+	public LoginResult getKaKaoId(String accessToken) {
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization","Bearer "+ accessToken);
@@ -28,6 +29,8 @@ public class KakaoSignInService {
 		ResponseEntity<Object> responseData;
 		responseData = restTemplate.postForEntity(KAKAO_URL,httpEntity,Object.class);
 		ObjectMapper objectMapper = new ObjectMapper();
-		return objectMapper.convertValue(responseData.getBody(), Map.class).get("id").toString(); //소셜 id만 가져오는듯.
+		HashMap profileResponse = (HashMap)objectMapper.convertValue( responseData.getBody(),Map.class).get("properties");
+		System.out.println(profileResponse.get("profile_image").toString());
+		return LoginResult.of(objectMapper.convertValue(responseData.getBody(), Map.class).get("id").toString(), profileResponse.get("profile_image").toString()); //소셜 id만 가져오는듯.
 	}
 }
