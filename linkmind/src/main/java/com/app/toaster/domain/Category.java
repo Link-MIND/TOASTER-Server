@@ -43,5 +43,9 @@ public class Category{
 
 	public void updateCategoryPriority(int newPriority){
 		this.priority = newPriority;}
+
+	public void updateLatestReadTime(LocalDateTime now){
+		this.latestReadTime = now;
+	}
 }
 
