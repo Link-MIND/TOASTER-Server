@@ -8,6 +8,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.0'
 	id 'io.spring.dependency-management' version '1.1.4'
+	id "io.sentry.jvm.gradle" version "4.1.1"
 }
 
 group = 'com.app'
@@ -64,8 +65,25 @@ dependencies {
 	// JSoup
 	implementation 'org.jsoup:jsoup:1.15.3'
 
+	// slack
+	implementation 'com.slack.api:slack-api-client:1.28.0'
+	implementation 'com.google.code.gson:gson:2.10.1'
+	implementation 'com.slack.api:slack-app-backend:1.28.0'
+	implementation 'com.slack.api:slack-api-model:1.28.0'
+
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+sentry {
+	// Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
+	// This enables source context, allowing you to see your source
+	// code as part of your stack traces in Sentry.
+	includeSourceContext = true
+
+	org = "linkmind"
+	projectName = "java-spring-boot"
+	authToken = System.getenv("SENTRY_AUTH_TOKEN")
 }
