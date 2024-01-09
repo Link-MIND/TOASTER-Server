@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/timer")
@@ -70,7 +72,7 @@ public class TimerController {
     @GetMapping("/main")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse getTimerPage(
-            @RequestHeader("userId") Long userId){
+            @RequestHeader("userId") Long userId) throws IOException {
         return ApiResponse.success(Success.GET_TIMER_PAGE_SUCCESS, timerService.getTimerPage(userId));
     }
 }

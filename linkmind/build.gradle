@@ -44,8 +44,8 @@ dependencies {
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
 
 
-	//FCM
-	implementation group: 'com.google.firebase', name: 'firebase-admin', version: '6.8.1'
+	// FCM
+	implementation 'com.google.firebase:firebase-admin:9.1.1'
 	implementation 'com.squareup.okhttp3:okhttp:4.10.0'  // Firebase 서버로 푸시 메시지 전송 시 필요
 
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
