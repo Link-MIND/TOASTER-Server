@@ -63,8 +63,9 @@ public class ControllerExceptionAdvice {
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(DateTimeParseException.class)
-	protected ApiResponse handleDateTimeParseException(final DateTimeParseException e){
+	protected ApiResponse handleDateTimeParseException(final DateTimeParseException e) {
 		return ApiResponse.error(Error.BAD_REQUEST_REMIND_TIME, Error.BAD_REQUEST_REMIND_TIME.getMessage());
+	}
 	
    /**
 	 * 500 Internal Server Error
