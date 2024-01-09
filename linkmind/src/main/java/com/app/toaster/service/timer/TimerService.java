@@ -12,6 +12,7 @@ import com.app.toaster.domain.Category;
 import com.app.toaster.domain.Reminder;
 import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
+import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.exception.model.UnauthorizedException;
 import com.app.toaster.infrastructure.CategoryRepository;
@@ -45,6 +46,12 @@ public class TimerService {
     @Transactional
     public void createTimer(Long userId, CreateTimerRequestDto createTimerRequestDto){
         User presentUser = findUser(userId);
+
+        int timerNum = timerRepository.findAllByUser(presentUser).size();
+
+        if(timerNum>=5){
+            throw new CustomException(Error.UNPROCESSABLE_ENTITY_CEEATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CEEATE_TIMER_EXCEPTION.getMessage());
+        }
 
         Category category = categoryRepository.findById(createTimerRequestDto.categoryId())
                 .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));

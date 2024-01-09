@@ -6,10 +6,15 @@ import com.app.toaster.controller.request.timer.CreateTimerRequestDto;
 import com.app.toaster.controller.request.timer.UpdateTimerCommentDto;
 import com.app.toaster.controller.request.timer.UpdateTimerDateTimeDto;
 import com.app.toaster.controller.response.timer.GetTimerResponseDto;
+import com.app.toaster.exception.Error;
 import com.app.toaster.exception.Success;
+import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.service.timer.TimerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -27,6 +32,7 @@ public class TimerController {
             @UserId Long userId,
             @RequestBody CreateTimerRequestDto createTimerRequestDto
             ){
+
         timerService.createTimer(userId, createTimerRequestDto);
         return ApiResponse.success(Success.CREATE_TIMER_SUCCESS);
     }
@@ -73,7 +79,7 @@ public class TimerController {
     @GetMapping("/main")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse getTimerPage(
-            @UserId Long userId){
+            @UserId Long userId) throws IOException {
         return ApiResponse.success(Success.GET_TIMER_PAGE_SUCCESS, timerService.getTimerPage(userId));
     }
 }

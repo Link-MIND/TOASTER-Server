@@ -1,6 +1,8 @@
 package com.app.toaster.common.advice;
 
 import java.net.MalformedURLException;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +31,7 @@ public class ControllerExceptionAdvice {
 	@ExceptionHandler(CustomException.class)
 	protected ResponseEntity<ApiResponse> handleCustomException(CustomException e) {
 		return ResponseEntity.status(e.getHttpStatus())
-			.body(ApiResponse.error(e.getError(), e.getMessage()));
+				.body(ApiResponse.error(e.getError(), e.getMessage()));
 	}
 
 	// @ExceptionHandler(IllegalArgumentException.class)
@@ -41,11 +43,18 @@ public class ControllerExceptionAdvice {
 	protected ResponseEntity<ApiResponse> handleConstraintDefinitionException(final MethodArgumentNotValidException e) {
 		FieldError fieldError = e.getBindingResult().getFieldError();
 		return ResponseEntity.status(e.getStatusCode())
-			.body(ApiResponse.error(Error.BAD_REQUEST_VALIDATION, fieldError.getDefaultMessage()));
+				.body(ApiResponse.error(Error.BAD_REQUEST_VALIDATION, fieldError.getDefaultMessage()));
 	}
+
 	@ExceptionHandler(MalformedURLException.class)
 	protected ApiResponse handleConstraintDefinitionException(final MalformedURLException e) {
 		return ApiResponse.error(Error.MALFORMED_URL_EXEPTION, Error.MALFORMED_URL_EXEPTION.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(DateTimeParseException.class)
+	protected ApiResponse handleDateTimeParseException(final DateTimeParseException e){
+		return ApiResponse.error(Error.BAD_REQUEST_REMIND_TIME, Error.BAD_REQUEST_REMIND_TIME.getMessage());
 	}
 
 }

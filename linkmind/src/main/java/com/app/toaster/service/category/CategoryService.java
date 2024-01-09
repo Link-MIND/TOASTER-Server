@@ -9,6 +9,7 @@ import com.app.toaster.domain.Category;
 import com.app.toaster.domain.Toast;
 import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
+import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.exception.model.UnauthorizedException;
 import com.app.toaster.infrastructure.CategoryRepository;
@@ -39,6 +40,12 @@ public class CategoryService {
 
         // 현재 최대 우선순위를 가져와서 새로운 우선순위를 설정
         int maxPriority = categoryRepository.findMaxPriority();
+
+        int categoryNum= categoryRepository.findAll().size();
+
+        if(categoryNum >= 50){
+            throw new CustomException(Error.UNPROCESSABLE_ENTITY_CEEATE_CLIP_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CEEATE_CLIP_EXCEPTION.getMessage());
+        }
 
         //카테고리 생성
         Category newCategory = Category.builder()
