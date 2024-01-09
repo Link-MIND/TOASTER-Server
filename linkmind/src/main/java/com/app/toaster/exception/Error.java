@@ -18,7 +18,8 @@ public enum Error {
 	NOT_FOUND_CATEGORY_EXCEPTION(HttpStatus.NOT_FOUND, "찾을 수 없는 카테고리 입니다."),
 	NOT_FOUND_TOAST_EXCEPTION(HttpStatus.NOT_FOUND, "찾을 수 없는 토스트 입니다."),
 	NOT_FOUND_IMAGE_EXCEPTION(HttpStatus.NOT_FOUND, "s3 서비스에서 이미지를 찾을 수 없습니다."),
-
+	NOT_FOUND_TOAST_FILTER(HttpStatus.NOT_FOUND, "유효하지 않은 필터입니다."),
+	NOT_FOUND_TIMER(HttpStatus.NOT_FOUND, "찾을 수 없는 타이머입니다."),
 
 	/**
 	 * 400 BAD REQUEST EXCEPTION
