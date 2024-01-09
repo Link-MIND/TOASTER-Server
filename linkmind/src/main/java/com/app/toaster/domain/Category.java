@@ -20,7 +20,6 @@ public class Category{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long categoryId;
 
-	@Size(max = 10, message = "클립의 이름은 최대 10자까지 입력 가능해요!")
 	private String title;
 
 	@ManyToOne(fetch = FetchType.LAZY)
