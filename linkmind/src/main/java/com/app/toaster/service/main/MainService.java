@@ -2,6 +2,7 @@ package com.app.toaster.service.main;
 
 import com.app.toaster.controller.response.category.CategoriesReponse;
 import com.app.toaster.controller.response.main.MainPageResponseDto;
+import com.app.toaster.controller.response.toast.MainToastDto;
 import com.app.toaster.domain.Category;
 import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
@@ -37,6 +38,8 @@ public class MainService {
         MainPageResponseDto mainPageResponseDto = MainPageResponseDto.builder().nickname(user.getNickname())
                 .allToastNum(allToastNum)
                 .readToastNum(readToastNum)
+                .toastListDto(toastRepository.findAll().subList(0,Math.min(3,toastRepository.findAll().size()))
+                        .stream().map(MainToastDto::of).toList())
                 .recommendedSiteListDto(recommedSiteRepository.findAll().subList(0, Math.min(9, recommedSiteRepository.findAll().size())))
                 .mainCategoryListDto(getCategory(user).stream()
                 .map(category -> CategoriesReponse.builder()
