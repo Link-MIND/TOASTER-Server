@@ -27,6 +27,7 @@ public enum Success {
 	GET_CATEORY_SUCCESS(HttpStatus.OK, "세부 카테고리 조회 성공"),
 	GET_TIMER_SUCCESS(HttpStatus.OK, "타이머 조회 성공"),
 	GET_TIMER_PAGE_SUCCESS(HttpStatus.OK, "타이머 페이지 조회 성공"),
+	GET_DUPLICATED_SUCCESS(HttpStatus.OK, "중복 여부 체크 성공"),
 
   	LOGIN_SUCCESS(HttpStatus.OK, "로그인 성공"),
 	RE_ISSUE_TOKEN_SUCCESS(HttpStatus.OK, "토큰 재발급 성공"),

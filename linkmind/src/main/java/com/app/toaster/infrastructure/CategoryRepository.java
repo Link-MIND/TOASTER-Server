@@ -63,4 +63,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     void deleteAllByUser(User user);
 
+    Boolean existsCategoriesByUserAndTitle(User user, String title);
+
 }
