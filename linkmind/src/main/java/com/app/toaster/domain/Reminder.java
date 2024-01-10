@@ -57,4 +57,8 @@ public class Reminder extends BaseTimeEntity {
 	public void updateComment(String comment){
 		this.comment = comment;
 	}
+
+	public void changeAlarm(){
+		this.isAlarm = !isAlarm;
+	}
 }

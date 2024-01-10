@@ -122,6 +122,20 @@ public class TimerService {
         timerRepository.delete(reminder);
     }
 
+    @Transactional
+    public void changeAlarm(Long userId, Long timerId){
+        User presentUser = findUser(userId);
+
+        Reminder reminder = timerRepository.findById(timerId)
+                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_TIMER, Error.NOT_FOUND_TIMER.getMessage()));
+
+        if (!presentUser.equals(reminder.getUser())){
+            throw new UnauthorizedException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
+        }
+
+        reminder.changeAlarm();
+    }
+
     public GetTimerPageResponseDto getTimerPage(Long userId) throws IOException {
         User presentUser = findUser(userId);
         ArrayList<Reminder> reminders = timerRepository.findAllByUser(presentUser);
