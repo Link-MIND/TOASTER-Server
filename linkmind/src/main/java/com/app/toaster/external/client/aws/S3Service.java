@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -115,6 +116,17 @@ public class S3Service {
 				.key(key)
 				.build()
 		);
+	}
+
+	public void deleteImages(List<String> keys) throws IOException{
+		final S3Client s3Client = awsConfig.getS3Client();
+		for (String key : keys) {
+			s3Client.deleteObject((DeleteObjectRequest.Builder builder) ->
+				builder.bucket(bucketName)
+					.key(key)
+					.build()
+			);
+		}
 	}
 
 	private void validateFileSize(MultipartFile image) {

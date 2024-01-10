@@ -18,10 +18,14 @@ import com.app.toaster.exception.model.BadRequestException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.exception.model.UnprocessableEntityException;
 import com.app.toaster.external.client.slack.SlackApi;
+import com.app.toaster.infrastructure.CategoryRepository;
+import com.app.toaster.infrastructure.TimerRepository;
+import com.app.toaster.infrastructure.ToastRepository;
 import com.app.toaster.infrastructure.UserRepository;
 import com.app.toaster.service.auth.apple.AppleSignInService;
 import com.app.toaster.service.auth.kakao.KakaoSignInService;
 import com.app.toaster.service.auth.kakao.LoginResult;
+import com.app.toaster.service.toast.ToastService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,8 +35,10 @@ public class AuthService {
 	private final AppleSignInService appleSignInService;
 	private final KakaoSignInService kakaoSignInService;
 	private final JwtService jwtService;
+	private final ToastService toastService;
 
 	private final UserRepository userRepository;
+	private final CategoryRepository categoryRepository;
 
 	private final SlackApi slackApi;
 
@@ -44,7 +50,8 @@ public class AuthService {
 
 	@Value("${static-image.url}")
 	private String BASIC_THUMBNAIL;
-
+	private final ToastRepository toastRepository;
+	private final TimerRepository timerRepository;
 
 	@Transactional
 	public SignInResponseDto signIn(String socialAccessToken, SignInRequestDto requestDto) throws IOException {
@@ -120,14 +127,15 @@ public class AuthService {
 	}
 
 	@Transactional
-	public void withdraw(Long userId){
-		User user = userRepository.findByUserId(userId).orElse(null);
-		System.out.println(userId);
-		if (user == null) {
-			throw new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage());
-		}
+	public void withdraw(Long userId) throws IOException {
+		User user = userRepository.findByUserId(userId).orElseThrow(
+			()->new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
+		toastService.deleteAllToast(user);
+		timerRepository.deleteAllByUser(user);
+		categoryRepository.deleteAllByUser(user);
 
 		Long res = userRepository.deleteByUserId(userId); //res가 삭제된 컬럼의 개수 즉, 1이 아니면 뭔가 알 수 없는 에러.
+
 		System.out.println(res + "개의 컬럼이 삭제되었습니다.");
 		if (res!=1){
 			throw new UnprocessableEntityException(Error.UNPROCESSABLE_ENTITY_DELETE_EXCEPTION, Error.UNPROCESSABLE_ENTITY_DELETE_EXCEPTION.getMessage());

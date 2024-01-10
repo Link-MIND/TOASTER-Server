@@ -9,4 +9,5 @@ import java.util.ArrayList;
 public interface TimerRepository extends JpaRepository<Reminder, Long> {
 
     ArrayList<Reminder> findAllByUser(User user);
+    void deleteAllByUser(User user);
 }

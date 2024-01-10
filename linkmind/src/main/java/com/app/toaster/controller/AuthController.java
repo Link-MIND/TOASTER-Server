@@ -52,7 +52,7 @@ public class AuthController {
 
 	@DeleteMapping("/withdraw")
 	@ResponseStatus(HttpStatus.OK)
-	public ApiResponse withdraw(@UserId Long userId){
+	public ApiResponse withdraw(@UserId Long userId) throws IOException {
 		authService.withdraw(userId);
 		return ApiResponse.success(Success.DELETE_USER_SUCCESS);
 	}

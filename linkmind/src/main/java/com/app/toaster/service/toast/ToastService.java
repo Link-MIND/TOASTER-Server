@@ -3,6 +3,8 @@ package com.app.toaster.service.toast;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -93,8 +95,22 @@ public class ToastService {
 		if (!presentUser.equals(toast.getUser())){
 			throw new UnauthorizedException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
 		}
-		s3Service.deleteImage(toast.getThumbnailUrl());
+		// BASIC_ROOT를 제외한 문자열을 추출합니다.
+		String imageKey = toast.getThumbnailUrl().replace(BASIC_ROOT, "");
+		s3Service.deleteImage(imageKey);
 		toastRepository.deleteById(toastId);
+	}
+
+	@Transactional
+	public void deleteAllToast(User user) throws IOException {
+		List<Toast> toasts = toastRepository.getAllByUser(user);
+		// BASIC_ROOT를 제외한 문자열을 추출합니다.
+		List<String> imageKeyList = toasts.stream().map(
+			(toast) -> toast.getThumbnailUrl().replace(BASIC_ROOT, ""))
+			.collect(Collectors.toList());
+		s3Service.deleteImages(imageKeyList);
+		toastRepository.deleteAllById(toasts.stream().map(
+			(toast -> toast.getId())).collect(Collectors.toList()));
 	}
 
 	private void checkCategoryIsEmpty(Toast toast, Long categoryId){

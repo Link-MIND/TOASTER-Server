@@ -61,4 +61,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     )
     List<Category> searchCategoriesByQuery(Long userId,String query);
 
+    void deleteAllByUser(User user);
+
 }
