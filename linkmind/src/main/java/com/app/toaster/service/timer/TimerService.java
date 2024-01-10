@@ -122,12 +122,9 @@ public class TimerService {
         timerRepository.delete(reminder);
     }
 
-    public GetTimerPageResponseDto getTimerPage(Long userId) throws IOException {
+    public GetTimerPageResponseDto getTimerPage(Long userId){
         User presentUser = findUser(userId);
         ArrayList<Reminder> reminders = timerRepository.findAllByUser(presentUser);
-
-        //== User 조회 API 호출 시 푸시 알림 전송! ==//
-        fcmService.pushAlarm(FCMPushRequestDto.sendTestPush(presentUser.getFcmToken()));
 
         List<CompletedTimerDto> completedTimerList = reminders.stream()
                 .filter(this::isCompletedTimer)
@@ -201,6 +198,11 @@ public class TimerService {
         String dayName = dayOfWeek.getDisplayName(java.time.format.TextStyle.FULL, Locale.getDefault());
 
         return dayName.substring(0, 1);
+    }
+
+    // 스케줄링 만들기
+    private void makeSchedule(){
+
     }
 
 }

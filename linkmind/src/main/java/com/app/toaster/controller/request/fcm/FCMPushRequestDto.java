@@ -1,5 +1,7 @@
 package com.app.toaster.controller.request.fcm;
 
+import com.app.toaster.exception.Error;
+import com.app.toaster.exception.model.CustomException;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +25,14 @@ public class FCMPushRequestDto {
 
     private String image;
 
-    public static FCMPushRequestDto sendTestPush(String targetToken) {
+    public static FCMPushRequestDto sendTestPush(String targetToken, String comment) {
 
         return FCMPushRequestDto.builder()
                 .targetToken(targetToken)
                 .title("🍞" + PushMessage.TODAY_QNA.getTitle())
-                .body(PushMessage.TODAY_QNA.getBody())
+                .body(comment)
                 .build();
+
     }
+
 }

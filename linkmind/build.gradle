@@ -71,7 +71,12 @@ dependencies {
 	implementation 'com.slack.api:slack-app-backend:1.28.0'
 	implementation 'com.slack.api:slack-api-model:1.28.0'
 
+	//sqs
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.1.RELEASE'
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-aws-messaging', version: '2.2.3.RELEASE'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '2.5.6'//나중에 메세지 유효성 검사를 위함
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()
