@@ -43,7 +43,7 @@ public class MainService {
                 .recommendedSiteListDto(recommedSiteRepository.findAll().subList(0, Math.min(9, recommedSiteRepository.findAll().size())))
                 .mainCategoryListDto(getCategory(user).stream()
                 .map(category -> CategoriesReponse.builder()
-                        .CategoryId(category.getCategoryId())
+                        .categoryId(category.getCategoryId())
                         .categoryTitle(category.getTitle())
                         .toastNum(toastRepository.getAllByCategory(category).size()).build()
                 ).collect(Collectors.toList())).build();
