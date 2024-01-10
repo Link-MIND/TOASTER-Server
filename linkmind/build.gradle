@@ -39,6 +39,7 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	implementation 'io.sentry:sentry-spring-boot-starter:5.1.0'
 	//JWT
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
@@ -75,15 +76,4 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
-}
-
-sentry {
-	// Generates a JVM (Java, Kotlin, etc.) source bundle and uploads your source code to Sentry.
-	// This enables source context, allowing you to see your source
-	// code as part of your stack traces in Sentry.
-	includeSourceContext = true
-
-	org = "linkmind"
-	projectName = "java-spring-boot"
-	authToken = System.getenv("SENTRY_TOKEN")
 }
