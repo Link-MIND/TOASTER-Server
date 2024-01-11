@@ -2,6 +2,7 @@ package com.app.toaster.controller;
 
 import com.app.toaster.common.dto.ApiResponse;
 import com.app.toaster.config.UserId;
+import com.app.toaster.config.sqs.SqsProducer;
 import com.app.toaster.controller.request.fcm.FCMPushRequestDto;
 import com.app.toaster.exception.Success;
 import com.app.toaster.service.fcm.FCMScheduler;
@@ -19,7 +20,8 @@ import java.io.IOException;
 public class FCMController {
 
     private final FCMService fcmService;
-    private final FCMScheduler fcmScheduler;
+//    private final FCMScheduler fcmScheduler;
+    private final SqsProducer sqsProducer;
 
     /**
      * 헤더와 바디를 직접 만들어 알림을 전송하는 테스트용 API
@@ -38,7 +40,8 @@ public class FCMController {
      */
     @PostMapping("/qna")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse sendTopicScheduledTest() {
-        return ApiResponse.success(Success.PUSH_ALARM_PERIODIC_SUCCESS, fcmScheduler.pushTodayTimer());
+    public ApiResponse sendTopicScheduledTest(@RequestBody FCMPushRequestDto request) {
+        sqsProducer.sendMessage(request);
+        return ApiResponse.success(Success.PUSH_ALARM_PERIODIC_SUCCESS);
     }
 }

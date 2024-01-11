@@ -1,5 +1,6 @@
 package com.app.toaster.service.fcm;
 
+import com.app.toaster.config.sqs.SqsProducer;
 import com.app.toaster.controller.request.fcm.FCMPushRequestDto;
 import com.app.toaster.domain.FCMMessage;
 import com.app.toaster.domain.Reminder;
@@ -65,6 +66,7 @@ public class FCMService {
     private static ScheduledFuture<?> scheduledFuture;
     private final TaskScheduler taskScheduler;
     private final PlatformTransactionManager transactionManager;
+    private final SqsProducer sqsProducer;
 
     @PersistenceContext
     private EntityManager em;
@@ -265,18 +267,15 @@ public class FCMService {
                 // 현재 알람이 커져있고 설정값이 동일하면 알람 전송
                 if(timer.getUser().getFcmIsAllowed()
                         && cronExpression.equals(cron)) {
-                    try {
-                        //sqs 푸시
-                        FCMPushRequestDto request = FCMPushRequestDto.builder().title("🍞토스터 🍞")
-                                .targetToken(timer.getUser().getFcmToken())
-                                .body(timer.getComment()).image("empty").build();
+                    System.out.println("================= 전송시간 =================");
+                    //sqs 푸시
+                    FCMPushRequestDto request = FCMPushRequestDto.builder().title("🍞토스터 🍞")
+                            .targetToken(timer.getUser().getFcmToken())
+                            .body(timer.getComment()).image("empty").build();
 
-                        sqsProducer.produce(request);
+                    sqsProducer.sendMessage(request);
 
-                        pushAlarm(FCMPushRequestDto.sendTestPush(timer.getUser().getFcmToken(), currentTopic));
-                    } catch (IOException e) {
-                        log.error("❌❌❌ 리마인드 알림 전송 실패");
-                    }
+//                        pushAlarm(FCMPushRequestDto.sendTestPush(timer.getUser().getFcmToken(), currentTopic));
 
                 }
 
@@ -291,7 +290,7 @@ public class FCMService {
 
     }
 
-            // 스케줄러에서 예약된 작업을 제거하는 메서드
+    // 스케줄러에서 예약된 작업을 제거하는 메서드
     public static void clearScheduledTasks() {
         if (scheduledFuture != null) {
             log.info("이전 스케줄링 예약 취소!");
