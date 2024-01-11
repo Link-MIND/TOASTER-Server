@@ -83,81 +83,7 @@ public class FCMService {
         return "알림을 성공적으로 전송했습니다. targetUserId = " + request.getTargetToken();
     }
 
-    /**
-     * 다수 기기
-     * - Firebase에 메시지를 수신하는 함수 (동일한 메시지를 2명 이상의 유저에게 발송)
-     */
-    public String multipleSendByToken(FCMPushRequestDto request, List<User> userList) {
-
-        // User 리스트에서 FCM 토큰만 꺼내와서 리스트로 저장
-        List<String> tokenList = userList.stream()
-                .map(User::getFcmToken).toList();
-
-        // 2명만 있다고 가정
-        log.info("tokenList: {}🌈,  {}🌈",tokenList.get(0), tokenList.get(1));
-
-        MulticastMessage message = makeMultipleMessage(request, tokenList);
-
-        try {
-            BatchResponse response = FirebaseMessaging.getInstance().sendMulticast(message);
-            log.info("다수 기기 알림 전송 성공 ! successCount: " + response.getSuccessCount() + " messages were sent successfully");
-            log.info("알림 전송: {}", response.getResponses().toString());
-
-            return "알림을 성공적으로 전송했습니다. \ntargetUserId = 1." + tokenList.get(0) + ", \n\n2." + tokenList.get(1);
-        } catch (FirebaseMessagingException e) {
-            log.error("다수기기 푸시메시지 전송 실패 - FirebaseMessagingException: {}", e.getMessage());
-            throw new IllegalArgumentException(Error.FAIL_TO_SEND_PUSH_ALARM.getMessage());
-        }
-    }
-
-    /**
-     * 주제 구독 등록 및 취소
-     * - 특정 타깃 토큰 없이 해당 주제를 구독한 모든 유저에 푸시 전송
-     */
-    @Transactional
-    public String pushTopicAlarm(FCMPushRequestDto request) throws IOException {
-
-        String message = makeTopicMessage(request);
-        sendPushMessage(message);
-        return "알림을 성공적으로 전송했습니다. targetUserId = " + request.getTargetToken();
-    }
-
-    // Topic 구독 설정 - application.yml에서 topic명 관리
-    // 단일 요청으로 최대 1000개의 기기를 Topic에 구독 등록 및 취소할 수 있다.
-
-    public void subscribe() throws FirebaseMessagingException {
-        // These registration tokens come from the client FCM SDKs.
-        List<String> registrationTokens = Arrays.asList(
-                "YOUR_REGISTRATION_TOKEN_1",
-                // ...
-                "YOUR_REGISTRATION_TOKEN_n"
-        );
-
-        // Subscribe the devices corresponding to the registration tokens to the topic.
-        TopicManagementResponse response = FirebaseMessaging.getInstance().subscribeToTopic(
-                registrationTokens, topic);
-
-        log.info(response.getSuccessCount() + " tokens were subscribed successfully");
-    }
-
-    // Topic 구독 취소
-    public void unsubscribe() throws FirebaseMessagingException {
-        // These registration tokens come from the client FCM SDKs.
-        List<String> registrationTokens = Arrays.asList(
-                "YOUR_REGISTRATION_TOKEN_1",
-                // ...
-                "YOUR_REGISTRATION_TOKEN_n"
-        );
-
-        // Unsubscribe the devices corresponding to the registration tokens from the topic.
-        TopicManagementResponse response = FirebaseMessaging.getInstance().unsubscribeFromTopic(
-                registrationTokens, topic);
-
-        log.info(response.getSuccessCount() + " tokens were unsubscribed successfully");
-    }
-
     // 요청 파라미터를 FCM의 body 형태로 만들어주는 메서드 [단일 기기]
-
     private String makeSingleMessage(FCMPushRequestDto request) throws JsonProcessingException {
 
         FCMMessage fcmMessage = FCMMessage.builder()
@@ -175,38 +101,6 @@ public class FCMService {
         return objectMapper.writeValueAsString(fcmMessage);
     }
 
-    // 요청 파라미터를 FCM의 body 형태로 만들어주는 메서드 [주제 구독]
-    private String makeTopicMessage(FCMPushRequestDto request) throws JsonProcessingException {
-
-        FCMMessage fcmMessage = FCMMessage.builder()
-                .message(FCMMessage.Message.builder()
-                        .topic(topic)   // 토픽 구독에서 반드시 필요한 설정 (token 지정 x)
-                        .notification(FCMMessage.Notification.builder()
-                                .title(request.getTitle())
-                                .body(request.getBody())
-                                .image(request.getImage())
-                                .build())
-                        .build()
-                ).validateOnly(false)
-                .build();
-
-        return objectMapper.writeValueAsString(fcmMessage);
-    }
-
-    // 요청 파라미터를 FCM의 body 형태로 만들어주는 메서드 [다수 기기]
-    private static MulticastMessage makeMultipleMessage(FCMPushRequestDto request, List<String> tokenList) {
-        MulticastMessage message = MulticastMessage.builder()
-                .setNotification(Notification.builder()
-                        .setTitle(request.getTitle())
-                        .setBody(request.getBody())
-                        .setImage(request.getImage())
-                        .build())
-                .addAllTokens(tokenList)
-                .build();
-
-        log.info("message: {}", request.getTitle() +" "+ request.getBody());
-        return message;
-    }
 
     // 실제 파이어베이스 서버로 푸시 메시지를 전송하는 메서드
     private void sendPushMessage(String message) throws IOException {
@@ -260,13 +154,8 @@ public class FCMService {
 
                 String cron = String.format("0 %s %s * * ?", timer.getRemindTime().getMinute(),timer.getRemindTime().getHour());
 
-
-                String currentTopic = timer.getComment();
-
-
                 // 현재 알람이 커져있고 설정값이 동일하면 알람 전송
-                if(timer.getUser().getFcmIsAllowed()
-                        && cronExpression.equals(cron)) {
+                if(timer.getIsAlarm() && timer.getUser().getFcmIsAllowed() && cronExpression.equals(cron)) {
                     System.out.println("================= 전송시간 =================");
                     //sqs 푸시
                     FCMPushRequestDto request = FCMPushRequestDto.builder().title("🍞토스터 🍞")
@@ -274,8 +163,6 @@ public class FCMService {
                             .body(timer.getComment()).image("empty").build();
 
                     sqsProducer.sendMessage(request);
-
-//                        pushAlarm(FCMPushRequestDto.sendTestPush(timer.getUser().getFcmToken(), currentTopic));
 
                 }
 

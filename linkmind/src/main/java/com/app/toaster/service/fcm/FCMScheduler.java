@@ -20,7 +20,7 @@ public class FCMScheduler {
 
     private final ObjectMapper objectMapper;  // FCM의 body 형태에 따라 생성한 값을 문자열로 저장하기 위한 Mapper 클래스
 
-    @Scheduled(cron = "0 37 3 * * ?", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 0 0 * * ?", zone = "Asia/Seoul")
     public String pushTodayTimer()  {
 
         log.info("리마인드 알람");

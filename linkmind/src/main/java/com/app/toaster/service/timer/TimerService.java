@@ -38,9 +38,6 @@ public class TimerService {
     private final CategoryRepository categoryRepository;
     private final TimerRepository timerRepository;
 
-    // 푸시알림 활성화가 필요한 로직이라면, FCMService를 주입!
-    private final FCMService fcmService;
-
     private LocalDateTime now;
 
     @Transactional
