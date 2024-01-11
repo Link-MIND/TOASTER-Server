@@ -15,6 +15,7 @@ import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.Success;
 import com.app.toaster.exception.model.BadRequestException;
+import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.exception.model.UnprocessableEntityException;
 import com.app.toaster.external.client.slack.SlackApi;
@@ -127,10 +128,14 @@ public class AuthService {
 	}
 
 	@Transactional
-	public void withdraw(Long userId) throws IOException {
+	public void withdraw(Long userId) {
 		User user = userRepository.findByUserId(userId).orElseThrow(
 			()->new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
-		toastService.deleteAllToast(user);
+		try {
+			toastService.deleteAllToast(user);
+		}catch (IOException e){
+			throw new CustomException(Error.UNPROCESSABLE_ENTITY_DELETE_EXCEPTION, Error.UNPROCESSABLE_ENTITY_DELETE_EXCEPTION.getMessage());
+		}
 		timerRepository.deleteAllByUser(user);
 		categoryRepository.deleteAllByUser(user);
 
