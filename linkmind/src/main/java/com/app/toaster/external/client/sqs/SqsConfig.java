@@ -1,4 +1,4 @@
-package com.app.toaster.config.sqs;
+package com.app.toaster.external.client.sqs;
 
 import io.awspring.cloud.sqs.config.SqsBootstrapConfiguration;
 import io.awspring.cloud.sqs.config.SqsMessageListenerContainerFactory;

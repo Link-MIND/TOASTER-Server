@@ -1,6 +1,6 @@
-package com.app.toaster.config.sqs;
+package com.app.toaster.external.client.sqs;
 
-import com.app.toaster.service.fcm.FCMService;
+import com.app.toaster.external.client.fcm.FCMService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.TaskScheduler;

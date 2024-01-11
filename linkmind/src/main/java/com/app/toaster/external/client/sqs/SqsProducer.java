@@ -1,4 +1,4 @@
-package com.app.toaster.config.sqs;
+package com.app.toaster.external.client.sqs;
 
 import com.app.toaster.controller.request.fcm.FCMPushRequestDto;
 import com.fasterxml.jackson.core.JsonProcessingException;

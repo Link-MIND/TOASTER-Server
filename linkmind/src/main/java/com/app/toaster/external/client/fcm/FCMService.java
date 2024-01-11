@@ -1,30 +1,22 @@
-package com.app.toaster.service.fcm;
+package com.app.toaster.external.client.fcm;
 
-import com.app.toaster.config.sqs.SqsProducer;
+import com.app.toaster.external.client.sqs.SqsProducer;
 import com.app.toaster.controller.request.fcm.FCMPushRequestDto;
-import com.app.toaster.domain.FCMMessage;
+import com.app.toaster.external.client.fcm.FCMMessage;
 import com.app.toaster.domain.Reminder;
-import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.infrastructure.TimerRepository;
-import com.app.toaster.infrastructure.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.messaging.BatchResponse;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PessimisticLockException;
 import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.scheduling.TaskScheduler;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.MulticastMessage;
-import com.google.firebase.messaging.Notification;
-import com.google.firebase.messaging.TopicManagementResponse;
+
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 

@@ -1,6 +1,5 @@
 package com.app.toaster.service.timer;
 
-import com.app.toaster.controller.request.fcm.FCMPushRequestDto;
 import com.app.toaster.controller.request.timer.CreateTimerRequestDto;
 import com.app.toaster.controller.request.timer.UpdateTimerCommentDto;
 import com.app.toaster.controller.request.timer.UpdateTimerDateTimeDto;
@@ -18,12 +17,10 @@ import com.app.toaster.exception.model.UnauthorizedException;
 import com.app.toaster.infrastructure.CategoryRepository;
 import com.app.toaster.infrastructure.TimerRepository;
 import com.app.toaster.infrastructure.UserRepository;
-import com.app.toaster.service.fcm.FCMService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;

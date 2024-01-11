@@ -1,7 +1,5 @@
-package com.app.toaster.service.fcm;
+package com.app.toaster.external.client.fcm;
 
-import com.app.toaster.config.sqs.SqsProducer;
-import com.app.toaster.controller.request.fcm.FCMPushRequestDto;
 import com.app.toaster.infrastructure.TimerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +26,7 @@ public class FCMScheduler {
         // 오늘 요일
         int today = LocalDateTime.now().getDayOfMonth();
 
-        // 리마인드 요일이 오늘인 타이머를 모두 가져와서 각 타이머 설정 시간에 맞춰서 cron 생성
+        // TODO : 리마인드 요일이 오늘인 타이머를 모두 가져와서 각 타이머 설정 시간에 맞춰서 cron 생성
         timerRepository.findAll().forEach(timer -> {
             System.out.println("timerId : " + timer.getId());
             String cronExpression = String.format("0 %s %s * * ?", timer.getRemindTime().getMinute(),timer.getRemindTime().getHour());

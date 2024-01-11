@@ -1,7 +1,7 @@
-package com.app.toaster.config.sqs;
+package com.app.toaster.external.client.sqs;
 
 import com.app.toaster.controller.request.fcm.FCMPushRequestDto;
-import com.app.toaster.service.fcm.FCMService;
+import com.app.toaster.external.client.fcm.FCMService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.awspring.cloud.sqs.annotation.SqsListener;
 import lombok.RequiredArgsConstructor;

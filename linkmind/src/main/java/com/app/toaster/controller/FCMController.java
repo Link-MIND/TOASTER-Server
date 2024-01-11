@@ -1,12 +1,10 @@
 package com.app.toaster.controller;
 
 import com.app.toaster.common.dto.ApiResponse;
-import com.app.toaster.config.UserId;
-import com.app.toaster.config.sqs.SqsProducer;
+import com.app.toaster.external.client.sqs.SqsProducer;
 import com.app.toaster.controller.request.fcm.FCMPushRequestDto;
 import com.app.toaster.exception.Success;
-import com.app.toaster.service.fcm.FCMScheduler;
-import com.app.toaster.service.fcm.FCMService;
+import com.app.toaster.external.client.fcm.FCMService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

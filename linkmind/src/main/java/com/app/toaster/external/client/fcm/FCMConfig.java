@@ -1,4 +1,4 @@
-package com.app.toaster.config.fcm;
+package com.app.toaster.external.client.fcm;
 
 import com.app.toaster.controller.request.fcm.FCMPushRequestDto;
 import com.google.auth.oauth2.GoogleCredentials;
