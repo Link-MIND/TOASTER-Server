@@ -1,7 +1,10 @@
 package com.app.toaster.controller;
 
 import java.io.IOException;
+import java.util.List;
 
+import com.app.toaster.controller.response.toast.WeekSiteDto;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -77,6 +80,14 @@ public class ToastController {
 	) throws IOException {
 		toastService.deleteToast(userId, toastId);
 		return ApiResponse.success(Success.DELETE_TOAST_SUCCESS);
+	}
+
+	@GetMapping("/week")
+	@ResponseStatus(HttpStatus.OK)
+	public ApiResponse<List<WeekSiteDto>> getWeekLinks(
+			@UserId Long userId
+	) {
+		return ApiResponse.success(Success.GET_LINKS_SUCCESS, toastService.getWeekLinks());
 	}
 
 

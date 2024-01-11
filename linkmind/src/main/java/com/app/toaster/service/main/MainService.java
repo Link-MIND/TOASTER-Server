@@ -1,8 +1,5 @@
 package com.app.toaster.service.main;
 
-import com.app.toaster.controller.response.category.CategoriesReponse;
-import com.app.toaster.controller.response.main.MainPageResponseDto;
-import com.app.toaster.controller.response.toast.MainToastDto;
 import com.app.toaster.domain.Category;
 import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
@@ -28,28 +25,28 @@ public class MainService {
     private final RecommedSiteRepository recommedSiteRepository;
 
 
-    public MainPageResponseDto getMainPage(Long userId) {
-        User user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
-
-        int allToastNum = toastRepository.getAllByUser(user).size();
-        int readToastNum = toastRepository.getAllByUserAndIsReadIsTrue(user).size();
-
-        MainPageResponseDto mainPageResponseDto = MainPageResponseDto.builder().nickname(user.getNickname())
-                .allToastNum(allToastNum)
-                .readToastNum(readToastNum)
-                .toastListDto(toastRepository.findAll().subList(0,Math.min(3,toastRepository.findAll().size()))
-                        .stream().map(MainToastDto::of).toList())
-                .recommendedSiteListDto(recommedSiteRepository.findAll().subList(0, Math.min(9, recommedSiteRepository.findAll().size())))
-                .mainCategoryListDto(getCategory(user).stream()
-                .map(category -> CategoriesReponse.builder()
-                        .categoryId(category.getCategoryId())
-                        .categoryTitle(category.getTitle())
-                        .toastNum(toastRepository.getAllByCategory(category).size()).build()
-                ).collect(Collectors.toList())).build();
-
-        return mainPageResponseDto;
-    }
+//    public MainPageResponseDto getMainPage(Long userId) {
+//        User user = userRepository.findByUserId(userId)
+//                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
+//
+//        int allToastNum = toastRepository.getAllByUser(user).size();
+//        int readToastNum = toastRepository.getAllByUserAndIsReadIsTrue(user).size();
+//
+//        MainPageResponseDto mainPageResponseDto = MainPageResponseDto.builder().nickname(user.getNickname())
+//                .allToastNum(allToastNum)
+//                .readToastNum(readToastNum)
+//                .toastListDto(toastRepository.findAll().subList(0,Math.min(3,toastRepository.findAll().size()))
+//                        .stream().map(MainToastDto::of).toList())
+//                .recommendedSiteListDto(recommedSiteRepository.findAll().subList(0, Math.min(9, recommedSiteRepository.findAll().size())))
+//                .mainCategoryListDto(getCategory(user).stream()
+//                .map(category -> CategoriesReponse.builder()
+//                        .categoryId(category.getCategoryId())
+//                        .categoryTitle(category.getTitle())
+//                        .toastNum(toastRepository.getAllByCategory(category).size()).build()
+//                ).collect(Collectors.toList())).build();
+//
+//        return mainPageResponseDto;
+//    }
 
     private ArrayList<Category> getCategory(User user){
 

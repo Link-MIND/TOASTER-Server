@@ -1,8 +1,5 @@
 package com.app.toaster.service.recommendSite;
 
-import com.app.toaster.controller.response.category.CategoriesReponse;
-import com.app.toaster.controller.response.main.MainPageResponseDto;
-import com.app.toaster.controller.response.toast.MainToastDto;
 import com.app.toaster.domain.RecommendSite;
 import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;

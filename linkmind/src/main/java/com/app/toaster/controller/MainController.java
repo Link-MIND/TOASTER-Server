@@ -31,11 +31,11 @@ public class MainController {
 		return searchService.searchMain(userId,query);
 	}
 
-	@GetMapping
-	@ResponseStatus(HttpStatus.OK)
-	public ApiResponse<MainPageResponseDto> getTimer(
-			@UserId Long userId) {
-
-		return ApiResponse.success(Success.GET_TIMER_SUCCESS,mainService.getMainPage(userId) );
-	}
+//	@GetMapping
+//	@ResponseStatus(HttpStatus.OK)
+//	public ApiResponse<MainPageResponseDto> getTimer(
+//			@UserId Long userId) {
+//
+//		return ApiResponse.success(Success.GET_TIMER_SUCCESS,mainService.getMainPage(userId) );
+//	}
 }
