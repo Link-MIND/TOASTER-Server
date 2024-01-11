@@ -9,5 +9,5 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Builder
-public record MainPageResponseDto(String nickname, int readToastNum, int allToastNum, List<CategoriesReponse> mainCategoryListDto, List<WeekSiteDto> toastListDto, List<RecommendSite> recommendedSiteListDto) {
+public record MainPageResponseDto(String nickname, int readToastNum, int allToastNum, List<CategoriesReponse> mainCategoryListDto) {
 }
