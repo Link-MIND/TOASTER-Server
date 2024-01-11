@@ -71,6 +71,8 @@ dependencies {
 	implementation 'com.slack.api:slack-app-backend:1.28.0'
 	implementation 'com.slack.api:slack-api-model:1.28.0'
 
+	implementation 'io.sentry:sentry-spring-boot-starter:5.7.0'
+
 }
 
 tasks.named('test') {

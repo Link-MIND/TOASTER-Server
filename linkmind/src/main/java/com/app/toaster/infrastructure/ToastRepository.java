@@ -39,4 +39,5 @@ public interface ToastRepository extends JpaRepository<Toast, Long> {
 	Long countALLByUserAndIsReadTrue(User user);
 
 	Long countAllByUserAndIsReadFalse(User user);
+
 }
