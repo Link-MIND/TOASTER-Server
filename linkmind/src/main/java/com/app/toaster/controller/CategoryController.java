@@ -43,7 +43,7 @@ public class CategoryController {
             @UserId Long userId,
             @RequestBody DeleteCategoryDto deleteCategoryDto
     ){
-        categoryService.deleteCategory(userId, deleteCategoryDto);
+        categoryService.deleteCategory(deleteCategoryDto);
         return ApiResponse.success(Success.DELETE_CATEGORY_SUCCESS);
     }
 
@@ -59,7 +59,7 @@ public class CategoryController {
             @UserId Long userId,
             @RequestBody EditCategoryRequestDto editCategoryRequestDto
     ){
-        categoryService.editCategories(userId, editCategoryRequestDto);
+        categoryService.editCategories(editCategoryRequestDto);
         return ApiResponse.success(Success.UPDATE_CATEGORY_TITLE_SUCCESS);
     }
 
@@ -77,6 +77,11 @@ public class CategoryController {
     @GetMapping("/search")
     public ApiResponse searchProducts(@UserId Long userId ,@RequestParam("query") String query){
       return searchService.searchMain(userId,query);
+    }
+
+    @GetMapping("/check")
+    public ApiResponse checkDuplicatedNickname(@UserId Long userId ,@RequestParam("title") String title){
+        return ApiResponse.success(Success.GET_DUPLICATED_SUCCESS, categoryService.checkDuplicatedTitle(userId,title));
     }
 
 }

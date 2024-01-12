@@ -50,7 +50,7 @@ public class TimerService {
         int timerNum = timerRepository.findAllByUser(presentUser).size();
 
         if(timerNum>=5){
-            throw new CustomException(Error.UNPROCESSABLE_ENTITY_CEEATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CEEATE_TIMER_EXCEPTION.getMessage());
+            throw new CustomException(Error.UNPROCESSABLE_ENTITY_CREATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CREATE_TIMER_EXCEPTION.getMessage());
         }
 
         Category category = categoryRepository.findById(createTimerRequestDto.categoryId())
@@ -63,7 +63,7 @@ public class TimerService {
                 .remindDates(createTimerRequestDto.remindDates())
                 .remindTime(LocalTime.parse(createTimerRequestDto.remindTime()))
                 .isAlarm(true)
-                .comment(category.getTitle() + " 링크들을 읽기 딱 좋은 시간이에요!")
+                .comment(category.getTitle())
                 .build();
 
 
@@ -87,7 +87,7 @@ public class TimerService {
         if (!presentUser.equals(reminder.getUser())){
             throw new UnauthorizedException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
         }
-        reminder.updateRemindDates(updateTimerDateTimeDto.remindDate());
+        reminder.updateRemindDates(updateTimerDateTimeDto.remindDates());
         reminder.updateRemindTime(updateTimerDateTimeDto.remindTime());
 
     }
@@ -136,12 +136,9 @@ public class TimerService {
         reminder.changeAlarm();
     }
 
-    public GetTimerPageResponseDto getTimerPage(Long userId) throws IOException {
+    public GetTimerPageResponseDto getTimerPage(Long userId){
         User presentUser = findUser(userId);
         ArrayList<Reminder> reminders = timerRepository.findAllByUser(presentUser);
-
-        //== User 조회 API 호출 시 푸시 알림 전송! ==//
-        fcmService.pushAlarm(FCMPushRequestDto.sendTestPush(presentUser.getFcmToken()));
 
         List<CompletedTimerDto> completedTimerList = reminders.stream()
                 .filter(this::isCompletedTimer)
