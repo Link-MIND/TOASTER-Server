@@ -63,7 +63,7 @@ public class TimerService {
                 .remindDates(createTimerRequestDto.remindDates())
                 .remindTime(LocalTime.parse(createTimerRequestDto.remindTime()))
                 .isAlarm(true)
-                .comment(category.getTitle() + " 링크들을 읽기 딱 좋은 시간이에요!")
+                .comment(category.getTitle())
                 .build();
 
 
