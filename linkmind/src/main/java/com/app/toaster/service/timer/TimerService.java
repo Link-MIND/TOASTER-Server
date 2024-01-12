@@ -63,7 +63,7 @@ public class TimerService {
                 .remindDates(createTimerRequestDto.remindDates())
                 .remindTime(LocalTime.parse(createTimerRequestDto.remindTime()))
                 .isAlarm(true)
-                .comment(category.getTitle() + " 링크들을 읽기 딱 좋은 시간이에요!")
+                .comment(category.getTitle())
                 .build();
 
 
@@ -120,6 +120,20 @@ public class TimerService {
         }
 
         timerRepository.delete(reminder);
+    }
+
+    @Transactional
+    public void changeAlarm(Long userId, Long timerId){
+        User presentUser = findUser(userId);
+
+        Reminder reminder = timerRepository.findById(timerId)
+                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_TIMER, Error.NOT_FOUND_TIMER.getMessage()));
+
+        if (!presentUser.equals(reminder.getUser())){
+            throw new UnauthorizedException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
+        }
+
+        reminder.changeAlarm();
     }
 
     public GetTimerPageResponseDto getTimerPage(Long userId) throws IOException {

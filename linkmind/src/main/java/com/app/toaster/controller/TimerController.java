@@ -82,4 +82,13 @@ public class TimerController {
             @UserId Long userId) throws IOException {
         return ApiResponse.success(Success.GET_TIMER_PAGE_SUCCESS, timerService.getTimerPage(userId));
     }
+
+    @PatchMapping("/alarm/{timerId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse changeAlarm(
+            @UserId Long userId,
+            @PathVariable Long timerId) {
+        timerService.changeAlarm(userId, timerId);
+        return ApiResponse.success(Success.CHANGE_TIMER_ALARM_SUCCESS);
+    }
 }
