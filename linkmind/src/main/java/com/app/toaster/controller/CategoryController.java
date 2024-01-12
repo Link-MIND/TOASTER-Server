@@ -79,4 +79,9 @@ public class CategoryController {
       return searchService.searchMain(userId,query);
     }
 
+    @GetMapping("/check")
+    public ApiResponse checkDuplicatedNickname(@UserId Long userId ,@RequestParam("title") String title){
+        return ApiResponse.success(Success.GET_DUPLICATED_SUCCESS, categoryService.checkDuplicatedTitle(userId,title));
+    }
+
 }

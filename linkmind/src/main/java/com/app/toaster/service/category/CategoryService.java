@@ -1,6 +1,7 @@
 package com.app.toaster.service.category;
 
 import com.app.toaster.controller.request.category.*;
+import com.app.toaster.controller.response.category.DuplicatedResponse;
 import com.app.toaster.controller.response.toast.ToastDto;
 import com.app.toaster.controller.response.toast.ToastFilter;
 import com.app.toaster.controller.response.category.CategoriesReponse;
@@ -44,7 +45,7 @@ public class CategoryService {
         int categoryNum= categoryRepository.findAll().size();
 
         if(categoryNum >= 50){
-            throw new CustomException(Error.UNPROCESSABLE_ENTITY_CEEATE_CLIP_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CEEATE_CLIP_EXCEPTION.getMessage());
+            throw new CustomException(Error.UNPROCESSABLE_ENTITY_CREATE_CLIP_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CREATE_CLIP_EXCEPTION.getMessage());
         }
 
         //카테고리 생성
@@ -163,5 +164,10 @@ public class CategoryService {
         }
 
         return toastStream.map(ToastDto::of).toList();
+    }
+
+    public DuplicatedResponse checkDuplicatedTitle(Long userId, String title){
+        return DuplicatedResponse.of(categoryRepository.existsCategoriesByUserAndTitle(findUser(userId), title));
+
     }
 }
