@@ -37,7 +37,7 @@ public class ControllerExceptionAdvice {
 	 */
 	@ExceptionHandler(CustomException.class)
 	protected ResponseEntity<ApiResponse> handleCustomException(CustomException e) {
-		// Sentry.captureException(e);
+		Sentry.captureException(e);
 		return ResponseEntity.status(e.getHttpStatus())
 				.body(ApiResponse.error(e.getError(), e.getMessage()));
 	}
@@ -50,14 +50,14 @@ public class ControllerExceptionAdvice {
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	protected ResponseEntity<ApiResponse> handleConstraintDefinitionException(final MethodArgumentNotValidException e) {
 		FieldError fieldError = e.getBindingResult().getFieldError();
-		// Sentry.captureException(e);
+		Sentry.captureException(e);
 		return ResponseEntity.status(e.getStatusCode())
 				.body(ApiResponse.error(Error.BAD_REQUEST_VALIDATION, fieldError.getDefaultMessage()));
 	}
 
 	@ExceptionHandler(MalformedURLException.class)
 	protected ApiResponse handleConstraintDefinitionException(final MalformedURLException e) {
-		// Sentry.captureException(e);
+		Sentry.captureException(e);
 		return ApiResponse.error(Error.MALFORMED_URL_EXEPTION, Error.MALFORMED_URL_EXEPTION.getMessage());
 	}
 
@@ -74,8 +74,8 @@ public class ControllerExceptionAdvice {
 	@ExceptionHandler(Exception.class)
 	protected ApiResponse<Object> handleException(final Exception error, final HttpServletRequest request) throws
 		IOException {
-		slackApi.sendAlert(error, request);
-		// Sentry.captureException(error);
+		// slackApi.sendAlert(error, request);
+		Sentry.captureException(error);
 		return ApiResponse.error(Error.INTERNAL_SERVER_ERROR);
 	}
 
