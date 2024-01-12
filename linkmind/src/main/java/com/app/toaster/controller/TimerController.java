@@ -79,7 +79,7 @@ public class TimerController {
     @GetMapping("/main")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse getTimerPage(
-            @UserId Long userId) throws IOException {
+            @UserId Long userId){
         return ApiResponse.success(Success.GET_TIMER_PAGE_SUCCESS, timerService.getTimerPage(userId));
     }
 
