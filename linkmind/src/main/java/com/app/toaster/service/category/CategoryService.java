@@ -16,6 +16,7 @@ import com.app.toaster.infrastructure.CategoryRepository;
 import com.app.toaster.infrastructure.ToastRepository;
 import com.app.toaster.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,16 +35,18 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final ToastRepository toastRepository;
 
+    private final static int MAX_CATERGORY_NUMBER = 50;
+
     @Transactional
-    public void createCategory(Long userId, CreateCategoryDto createCategoryDto){
+    public void createCategory(final Long userId, final CreateCategoryDto createCategoryDto){
         User presentUser = findUser(userId);
 
         // 현재 최대 우선순위를 가져와서 새로운 우선순위를 설정
-        int maxPriority = categoryRepository.findMaxPriority();
+        val maxPriority = categoryRepository.findMaxPriority();
 
-        int categoryNum= categoryRepository.findAll().size();
+        val categoryNum= categoryRepository.findAllByUser(presentUser).size();
 
-        if(categoryNum >= 50){
+        if(categoryNum >= MAX_CATERGORY_NUMBER){
             throw new CustomException(Error.UNPROCESSABLE_ENTITY_CEEATE_CLIP_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CEEATE_CLIP_EXCEPTION.getMessage());
         }
 
@@ -58,9 +61,10 @@ public class CategoryService {
     }
 
     @Transactional
-    public void deleteCategory(Long userId, DeleteCategoryDto deleteCategoryDto){
+    public void deleteCategory(final DeleteCategoryDto deleteCategoryDto){
 
         toastRepository.updateCategoryIdsToNull(deleteCategoryDto.deleteCategoryList());
+
         for (Long categoryId : deleteCategoryDto.deleteCategoryList()) {
             Category category = categoryRepository.findById(categoryId)
                     .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
@@ -72,7 +76,7 @@ public class CategoryService {
 
     }
 
-    public List<CategoriesReponse> getCategories(Long userId){
+    public List<CategoriesReponse> getCategories(final Long userId){
         User presentUser = findUser(userId);
 
         return categoryRepository.findAllByUserOrderByPriority(presentUser)
@@ -86,7 +90,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public void editCategories(Long userId, EditCategoryRequestDto editCategoryRequestDto){
+    public void editCategories(final EditCategoryRequestDto editCategoryRequestDto){
         //제목 업데이트
         editCategoryRequestDto.changeCategoryTitleList().forEach(request ->
                 categoryRepository.updateCategoryTitle(request.categoryId(), request.newTitle()));
@@ -107,13 +111,11 @@ public class CategoryService {
             else if (currentPriority > newPriority)
                 categoryRepository.increasePriorityByOne(categoryId, currentPriority, newPriority);
 
-
         }
 
     }
 
-    public GetCategoryResponseDto getCategory(Long userId, Long categoryId, ToastFilter filter) {
-        User presentUser = findUser(userId);
+    public GetCategoryResponseDto getCategory(final Long userId, final Long categoryId, final ToastFilter filter) {
 
         if (categoryId ==0){
             List<Toast> toastAllList = toastRepository.findAll();
@@ -146,21 +148,13 @@ public class CategoryService {
     }
 
     private List<ToastDto> mapToToastDtoList(List<Toast> toasts, ToastFilter filter, Category category) {
-        Stream<Toast> toastStream;
-
-        switch (filter) {
-            case ALL:
-                toastStream = toasts.stream();
-                break;
-            case READ:
-                toastStream = toastRepository.findByIsReadAndCategory(true, category).stream();
-                break;
-            case UNREAD:
-                toastStream = toastRepository.findByIsReadAndCategory(false, category).stream();
-                break;
-            default:
-                throw new NotFoundException(Error.NOT_FOUND_TOAST_FILTER, Error.NOT_FOUND_TOAST_FILTER.getMessage());
-        }
+        Stream<Toast> toastStream = switch (filter) {
+            case ALL -> toasts.stream();
+            case READ -> toastRepository.findByIsReadAndCategory(true, category).stream();
+            case UNREAD -> toastRepository.findByIsReadAndCategory(false, category).stream();
+            default ->
+                    throw new NotFoundException(Error.NOT_FOUND_TOAST_FILTER, Error.NOT_FOUND_TOAST_FILTER.getMessage());
+        };
 
         return toastStream.map(ToastDto::of).toList();
     }

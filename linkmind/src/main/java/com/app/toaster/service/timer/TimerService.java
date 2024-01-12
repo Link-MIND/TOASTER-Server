@@ -87,7 +87,7 @@ public class TimerService {
         if (!presentUser.equals(reminder.getUser())){
             throw new UnauthorizedException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
         }
-        reminder.updateRemindDates(updateTimerDateTimeDto.remindDate());
+        reminder.updateRemindDates(updateTimerDateTimeDto.remindDates());
         reminder.updateRemindTime(updateTimerDateTimeDto.remindTime());
 
     }

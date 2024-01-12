@@ -1,4 +1,10 @@
 package com.app.toaster.controller.request.category;
 
-public record ChangeCateoryPriorityDto(Long categoryId, int newPriority) {
+import jakarta.validation.constraints.NotNull;
+
+public record ChangeCateoryPriorityDto(
+        @NotNull
+        Long categoryId,
+        @NotNull
+        int newPriority) {
 }
