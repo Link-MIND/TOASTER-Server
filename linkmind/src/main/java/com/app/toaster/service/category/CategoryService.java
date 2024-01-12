@@ -48,7 +48,7 @@ public class CategoryService {
         val categoryNum= categoryRepository.findAllByUser(presentUser).size();
 
         if(categoryNum >= MAX_CATERGORY_NUMBER){
-            throw new CustomException(Error.UNPROCESSABLE_ENTITY_CEEATE_CLIP_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CEEATE_CLIP_EXCEPTION.getMessage());
+            throw new CustomException(Error.UNPROCESSABLE_ENTITY_CREATE_CLIP_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CREATE_CLIP_EXCEPTION.getMessage());
         }
 
         //카테고리 생성
