@@ -29,11 +29,12 @@ public enum Success {
 	GET_CATEORY_SUCCESS(HttpStatus.OK, "세부 카테고리 조회 성공"),
 	GET_TIMER_SUCCESS(HttpStatus.OK, "타이머 조회 성공"),
 	GET_TIMER_PAGE_SUCCESS(HttpStatus.OK, "타이머 페이지 조회 성공"),
+	GET_DUPLICATED_SUCCESS(HttpStatus.OK, "중복 여부 체크 성공"),
 
   	LOGIN_SUCCESS(HttpStatus.OK, "로그인 성공"),
 	RE_ISSUE_TOKEN_SUCCESS(HttpStatus.OK, "토큰 재발급 성공"),
 	SIGNOUT_SUCCESS(HttpStatus.OK, "로그아웃 성공"),
-	DELETE_USER_SUCCESS(HttpStatus.OK, "유저 삭제 성공"),
+	DELETE_USER_SUCCESS(HttpStatus.OK, "회원 탈퇴가 정상적으로 이루어졌습니다."),
 	DELETE_TOAST_SUCCESS(HttpStatus.OK, "토스트 삭제 성공"),
 	DELETE_CATEGORY_SUCCESS(HttpStatus.OK, "카테고리 삭제 성공"),
 	DELETE_TIMER_SUCCESS(HttpStatus.OK, "타이머 삭제 성공"),

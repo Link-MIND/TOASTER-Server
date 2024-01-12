@@ -20,8 +20,10 @@ import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.external.client.aws.AWSConfig;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class ParsingService {
 	private final String BASIC_THUMBNAIL;
 
@@ -32,15 +34,21 @@ public class ParsingService {
 	public OgResponse getOg(String linkUrl) throws IOException {
 		try {
 			String title = getTitle(linkUrl);
+			log.info(title);
 			String image = getImage(linkUrl);
+			log.info(image);
 			return OgResponse.of(
-				title == null || title.isBlank() ? "15자 내로 제목을 지어주세요." : title,
+				title == null || title.isBlank() ? "기본 토스트 제목" : title,
 				image == null || image.isBlank() ? BASIC_THUMBNAIL : image
 			);
 		}catch (org.jsoup.HttpStatusException e){
 			return OgResponse.of("15자 내로 제목을 지어주세요.", BASIC_THUMBNAIL);
 		}
 	}
+	// public String getOg(String linkUrl) throws IOException {
+	// 	String image = getImage(linkUrl);
+	// 	return image == null || image.isBlank() ? BASIC_THUMBNAIL : image;
+	// }
 
 	private String getTitle(String linkUrl) throws IOException {
 		try {
@@ -57,7 +65,7 @@ public class ParsingService {
 
 	}
 
-	private String getImage(String linkUrl) throws IOException {
+	private String getImage(String linkUrl){
 		try {
 			Document doc = Jsoup.connect(linkUrl).get();
 			Elements iframes = doc.select("iframe");
@@ -74,6 +82,8 @@ public class ParsingService {
 			throw new CustomException(Error.MALFORMED_URL_EXEPTION,Error.MALFORMED_URL_EXEPTION.getMessage());
 		}catch (org.jsoup.HttpStatusException e){
 			return null;
+		}catch (IOException e){
+			throw new CustomException(Error.NOT_FOUND_IMAGE_EXCEPTION, Error.NOT_FOUND_IMAGE_EXCEPTION.getMessage());
 		}
 	}
 

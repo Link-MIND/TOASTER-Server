@@ -50,7 +50,7 @@ public class TimerService {
         int timerNum = timerRepository.findAllByUser(presentUser).size();
 
         if(timerNum>=5){
-            throw new CustomException(Error.UNPROCESSABLE_ENTITY_CEEATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CEEATE_TIMER_EXCEPTION.getMessage());
+            throw new CustomException(Error.UNPROCESSABLE_ENTITY_CREATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CREATE_TIMER_EXCEPTION.getMessage());
         }
 
         Category category = categoryRepository.findById(createTimerRequestDto.categoryId())

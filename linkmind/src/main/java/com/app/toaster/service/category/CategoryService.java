@@ -1,6 +1,7 @@
 package com.app.toaster.service.category;
 
 import com.app.toaster.controller.request.category.*;
+import com.app.toaster.controller.response.category.DuplicatedResponse;
 import com.app.toaster.controller.response.toast.ToastDto;
 import com.app.toaster.controller.response.toast.ToastFilter;
 import com.app.toaster.controller.response.category.CategoriesReponse;
@@ -157,5 +158,10 @@ public class CategoryService {
         };
 
         return toastStream.map(ToastDto::of).toList();
+    }
+
+    public DuplicatedResponse checkDuplicatedTitle(Long userId, String title){
+        return DuplicatedResponse.of(categoryRepository.existsCategoriesByUserAndTitle(findUser(userId), title));
+
     }
 }
