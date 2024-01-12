@@ -79,7 +79,7 @@ public class CategoryService {
         return categoryRepository.findAllByUserOrderByPriority(presentUser)
                 .stream()
                 .map(category -> CategoriesReponse.builder()
-                        .CategoryId(category.getCategoryId())
+                        .categoryId(category.getCategoryId())
                         .categoryTitle(category.getTitle())
                         .toastNum(toastRepository.getAllByCategory(category).size()).build()
                 ).collect(Collectors.toList());
