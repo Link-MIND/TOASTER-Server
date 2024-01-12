@@ -1,34 +1,41 @@
 package com.app.toaster.external.client.aws;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.BadRequestException;
+import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.exception.model.NotFoundException;
 
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 @Component
+@Slf4j
 public class S3Service {
 	private final String bucketName;
 	private final AWSConfig awsConfig;
+
 	private static final Long MAX_FILE_SIZE = 5 * 1024 * 1024L;
+	private static final Long PRE_SIGNED_URL_EXPIRE_MINUTE = 1L;
+
 
 
 	public S3Service(@Value("${aws-property.s3-bucket-name}") final String bucketName, AWSConfig awsConfig) {
@@ -58,6 +65,7 @@ public class S3Service {
 			throw new NotFoundException(Error.NOT_FOUND_IMAGE_EXCEPTION, Error.NOT_FOUND_IMAGE_EXCEPTION.getMessage());
 		}
 	}
+
 
 	public List<String> uploadImages(List<MultipartFile> multipartFileList, String folder) {
 		final S3Client s3Client = awsConfig.getS3Client();
@@ -100,10 +108,12 @@ public class S3Service {
 		fileValidate.add(".JPG");
 		fileValidate.add(".JPEG");
 		fileValidate.add(".PNG");
+		System.out.println("여기여기기");
 		String idxFileName = fileName.substring(fileName.lastIndexOf("."));
 		if (!fileValidate.contains(idxFileName)) {
 			throw new BadRequestException(Error.BAD_REQUEST_FILE_EXTENSION, Error.BAD_REQUEST_FILE_EXTENSION.getMessage());
 		}
+		System.out.println("여기기기기기ㅣ기");
 		return fileName.substring(fileName.lastIndexOf("."));
 	}
 
@@ -132,6 +142,50 @@ public class S3Service {
 	private void validateFileSize(MultipartFile image) {
 		if (image.getSize() > MAX_FILE_SIZE) {
 			throw new BadRequestException(Error.BAD_REQUEST_FILE_SIZE, Error.BAD_REQUEST_FILE_SIZE.getMessage());
+		}
+	}
+
+	// 만료시간 1분
+
+	public PresignedUrlVO getUploadPreSignedUrl(final String filename, final String folder) {
+		final String fileName = createFileName(filename);
+		final String key = folder + fileName;
+		System.out.println("하이");
+		log.info(fileName);
+		log.info(key);
+
+		S3Presigner preSigner = awsConfig.getS3Presigner();
+
+		PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+			.bucket(bucketName)
+			.key(key)
+			.build();
+		log.info("-----");
+		PutObjectPresignRequest preSignedUrlRequest = PutObjectPresignRequest.builder()
+			.signatureDuration(Duration.ofMinutes(PRE_SIGNED_URL_EXPIRE_MINUTE))
+			.putObjectRequest(putObjectRequest)
+			.build();
+		log.info("-----");
+		String url = preSigner.presignPutObject(preSignedUrlRequest).url().toString();
+
+		return PresignedUrlVO.of(fileName, url);
+	}
+
+	public String getURL(String keyName) {
+		final S3Client s3Client = awsConfig.getS3Client();
+		try {
+			GetUrlRequest request = GetUrlRequest.builder()
+				.bucket(bucketName)
+				.key(keyName)
+				.build();
+
+			URL url = s3Client.utilities().getUrl(request);
+			System.out.println("The URL for  "+keyName +" is "+ url);
+			return "The URL for  "+keyName +" is "+ url;
+
+		} catch (S3Exception e) {
+			throw new CustomException(Error.UNPROCESSABLE_PRESIGNEDURL_EXCEPTION, Error.UNPROCESSABLE_PRESIGNEDURL_EXCEPTION.getMessage());
+			// Exception을 뿌려준다!! 사진 제대로 안 올라갔으니까 다시 올려라 ...
 		}
 	}
 }

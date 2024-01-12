@@ -53,10 +53,9 @@ public class ToastController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ApiResponse createToast(
 		@UserId Long userId,
-		@RequestPart MultipartFile image,
-		@Valid SaveToastDto requestDto
+		@RequestBody SaveToastDto requestDto
 	) {
-		toastService.createToast(userId, requestDto, image);
+		toastService.createToast(userId, requestDto);
 		return ApiResponse.success(Success.CREATE_TOAST_SUCCESS);
 	}
 

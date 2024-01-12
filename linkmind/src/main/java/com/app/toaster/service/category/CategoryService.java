@@ -45,7 +45,7 @@ public class CategoryService {
         int categoryNum= categoryRepository.findAll().size();
 
         if(categoryNum >= 50){
-            throw new CustomException(Error.UNPROCESSABLE_ENTITY_CEEATE_CLIP_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CEEATE_CLIP_EXCEPTION.getMessage());
+            throw new CustomException(Error.UNPROCESSABLE_ENTITY_CREATE_CLIP_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CREATE_CLIP_EXCEPTION.getMessage());
         }
 
         //카테고리 생성

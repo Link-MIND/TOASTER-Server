@@ -20,8 +20,10 @@ import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.external.client.aws.AWSConfig;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class ParsingService {
 	private final String BASIC_THUMBNAIL;
 
@@ -29,22 +31,24 @@ public class ParsingService {
 		this.BASIC_THUMBNAIL = basicThumbnail;
 	}
 
-	// public OgResponse getOg(String linkUrl) throws IOException {
-	// 	try {
-	// 		String title = getTitle(linkUrl);
-	// 		String image = getImage(linkUrl);
-	// 		return OgResponse.of(
-	// 			title == null || title.isBlank() ? "15자 내로 제목을 지어주세요." : title,
-	// 			image == null || image.isBlank() ? BASIC_THUMBNAIL : image
-	// 		);
-	// 	}catch (org.jsoup.HttpStatusException e){
-	// 		return OgResponse.of("15자 내로 제목을 지어주세요.", BASIC_THUMBNAIL);
-	// 	}
-	// }
-	public String getOg(String linkUrl) throws IOException {
-		String image = getImage(linkUrl);
-		return image == null || image.isBlank() ? BASIC_THUMBNAIL : image;
+	public OgResponse getOg(String linkUrl) throws IOException {
+		try {
+			String title = getTitle(linkUrl);
+			log.info(title);
+			String image = getImage(linkUrl);
+			log.info(image);
+			return OgResponse.of(
+				title == null || title.isBlank() ? "기본 토스트 제목" : title,
+				image == null || image.isBlank() ? BASIC_THUMBNAIL : image
+			);
+		}catch (org.jsoup.HttpStatusException e){
+			return OgResponse.of("15자 내로 제목을 지어주세요.", BASIC_THUMBNAIL);
+		}
 	}
+	// public String getOg(String linkUrl) throws IOException {
+	// 	String image = getImage(linkUrl);
+	// 	return image == null || image.isBlank() ? BASIC_THUMBNAIL : image;
+	// }
 
 	private String getTitle(String linkUrl) throws IOException {
 		try {
