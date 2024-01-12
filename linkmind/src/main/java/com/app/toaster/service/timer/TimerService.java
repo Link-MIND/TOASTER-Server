@@ -136,12 +136,9 @@ public class TimerService {
         reminder.changeAlarm();
     }
 
-    public GetTimerPageResponseDto getTimerPage(Long userId) throws IOException {
+    public GetTimerPageResponseDto getTimerPage(Long userId){
         User presentUser = findUser(userId);
         ArrayList<Reminder> reminders = timerRepository.findAllByUser(presentUser);
-
-        //== User 조회 API 호출 시 푸시 알림 전송! ==//
-        fcmService.pushAlarm(FCMPushRequestDto.sendTestPush(presentUser.getFcmToken()));
 
         List<CompletedTimerDto> completedTimerList = reminders.stream()
                 .filter(this::isCompletedTimer)
