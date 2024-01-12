@@ -20,7 +20,7 @@ import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.external.client.slack.SlackApi;
 
-// import io.sentry.Sentry;
+import io.sentry.Sentry;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintDefinitionException;
 import lombok.NoArgsConstructor;
