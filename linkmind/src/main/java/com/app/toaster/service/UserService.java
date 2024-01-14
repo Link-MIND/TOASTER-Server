@@ -1,10 +1,10 @@
 package com.app.toaster.service;
 
-import com.app.toaster.controller.response.category.CategoriesReponse;
+import com.app.toaster.controller.response.category.CategoryResponse;
 import com.app.toaster.controller.response.main.MainPageResponseDto;
 import com.app.toaster.domain.Category;
 import com.app.toaster.infrastructure.CategoryRepository;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +16,6 @@ import com.app.toaster.exception.model.BadRequestException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.infrastructure.ToastRepository;
 import com.app.toaster.infrastructure.UserRepository;
-import com.app.toaster.service.toast.ToastService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -76,7 +75,7 @@ public class UserService {
                 .allToastNum(allToastNum)
                 .readToastNum(readToastNum)
                 .mainCategoryListDto(getCategory(user).stream()
-                .map(category -> CategoriesReponse.builder()
+                .map(category -> CategoryResponse.builder()
                         .categoryId(category.getCategoryId())
                         .categoryTitle(category.getTitle())
                         .toastNum(toastRepository.getAllByCategory(category).size()).build()
