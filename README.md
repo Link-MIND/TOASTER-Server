@@ -23,6 +23,7 @@
 | Cloud Computing |	AWS EC2 (Ubuntu 22.04 LTS) |
 | Database | AWS RDS (MySQL 8.0.33) |
 | File Upload | AWS S3 |
+| MessageQueue | AWS SQS |
 | CI/CD | Github Actions, Docker, Nginx |
 | Notification | Firebase Cloud Messaging |
 | Monitoring  | Sentry, Slack |
