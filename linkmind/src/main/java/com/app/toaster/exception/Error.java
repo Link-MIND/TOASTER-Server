@@ -41,6 +41,11 @@ public enum Error {
 	INVALID_USER_ACCESS(HttpStatus.UNAUTHORIZED, "접근 권한이 없는 유저입니다."),
 
 	/**
+	 * 403 FORBIDDEN EXCEPTION
+	 */
+	UNAUTHORIZED_ACCESS(HttpStatus.FORBIDDEN, "리소스에 대한 권한이 없습니다."),
+
+	/**
 	 * 422 UNPROCESSABLE_ENTITY
 	 */
 	UNPROCESSABLE_ENTITY_DELETE_EXCEPTION(HttpStatus.UNPROCESSABLE_ENTITY, "서버에서 요청을 이해해 삭제하려는 도중 문제가 생겼습니다."),

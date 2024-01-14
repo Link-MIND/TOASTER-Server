@@ -30,6 +30,7 @@ import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.BadRequestException;
 import com.app.toaster.exception.model.CustomException;
+import com.app.toaster.exception.model.ForbiddenException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.exception.model.UnauthorizedException;
 import com.app.toaster.external.client.aws.ImagePresignedUrlResponse;
@@ -124,7 +125,7 @@ public class ToastService {
 			() -> new NotFoundException(Error.NOT_FOUND_TOAST_EXCEPTION, Error.NOT_FOUND_TOAST_EXCEPTION.getMessage())
 		);
 		if (!presentUser.equals(toast.getUser())){
-			throw new UnauthorizedException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
+			throw new ForbiddenException(Error.UNAUTHORIZED_ACCESS, Error.UNAUTHORIZED_ACCESS.getMessage());
 		}
 		// BASIC_ROOT를 제외한 문자열을 추출합니다.
 		// String imageKey = toast.getThumbnailUrl().replace(BASIC_ROOT, "");
