@@ -38,10 +38,8 @@ public class TimerService {
     private final CategoryRepository categoryRepository;
     private final TimerRepository timerRepository;
 
-    // 푸시알림 활성화가 필요한 로직이라면, FCMService를 주입!
-    private final FCMService fcmService;
 
-    private LocalDateTime now;
+    private final Locale locale = Locale.KOREA;
 
     @Transactional
     public void createTimer(Long userId, CreateTimerRequestDto createTimerRequestDto){
@@ -173,7 +171,7 @@ public class TimerService {
     // 완료된 타이머이고 알람이 켜져있는지 식별
     private boolean isCompletedTimer(Reminder reminder){
         // 현재 시간
-        now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
 
         LocalTime futureDateTime = LocalTime.from(now.plusHours(1));
         LocalTime pastDateTime = LocalTime.from(now.minusHours(1));
@@ -209,7 +207,7 @@ public class TimerService {
     // 인덱스로 요일 알아내기
     private String mapIndexToDayString(int index) {
         DayOfWeek dayOfWeek = DayOfWeek.of(index);
-        String dayName = dayOfWeek.getDisplayName(java.time.format.TextStyle.FULL, Locale.KOREAN);
+        String dayName = dayOfWeek.getDisplayName(java.time.format.TextStyle.FULL,locale);
 
         return dayName.substring(0, 1);
     }
