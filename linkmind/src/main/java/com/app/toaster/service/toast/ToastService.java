@@ -11,15 +11,8 @@ import java.util.stream.Collectors;
 import org.slf4j.LoggerFactory;
 import com.app.toaster.controller.response.toast.WeekSiteDto;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.app.toaster.controller.request.toast.IsReadDto;
 import com.app.toaster.controller.request.toast.SaveToastDto;
 import com.app.toaster.controller.response.parse.OgResponse;
@@ -30,6 +23,7 @@ import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.BadRequestException;
 import com.app.toaster.exception.model.CustomException;
+import com.app.toaster.exception.model.ForbiddenException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.exception.model.UnauthorizedException;
 import com.app.toaster.external.client.aws.ImagePresignedUrlResponse;
@@ -124,7 +118,7 @@ public class ToastService {
 			() -> new NotFoundException(Error.NOT_FOUND_TOAST_EXCEPTION, Error.NOT_FOUND_TOAST_EXCEPTION.getMessage())
 		);
 		if (!presentUser.equals(toast.getUser())){
-			throw new UnauthorizedException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
+			throw new ForbiddenException(Error.UNAUTHORIZED_ACCESS, Error.UNAUTHORIZED_ACCESS.getMessage());
 		}
 		// BASIC_ROOT를 제외한 문자열을 추출합니다.
 		// String imageKey = toast.getThumbnailUrl().replace(BASIC_ROOT, "");

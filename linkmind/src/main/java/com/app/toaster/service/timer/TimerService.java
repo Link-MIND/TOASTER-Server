@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -41,19 +42,25 @@ public class TimerService {
 
     private final Locale locale = Locale.KOREA;
 
+    private final int MaxTimerNumber = 5;
+    private final int TimeIntervalInHours = 60;
+
     @Transactional
     public void createTimer(Long userId, CreateTimerRequestDto createTimerRequestDto){
         User presentUser = findUser(userId);
 
         int timerNum = timerRepository.findAllByUser(presentUser).size();
 
-        if(timerNum>=5){
+        if(timerNum>=MaxTimerNumber){
             throw new CustomException(Error.UNPROCESSABLE_ENTITY_CREATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CREATE_TIMER_EXCEPTION.getMessage());
         }
 
         Category category = categoryRepository.findById(createTimerRequestDto.categoryId())
                 .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
 
+        if(!timerRepository.findAllByCategory(category).isEmpty()){
+            throw new CustomException(Error.UNPROCESSABLE_CREATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_CREATE_TIMER_EXCEPTION.getMessage());
+        }
 
         Reminder reminder = Reminder.builder()
                 .user(presentUser)
@@ -172,30 +179,44 @@ public class TimerService {
     private boolean isCompletedTimer(Reminder reminder){
         // 현재 시간
         LocalDateTime now = LocalDateTime.now();
+        List<LocalDateTime> resultDateTimeList = new ArrayList<>();
 
-        LocalTime futureDateTime = LocalTime.from(now.plusHours(1));
-        LocalTime pastDateTime = LocalTime.from(now.minusHours(1));
 
-        if (reminder.getRemindDates().contains(now.getDayOfWeek().getValue())) {
-            LocalTime reminderTime = reminder.getRemindTime();
-            return !reminderTime.isBefore(pastDateTime) && !reminderTime.isAfter(futureDateTime) && reminder.getIsAlarm();
+        // 주어진 요일 인덱스에 대해 LocalDateTime 생성 및 리스트에 추가
+        for (Integer dayOfWeekIndex : reminder.getRemindDates()) {
+            DayOfWeek currentDayOfWeek = now.getDayOfWeek();
+
+            LocalDateTime newDateTime = now.plusDays(dayOfWeekIndex - currentDayOfWeek.getValue());
+            newDateTime = LocalDateTime.of(newDateTime.toLocalDate(), reminder.getRemindTime());
+
+            resultDateTimeList.add(newDateTime);
+
+            if (currentDayOfWeek.getValue() == 1 || currentDayOfWeek.getValue() == 7) {
+                resultDateTimeList.add(currentDayOfWeek.getValue() == 1 ? newDateTime.minusWeeks(1) : newDateTime.plusWeeks(1));
+            }
         }
 
+        for(LocalDateTime remind : resultDateTimeList){
+            Duration duration = Duration.between(now, remind);
+            if (Math.abs(duration.toMinutes()) <= TimeIntervalInHours) {
+                return true;
+            }
+        }
         return false;
     }
 
     // 완료된 타이머 날짜,시간 포맷
     private CompletedTimerDto createCompletedTimerDto(Reminder reminder) {
-        String time = reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a hh:mm"));
-        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("E요일"));
+        String time = reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a hh:mm",locale));
+        String date = getRemindDate(reminder);
         return CompletedTimerDto.of(reminder, time, date);
     }
 
     // 대기중인 타이머 날짜,시간 포맷
     private WaitingTimerDto createWaitingTimerDto(Reminder reminder) {
         String time = (reminder.getRemindTime().getMinute() == 0)
-                ? reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시"))
-                : reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시 mm분"));
+                ? reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시",locale))
+                : reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시 mm분",locale));
 
         String dates = reminder.getRemindDates().stream()
                 .map(this::mapIndexToDayString)
@@ -210,6 +231,31 @@ public class TimerService {
         String dayName = dayOfWeek.getDisplayName(java.time.format.TextStyle.FULL,locale);
 
         return dayName.substring(0, 1);
+    }
+
+    private String getRemindDate(Reminder reminder){
+        LocalDateTime remindDate = LocalDateTime.now();
+        LocalTime now = LocalTime.now();
+
+        // 비교할 시간 범위를 설정합니다.
+        LocalTime startTime = LocalTime.of(23, 0);   // 11시
+        LocalTime endTime = LocalTime.of(1, 0);      // 1시
+
+        // 현재 시간이 11시 이후 또는 1시 이전인지 확인합니다.
+        if (reminder.getRemindTime().isAfter(startTime) && now.isBefore(startTime)) {
+            if(remindDate.getDayOfWeek().getValue() == 1 )
+                remindDate = remindDate.plusDays(6);
+            else
+                remindDate = remindDate.minusDays(1);
+        }
+        if (reminder.getRemindTime().isBefore(endTime) && now.isAfter(endTime)) {
+            if(remindDate.getDayOfWeek().getValue() == 7 )
+                remindDate = remindDate.minusDays(6);
+            else
+                remindDate = remindDate.plusDays(1);
+        }
+
+        return remindDate.format(DateTimeFormatter.ofPattern("E요일",locale));
     }
 
 }

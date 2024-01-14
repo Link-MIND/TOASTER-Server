@@ -2,9 +2,11 @@ package com.app.toaster;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalTime;
 import java.util.TimeZone;
 
 @SpringBootApplication
@@ -15,8 +17,4 @@ public class ToasterApplication {
 		SpringApplication.run(ToasterApplication.class, args);
 	}
 
-	@PostConstruct
-	public void init() {
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
-	}
 }
