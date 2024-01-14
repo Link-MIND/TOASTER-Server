@@ -209,7 +209,7 @@ public class TimerService {
     // 인덱스로 요일 알아내기
     private String mapIndexToDayString(int index) {
         DayOfWeek dayOfWeek = DayOfWeek.of(index);
-        String dayName = dayOfWeek.getDisplayName(java.time.format.TextStyle.FULL, Locale.getDefault());
+        String dayName = dayOfWeek.getDisplayName(java.time.format.TextStyle.FULL, Locale.KOREAN);
 
         return dayName.substring(0, 1);
     }
