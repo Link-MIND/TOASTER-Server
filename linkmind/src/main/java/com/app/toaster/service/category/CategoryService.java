@@ -1,10 +1,11 @@
 package com.app.toaster.service.category;
 
 import com.app.toaster.controller.request.category.*;
+import com.app.toaster.controller.response.category.CategoriesResponse;
 import com.app.toaster.controller.response.category.DuplicatedResponse;
 import com.app.toaster.controller.response.toast.ToastDto;
 import com.app.toaster.controller.response.toast.ToastFilter;
-import com.app.toaster.controller.response.category.CategoriesReponse;
+import com.app.toaster.controller.response.category.CategoryResponse;
 import com.app.toaster.controller.response.category.GetCategoryResponseDto;
 import com.app.toaster.domain.Category;
 import com.app.toaster.domain.Toast;
@@ -12,7 +13,6 @@ import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.exception.model.NotFoundException;
-import com.app.toaster.exception.model.UnauthorizedException;
 import com.app.toaster.infrastructure.CategoryRepository;
 import com.app.toaster.infrastructure.ToastRepository;
 import com.app.toaster.infrastructure.UserRepository;
@@ -24,8 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -77,16 +75,17 @@ public class CategoryService {
 
     }
 
-    public List<CategoriesReponse> getCategories(final Long userId){
+    public CategoriesResponse getCategories(final Long userId){
         User presentUser = findUser(userId);
 
-        return categoryRepository.findAllByUserOrderByPriority(presentUser)
-                .stream()
-                .map(category -> CategoriesReponse.builder()
-                        .categoryId(category.getCategoryId())
-                        .categoryTitle(category.getTitle())
-                        .toastNum(toastRepository.getAllByCategory(category).size()).build()
-                ).collect(Collectors.toList());
+        return CategoriesResponse.of(toastRepository.countAllByUser(presentUser),categoryRepository.findAllByUserOrderByPriority(presentUser)
+            .stream()
+            .map(category -> CategoryResponse.builder()
+                .categoryId(category.getCategoryId())
+                .categoryTitle(category.getTitle())
+                .toastNum(toastRepository.getAllByCategory(category).size()).build()
+            ).collect(Collectors.toList()));
+
 
     }
 
