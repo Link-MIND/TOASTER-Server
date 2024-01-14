@@ -42,6 +42,7 @@ public class TimerService {
 
     private final Locale locale = Locale.KOREA;
 
+    private final int MaxTimerNumber = 5;
     private final int TimeIntervalInHours = 60;
 
     @Transactional
@@ -50,13 +51,16 @@ public class TimerService {
 
         int timerNum = timerRepository.findAllByUser(presentUser).size();
 
-        if(timerNum>=5){
+        if(timerNum>=MaxTimerNumber){
             throw new CustomException(Error.UNPROCESSABLE_ENTITY_CREATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CREATE_TIMER_EXCEPTION.getMessage());
         }
 
         Category category = categoryRepository.findById(createTimerRequestDto.categoryId())
                 .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
 
+        if(!timerRepository.findAllByCategory(category).isEmpty()){
+            throw new CustomException(Error.UNPROCESSABLE_CREATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_CREATE_TIMER_EXCEPTION.getMessage());
+        }
 
         Reminder reminder = Reminder.builder()
                 .user(presentUser)
