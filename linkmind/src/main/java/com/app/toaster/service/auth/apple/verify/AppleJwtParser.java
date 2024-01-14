@@ -16,8 +16,10 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class AppleJwtParser {
 
 	private static final String IDENTITY_TOKEN_VALUE_DELIMITER = "\\.";

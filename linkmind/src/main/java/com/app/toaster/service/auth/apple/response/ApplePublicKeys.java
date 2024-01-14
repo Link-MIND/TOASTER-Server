@@ -5,6 +5,8 @@ import java.util.List;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.CustomException;
 
+import lombok.extern.slf4j.Slf4j;
+
 public record ApplePublicKeys(List<ApplePublicKey> keys) {
 
 	public ApplePublicKey getMatchesKey(String alg, String kid) {

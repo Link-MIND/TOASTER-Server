@@ -15,14 +15,16 @@ import com.mysql.cj.log.Log;
 
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AppleSignInService {
 	private static final String APPLE_URI = "https://appleid.apple.com/auth";
 	private static final RestClient restClient = RestClient.create(APPLE_URI);
-	private static AppleJwtParser appleJwtParser;
-	private static PublicKeyGenerator publicKeyGenerator;
+	private final AppleJwtParser appleJwtParser;
+	private final PublicKeyGenerator publicKeyGenerator;
 
 	public LoginResult getAppleId(String identityToken) {
 		Map<String, String> headers = appleJwtParser.parseHeaders(identityToken);
@@ -31,9 +33,7 @@ public class AppleSignInService {
 			.uri("/keys")
 			.retrieve()
 			.toEntity(ApplePublicKeys.class);
-
 		PublicKey publicKey = publicKeyGenerator.generatePublicKey(headers, result.getBody());
-
 		Claims claims = appleJwtParser.parsePublicKeyAndGetClaims(identityToken, publicKey);
 		return LoginResult.of(claims.getSubject(),null);
 	}
