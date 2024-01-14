@@ -11,15 +11,8 @@ import java.util.stream.Collectors;
 import org.slf4j.LoggerFactory;
 import com.app.toaster.controller.response.toast.WeekSiteDto;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.app.toaster.controller.request.toast.IsReadDto;
 import com.app.toaster.controller.request.toast.SaveToastDto;
 import com.app.toaster.controller.response.parse.OgResponse;
