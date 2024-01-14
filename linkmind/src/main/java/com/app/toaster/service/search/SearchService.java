@@ -42,7 +42,7 @@ public class SearchService {
 		if (searchToastList.isEmpty() && searchCategoryList.isEmpty()){
 			return ApiResponse.success(Success.SEARCH_SUCCESS_BUT_IS_EMPTY,null);
 		}
-		return ApiResponse.success(Success.SEARCH_SUCCESS, SearchMainResult.of(
+		return ApiResponse.success(Success.SEARCH_SUCCESS, SearchMainResult.of(searchParam,
 			searchToastList.stream().map(
 					toast -> ToastDto.of(toast))
 				.collect(Collectors.toList()),
