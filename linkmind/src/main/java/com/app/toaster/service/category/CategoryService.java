@@ -8,12 +8,14 @@ import com.app.toaster.controller.response.toast.ToastFilter;
 import com.app.toaster.controller.response.category.CategoryResponse;
 import com.app.toaster.controller.response.category.GetCategoryResponseDto;
 import com.app.toaster.domain.Category;
+import com.app.toaster.domain.Reminder;
 import com.app.toaster.domain.Toast;
 import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.infrastructure.CategoryRepository;
+import com.app.toaster.infrastructure.TimerRepository;
 import com.app.toaster.infrastructure.ToastRepository;
 import com.app.toaster.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,7 @@ public class CategoryService {
     private final ToastRepository toastRepository;
 
     private final static int MAX_CATERGORY_NUMBER = 50;
+    private final TimerRepository timerRepository;
 
     @Transactional
     public void createCategory(final Long userId, final CreateCategoryDto createCategoryDto){
@@ -69,9 +72,11 @@ public class CategoryService {
                     .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
 
             categoryRepository.decreasePriorityNextDeleteCategory(categoryId, category.getPriority());
-        }
 
-        categoryRepository.deleteALLByCategoryIdInQuery(deleteCategoryDto.deleteCategoryList());
+            Reminder timer = timerRepository.findByCategory_CategoryId(categoryId);
+
+            timerRepository.delete(timer);
+        }
 
     }
 
