@@ -30,20 +30,20 @@ public enum Error {
 	BAD_REQUEST_FILE_SIZE(HttpStatus.BAD_REQUEST, "파일크기가 잘못된 것 같습니다. 최대 5MB"),
 	MALFORMED_URL_EXEPTION(HttpStatus.BAD_REQUEST, "url 링크가 잘못된 것 같습니다."),
 	BAD_REQUEST_REMIND_TIME(HttpStatus.BAD_REQUEST, "RemindTime 값이 잘못요청 되었습니다."),
+	INVALID_APPLE_PUBLIC_KEY(HttpStatus.BAD_REQUEST, "유효하지않은 애플 퍼블릭 키 입니다."),
+	INVALID_APPLE_IDENTITY_TOKEN(HttpStatus.BAD_REQUEST, "잘못된 아이덴티티 토큰입니다."),
 
 	/**
 	 * 401 UNAUTHORIZED EXCEPTION
 	 */
 	TOKEN_TIME_EXPIRED_EXCEPTION(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
-	INVALID_APPLE_PUBLIC_KEY(HttpStatus.UNAUTHORIZED, "유효하지않은 애플 퍼블릭 키 입니다."),
 	EXPIRED_APPLE_IDENTITY_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 아이덴티티 토큰입니다."),
-	INVALID_APPLE_IDENTITY_TOKEN(HttpStatus.UNAUTHORIZED, "잘못된 아이덴티티 토큰입니다."),
-	INVALID_USER_ACCESS(HttpStatus.UNAUTHORIZED, "접근 권한이 없는 유저입니다."),
 
 	/**
 	 * 403 FORBIDDEN EXCEPTION
 	 */
 	UNAUTHORIZED_ACCESS(HttpStatus.FORBIDDEN, "리소스에 대한 권한이 없습니다."),
+	INVALID_USER_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 없는 유저입니다."),
 
 	/**
 	 * 422 UNPROCESSABLE_ENTITY
