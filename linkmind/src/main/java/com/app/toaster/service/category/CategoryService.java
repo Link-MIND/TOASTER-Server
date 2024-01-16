@@ -74,8 +74,9 @@ public class CategoryService {
             categoryRepository.decreasePriorityNextDeleteCategory(categoryId, category.getPriority());
 
             Reminder timer = timerRepository.findByCategory_CategoryId(categoryId);
-
-            timerRepository.delete(timer);
+            if(timer != null)
+                timerRepository.delete(timer);
+            categoryRepository.delete(category);
         }
 
     }
@@ -121,9 +122,9 @@ public class CategoryService {
     }
 
     public GetCategoryResponseDto getCategory(final Long userId, final Long categoryId, final ToastFilter filter) {
-
+        User presentUser = findUser(userId);
         if (categoryId ==0){
-            List<Toast> toastAllList = toastRepository.findAll();
+            List<Toast> toastAllList = toastRepository.getAllByUser(presentUser);
             List<ToastDto> toastListDto = mapToToastDtoList(toastAllList, filter, null);
             return GetCategoryResponseDto.builder()
                 .allToastNum(toastAllList.size())
