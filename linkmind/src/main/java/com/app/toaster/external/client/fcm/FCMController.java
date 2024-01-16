@@ -1,8 +1,8 @@
-package com.app.toaster.controller;
+package com.app.toaster.external.client.fcm;
 
 import com.app.toaster.common.dto.ApiResponse;
 import com.app.toaster.external.client.sqs.SqsProducer;
-import com.app.toaster.controller.request.fcm.FCMPushRequestDto;
+import com.app.toaster.external.client.fcm.FCMPushRequestDto;
 import com.app.toaster.exception.Success;
 import com.app.toaster.external.client.fcm.FCMService;
 import lombok.RequiredArgsConstructor;

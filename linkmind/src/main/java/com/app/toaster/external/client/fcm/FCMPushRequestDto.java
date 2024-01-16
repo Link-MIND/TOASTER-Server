@@ -1,12 +1,11 @@
-package com.app.toaster.controller.request.fcm;
+package com.app.toaster.external.client.fcm;
 
-import com.app.toaster.exception.Error;
-import com.app.toaster.exception.model.CustomException;
+import com.app.toaster.domain.Reminder;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
+import java.util.Random;
 
 @Slf4j
 @Getter
@@ -14,6 +13,8 @@ import java.awt.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FCMPushRequestDto {
+
+    private final int PUSH_MESSAGE_NUMBER = 5;
 
     private String targetToken;
 
@@ -29,9 +30,33 @@ public class FCMPushRequestDto {
 
         return FCMPushRequestDto.builder()
                 .targetToken(targetToken)
-                .title("🍞" + PushMessage.TODAY_QNA.getTitle())
+                .title("🍞 토스트 ")
                 .body(comment)
                 .build();
+
+    }
+
+    private void getPushMessage(Reminder reminder){
+        Random random = new Random();
+        int randomNumber = random.nextInt(PUSH_MESSAGE_NUMBER);
+
+        switch (randomNumber) {
+            case 0 -> {
+
+            }
+            case 1 -> {
+
+            }
+            case 2 -> {
+
+            }
+            case 3 -> {
+
+            }
+            case 4 -> {
+
+            }
+        };
 
     }
 

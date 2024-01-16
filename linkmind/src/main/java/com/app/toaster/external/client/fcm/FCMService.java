@@ -1,8 +1,6 @@
 package com.app.toaster.external.client.fcm;
 
 import com.app.toaster.external.client.sqs.SqsProducer;
-import com.app.toaster.controller.request.fcm.FCMPushRequestDto;
-import com.app.toaster.external.client.fcm.FCMMessage;
 import com.app.toaster.domain.Reminder;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.NotFoundException;
