@@ -156,8 +156,8 @@ public class CategoryService {
     private List<ToastDto> mapToToastDtoList(List<Toast> toasts, ToastFilter filter, Category category) {
         Stream<Toast> toastStream = switch (filter) {
             case ALL -> toasts.stream();
-            case READ -> toastRepository.findByIsReadAndCategory(true, category).stream();
-            case UNREAD -> toastRepository.findByIsReadAndCategory(false, category).stream();
+            case READ -> toasts.stream().filter(Toast::getIsRead);
+            case UNREAD ->toasts.stream().filter(toast -> !toast.getIsRead());
             default ->
                     throw new NotFoundException(Error.NOT_FOUND_TOAST_FILTER, Error.NOT_FOUND_TOAST_FILTER.getMessage());
         };
