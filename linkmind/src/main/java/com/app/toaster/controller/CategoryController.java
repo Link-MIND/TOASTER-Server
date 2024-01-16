@@ -53,16 +53,6 @@ public class CategoryController {
         return ApiResponse.success(Success.GET_CATEORIES_SUCCESS, categoryService.getCategories(userId));
     }
 
-//    @PatchMapping("/edit")
-//    @ResponseStatus(HttpStatus.OK)
-//    public ApiResponse editCategories(
-//            @UserId Long userId,
-//            @RequestBody EditCategoryRequestDto editCategoryRequestDto
-//    ){
-//        categoryService.editCategories(editCategoryRequestDto);
-//        return ApiResponse.success(Success.UPDATE_CATEGORY_TITLE_SUCCESS);
-//    }
-
     @PatchMapping("/priority")
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse editCategoryPriority(

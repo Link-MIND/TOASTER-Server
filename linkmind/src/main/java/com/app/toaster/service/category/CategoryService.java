@@ -95,32 +95,6 @@ public class CategoryService {
 
     }
 
-    @Transactional
-    public void editCategories(final EditCategoryRequestDto editCategoryRequestDto){
-        //제목 업데이트
-        editCategoryRequestDto.changeCategoryTitleList().forEach(request ->
-                categoryRepository.updateCategoryTitle(request.categoryId(), request.newTitle()));
-
-        //순서 업데이트
-        for (ChangeCateoryPriorityDto changeCateoryPriorityDto : editCategoryRequestDto.changeCategoryPriorityList()) {
-            Long categoryId = changeCateoryPriorityDto.categoryId();
-            int newPriority = changeCateoryPriorityDto.newPriority();
-
-            Category category = categoryRepository.findById(categoryId)
-                    .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
-
-            int currentPriority = category.getPriority();
-            category.updateCategoryPriority(changeCateoryPriorityDto.newPriority());
-
-            if(currentPriority < newPriority)
-                categoryRepository.decreasePriorityByOne(categoryId, currentPriority, newPriority);
-            else if (currentPriority > newPriority)
-                categoryRepository.increasePriorityByOne(categoryId, currentPriority, newPriority);
-
-        }
-
-    }
-
     public GetCategoryResponseDto getCategory(final Long userId, final Long categoryId, final ToastFilter filter) {
         User presentUser = findUser(userId);
         if (categoryId ==0){
