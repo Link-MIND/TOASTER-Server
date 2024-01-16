@@ -74,8 +74,9 @@ public class CategoryService {
             categoryRepository.decreasePriorityNextDeleteCategory(categoryId, category.getPriority());
 
             Reminder timer = timerRepository.findByCategory_CategoryId(categoryId);
-
-            timerRepository.delete(timer);
+            if(timer != null)
+                timerRepository.delete(timer);
+            categoryRepository.delete(category);
         }
 
     }
