@@ -25,7 +25,7 @@ public class Reminder extends BaseTimeEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
 
-	@OneToOne(cascade = CascadeType.REMOVE)
+	@OneToOne
 	private Category category;
 
 	private LocalTime remindTime;
