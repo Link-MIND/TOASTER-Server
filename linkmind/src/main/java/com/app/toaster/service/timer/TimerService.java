@@ -12,8 +12,10 @@ import com.app.toaster.domain.Reminder;
 import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.CustomException;
+import com.app.toaster.exception.model.ForbiddenException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.exception.model.UnauthorizedException;
+import com.app.toaster.external.client.fcm.FCMPushRequestDto;
 import com.app.toaster.infrastructure.CategoryRepository;
 import com.app.toaster.infrastructure.TimerRepository;
 import com.app.toaster.infrastructure.UserRepository;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -35,21 +38,33 @@ public class TimerService {
     private final CategoryRepository categoryRepository;
     private final TimerRepository timerRepository;
 
-    private LocalDateTime now;
+
+    private final Locale locale = Locale.KOREA;
+
+    private final int MaxTimerNumber = 5;
+    private final int TimeIntervalInHours = 60;
 
     @Transactional
     public void createTimer(Long userId, CreateTimerRequestDto createTimerRequestDto){
         User presentUser = findUser(userId);
+        Category category = null;
+        String comment = "전체";
 
         int timerNum = timerRepository.findAllByUser(presentUser).size();
 
-        if(timerNum>=5){
-            throw new CustomException(Error.UNPROCESSABLE_ENTITY_CEEATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CEEATE_TIMER_EXCEPTION.getMessage());
+        if(timerNum>=MaxTimerNumber){
+            throw new CustomException(Error.UNPROCESSABLE_ENTITY_CREATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CREATE_TIMER_EXCEPTION.getMessage());
         }
 
-        Category category = categoryRepository.findById(createTimerRequestDto.categoryId())
-                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
+        if(createTimerRequestDto.categoryId() != 0) {
+            category = categoryRepository.findById(createTimerRequestDto.categoryId())
+                    .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
+            comment = category.getTitle();
+        }
 
+        if(!timerRepository.findAllByCategory(category).isEmpty()){
+            throw new CustomException(Error.UNPROCESSABLE_CREATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_CREATE_TIMER_EXCEPTION.getMessage());
+        }
 
         Reminder reminder = Reminder.builder()
                 .user(presentUser)
@@ -57,7 +72,7 @@ public class TimerService {
                 .remindDates(createTimerRequestDto.remindDates())
                 .remindTime(LocalTime.parse(createTimerRequestDto.remindTime()))
                 .isAlarm(true)
-                .comment(category.getTitle() + " 링크들을 읽기 딱 좋은 시간이에요!")
+                .comment(comment)
                 .build();
 
 
@@ -79,9 +94,9 @@ public class TimerService {
                 .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_TIMER, Error.NOT_FOUND_TIMER.getMessage()));
 
         if (!presentUser.equals(reminder.getUser())){
-            throw new UnauthorizedException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
+            throw new CustomException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
         }
-        reminder.updateRemindDates(updateTimerDateTimeDto.remindDate());
+        reminder.updateRemindDates(updateTimerDateTimeDto.remindDates());
         reminder.updateRemindTime(updateTimerDateTimeDto.remindTime());
 
     }
@@ -101,6 +116,20 @@ public class TimerService {
 
     }
 
+    @Transactional
+    public void changeAlarm(Long userId, Long timerId){
+        User presentUser = findUser(userId);
+
+        Reminder reminder = timerRepository.findById(timerId)
+                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_TIMER, Error.NOT_FOUND_TIMER.getMessage()));
+
+        if (!presentUser.equals(reminder.getUser())){
+            throw new ForbiddenException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
+        }
+
+        reminder.changeAlarm();
+    }
+
 
     @Transactional
     public void deleteTimer(Long userId, Long timerId){
@@ -116,7 +145,7 @@ public class TimerService {
         timerRepository.delete(reminder);
     }
 
-    public GetTimerPageResponseDto getTimerPage(Long userId){
+    public GetTimerPageResponseDto getTimerPage(Long userId) {
         User presentUser = findUser(userId);
         ArrayList<Reminder> reminders = timerRepository.findAllByUser(presentUser);
 
@@ -153,7 +182,7 @@ public class TimerService {
     // 완료된 타이머이고 알람이 켜져있는지 식별
     private boolean isCompletedTimer(Reminder reminder){
         // 현재 시간
-        now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
 
         LocalTime futureDateTime = LocalTime.from(now.plusHours(1));
         LocalTime pastDateTime = LocalTime.from(now.minusHours(1));
@@ -192,11 +221,6 @@ public class TimerService {
         String dayName = dayOfWeek.getDisplayName(java.time.format.TextStyle.FULL, Locale.getDefault());
 
         return dayName.substring(0, 1);
-    }
-
-    // 스케줄링 만들기
-    private void makeSchedule(){
-
     }
 
 }

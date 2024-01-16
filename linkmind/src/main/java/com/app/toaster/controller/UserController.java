@@ -3,6 +3,7 @@ package com.app.toaster.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.app.toaster.controller.response.main.MainPageResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -46,5 +47,13 @@ public class UserController {
 	@GetMapping("/settings")
 	public ApiResponse getSettings(@UserId Long userId){
 		return ApiResponse.success(Success.GET_SETTINGS_SUCCESS,userService.getSettings(userId));
+	}
+
+	@GetMapping("/main")
+	@ResponseStatus(HttpStatus.OK)
+	public ApiResponse<MainPageResponseDto> getTimer(
+			@UserId Long userId) {
+
+		return ApiResponse.success(Success.GET_USER_MAIN_SUCCESS,userService.getMainPage(userId) );
 	}
 }

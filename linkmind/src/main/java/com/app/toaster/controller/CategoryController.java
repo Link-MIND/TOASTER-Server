@@ -3,14 +3,14 @@ package com.app.toaster.controller;
 import com.app.toaster.common.dto.ApiResponse;
 import com.app.toaster.config.UserId;
 import com.app.toaster.controller.request.category.*;
+import com.app.toaster.controller.response.category.CategoriesResponse;
 import com.app.toaster.controller.response.toast.ToastFilter;
-import com.app.toaster.controller.response.category.CategoriesReponse;
+import com.app.toaster.controller.response.category.CategoryResponse;
 import com.app.toaster.controller.response.category.GetCategoryResponseDto;
 import com.app.toaster.exception.Success;
 import com.app.toaster.service.category.CategoryService;
 import com.app.toaster.service.search.SearchService;
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -43,23 +43,33 @@ public class CategoryController {
             @UserId Long userId,
             @RequestBody DeleteCategoryDto deleteCategoryDto
     ){
-        categoryService.deleteCategory(userId, deleteCategoryDto);
+        categoryService.deleteCategory(deleteCategoryDto);
         return ApiResponse.success(Success.DELETE_CATEGORY_SUCCESS);
     }
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<List<CategoriesReponse>> getCategories(@UserId Long userId){
+    public ApiResponse<CategoriesResponse> getCategories(@UserId Long userId){
         return ApiResponse.success(Success.GET_CATEORIES_SUCCESS, categoryService.getCategories(userId));
     }
 
-    @PatchMapping("/edit")
+    @PatchMapping("/priority")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse editCategories(
+    public ApiResponse editCategoryPriority(
             @UserId Long userId,
-            @RequestBody EditCategoryRequestDto editCategoryRequestDto
+            @RequestBody ChangeCateoryPriorityDto changeCateoryPriorityDto
     ){
-        categoryService.editCategories(userId, editCategoryRequestDto);
+        categoryService.editCategoryPriority(changeCateoryPriorityDto);
+        return ApiResponse.success(Success.UPDATE_CATEGORY_TITLE_SUCCESS);
+    }
+
+    @PatchMapping("/title")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse editCategoryTitle(
+            @UserId Long userId,
+            @Valid @RequestBody ChangeCateoryTitleDto changeCateoryTitleDto
+    ){
+        categoryService.editCategoryTitle(changeCateoryTitleDto);
         return ApiResponse.success(Success.UPDATE_CATEGORY_TITLE_SUCCESS);
     }
 
@@ -77,6 +87,11 @@ public class CategoryController {
     @GetMapping("/search")
     public ApiResponse searchProducts(@UserId Long userId ,@RequestParam("query") String query){
       return searchService.searchMain(userId,query);
+    }
+
+    @GetMapping("/check")
+    public ApiResponse checkDuplicatedNickname(@UserId Long userId ,@RequestParam("title") String title){
+        return ApiResponse.success(Success.GET_DUPLICATED_SUCCESS, categoryService.checkDuplicatedTitle(userId,title));
     }
 
 }

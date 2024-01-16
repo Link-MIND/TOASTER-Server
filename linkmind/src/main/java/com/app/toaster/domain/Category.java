@@ -27,6 +27,9 @@ public class Category{
 
 	private int priority;
 
+	@OneToOne(cascade = CascadeType.REMOVE)
+	private Reminder reminder;
+
 	private LocalDateTime latestReadTime;
 
 	@Builder

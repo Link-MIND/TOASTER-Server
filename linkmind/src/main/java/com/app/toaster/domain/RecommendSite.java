@@ -22,11 +22,12 @@ public class RecommendSite {
 
     String siteImg;
 
-    Enum siteSub;
+    @Enumerated(EnumType.STRING)
+    Topic siteSub;
 
 
     @Builder
-    public RecommendSite(String siteTitle, String siteUrl, String siteImg, Enum siteSub) {
+    public RecommendSite(String siteTitle, String siteUrl, String siteImg, Topic siteSub) {
         this.siteTitle =siteTitle;
         this.siteUrl=siteUrl;
         this.siteImg = siteImg;

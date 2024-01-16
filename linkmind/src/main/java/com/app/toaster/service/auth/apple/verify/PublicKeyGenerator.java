@@ -16,6 +16,8 @@ import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.service.auth.apple.response.ApplePublicKey;
 import com.app.toaster.service.auth.apple.response.ApplePublicKeys;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
 public class PublicKeyGenerator {
 
@@ -26,13 +28,12 @@ public class PublicKeyGenerator {
 	public PublicKey generatePublicKey(Map<String, String> headers, ApplePublicKeys applePublicKeys) {
 		ApplePublicKey applePublicKey =
 			applePublicKeys.getMatchesKey(headers.get(SIGN_ALGORITHM_HEADER_KEY), headers.get(KEY_ID_HEADER_KEY));
-
 		return generatePublicKeyWithApplePublicKey(applePublicKey);
 	}
 
 	private PublicKey generatePublicKeyWithApplePublicKey(ApplePublicKey publicKey) {
-		byte[] nBytes = Base64.getDecoder().decode(publicKey.n());
-		byte[] eBytes = Base64.getDecoder().decode(publicKey.e());
+		byte[] nBytes = Base64.getUrlDecoder().decode(publicKey.n());
+		byte[] eBytes = Base64.getUrlDecoder().decode(publicKey.e());
 
 		BigInteger n = new BigInteger(POSITIVE_SIGN_NUMBER, nBytes);
 		BigInteger e = new BigInteger(POSITIVE_SIGN_NUMBER, eBytes);

@@ -1,4 +1,11 @@
 package com.app.toaster.controller.request.category;
 
-public record ChangeCateoryTitleDto(Long categoryId, String newTitle) {
+import com.app.toaster.controller.valid.Severity;
+import com.app.toaster.controller.valid.TitleValid;
+import jakarta.validation.constraints.NotNull;
+
+public record ChangeCateoryTitleDto(
+        @NotNull
+        Long categoryId,
+        @TitleValid(payload = Severity.Error.class) @NotNull String newTitle) {
 }
