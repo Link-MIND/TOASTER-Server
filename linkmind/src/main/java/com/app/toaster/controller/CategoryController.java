@@ -65,11 +65,21 @@ public class CategoryController {
 
     @PatchMapping("/priority")
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse editCategories(
+    public ApiResponse editCategoryPriority(
             @UserId Long userId,
             @RequestBody ChangeCateoryPriorityDto changeCateoryPriorityDto
     ){
-        categoryService.editCategoriePriority(changeCateoryPriorityDto);
+        categoryService.editCategoryPriority(changeCateoryPriorityDto);
+        return ApiResponse.success(Success.UPDATE_CATEGORY_TITLE_SUCCESS);
+    }
+
+    @PatchMapping("/title")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse editCategoryTitle(
+            @UserId Long userId,
+            @RequestBody ChangeCateoryTitleDto changeCateoryTitleDto
+    ){
+        categoryService.editCategoryTitle(changeCateoryTitleDto);
         return ApiResponse.success(Success.UPDATE_CATEGORY_TITLE_SUCCESS);
     }
 

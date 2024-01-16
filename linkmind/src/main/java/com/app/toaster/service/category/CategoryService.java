@@ -148,7 +148,7 @@ public class CategoryService {
 
     //순서 업데이트
     @Transactional
-    public void editCategoriePriority(ChangeCateoryPriorityDto changeCateoryPriorityDto){
+    public void editCategoryPriority(ChangeCateoryPriorityDto changeCateoryPriorityDto){
 
         val newPriority = changeCateoryPriorityDto.newPriority();
 
@@ -164,6 +164,12 @@ public class CategoryService {
             categoryRepository.increasePriorityByOne(changeCateoryPriorityDto.categoryId(), currentPriority, newPriority);
 
 
+    }
+
+    @Transactional
+    public void editCategoryTitle(ChangeCateoryTitleDto changeCateoryTitleDto){
+
+        categoryRepository.updateCategoryTitle(changeCateoryTitleDto.categoryId(), changeCateoryTitleDto.newTitle());
     }
 
     //해당 유저 탐색
