@@ -33,6 +33,7 @@ public enum Error {
 	INVALID_APPLE_PUBLIC_KEY(HttpStatus.BAD_REQUEST, "유효하지않은 애플 퍼블릭 키 입니다."),
 	INVALID_APPLE_IDENTITY_TOKEN(HttpStatus.BAD_REQUEST, "잘못된 아이덴티티 토큰입니다."),
 	REQUEST_METHOD_VALIDATION_EXCEPTION(HttpStatus.BAD_REQUEST, "잘못된 메소드입니다."),
+	REQUEST_MEDIA_TYPE_VALIDATION_EXCEPTION(HttpStatus.BAD_REQUEST, "미디어 타입을 확인해주세요."),
 
 	/**
 	 * 401 UNAUTHORIZED EXCEPTION

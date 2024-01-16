@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -70,7 +71,11 @@ public class ControllerExceptionAdvice {
 		return ApiResponse.error(Error.REQUEST_METHOD_VALIDATION_EXCEPTION, e.getMessage());
 	}
 
-
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+	protected ApiResponse handleHttpMediaTypeNotSupportedException(final HttpMediaTypeNotSupportedException e) {
+		return ApiResponse.error(Error.REQUEST_MEDIA_TYPE_VALIDATION_EXCEPTION, e.getMessage());
+	}
 
 	
    /**
