@@ -49,6 +49,8 @@ public class TimerService {
     @Transactional
     public void createTimer(Long userId, CreateTimerRequestDto createTimerRequestDto){
         User presentUser = findUser(userId);
+        Category category = null;
+        String comment = "전체";
 
         int timerNum = timerRepository.findAllByUser(presentUser).size();
 
@@ -56,8 +58,11 @@ public class TimerService {
             throw new CustomException(Error.UNPROCESSABLE_ENTITY_CREATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CREATE_TIMER_EXCEPTION.getMessage());
         }
 
-        Category category = categoryRepository.findById(createTimerRequestDto.categoryId())
-                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
+        if(createTimerRequestDto.categoryId() != 0) {
+            category = categoryRepository.findById(createTimerRequestDto.categoryId())
+                    .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
+            comment = category.getTitle();
+        }
 
         if(!timerRepository.findAllByCategory(category).isEmpty()){
             throw new CustomException(Error.UNPROCESSABLE_CREATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_CREATE_TIMER_EXCEPTION.getMessage());
@@ -69,7 +74,7 @@ public class TimerService {
                 .remindDates(createTimerRequestDto.remindDates())
                 .remindTime(LocalTime.parse(createTimerRequestDto.remindTime()))
                 .isAlarm(true)
-                .comment(category.getTitle())
+                .comment(comment)
                 .build();
 
 
