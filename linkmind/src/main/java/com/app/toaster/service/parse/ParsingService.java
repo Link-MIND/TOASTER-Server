@@ -1,11 +1,15 @@
 package com.app.toaster.service.parse;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
 
+import javax.net.ssl.SSLHandshakeException;
+
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import com.app.toaster.controller.response.parse.OgResponse;
 import com.app.toaster.exception.Error;
+import com.app.toaster.exception.model.BadRequestException;
 import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.external.client.aws.AWSConfig;
 
@@ -41,8 +46,10 @@ public class ParsingService {
 				title == null || title.isBlank() ? "기본 토스트 제목" : title,
 				image == null || image.isBlank() ? BASIC_THUMBNAIL : image
 			);
-		}catch (org.jsoup.HttpStatusException e){
+		}catch (HttpStatusException | SSLHandshakeException e){
 			return OgResponse.of("15자 내로 제목을 지어주세요.", BASIC_THUMBNAIL);
+		}catch (ConnectException e){
+			throw new BadRequestException(Error.BAD_REQUEST_URL, Error.BAD_REQUEST_URL.getMessage());
 		}
 	}
 	// public String getOg(String linkUrl) throws IOException {

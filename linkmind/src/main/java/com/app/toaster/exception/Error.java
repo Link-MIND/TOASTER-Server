@@ -34,6 +34,7 @@ public enum Error {
 	INVALID_APPLE_IDENTITY_TOKEN(HttpStatus.BAD_REQUEST, "잘못된 아이덴티티 토큰입니다."),
 	REQUEST_METHOD_VALIDATION_EXCEPTION(HttpStatus.BAD_REQUEST, "잘못된 메소드입니다."),
 	REQUEST_MEDIA_TYPE_VALIDATION_EXCEPTION(HttpStatus.BAD_REQUEST, "미디어 타입을 확인해주세요."),
+	BAD_REQUEST_URL(HttpStatus.BAD_REQUEST, "죄송합니다. 이해할 수 없는 url입니다."),
 
 	/**
 	 * 401 UNAUTHORIZED EXCEPTION
