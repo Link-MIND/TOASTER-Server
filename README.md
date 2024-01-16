@@ -31,9 +31,6 @@
 
 <br>
 
-## 📜서버 API 명세서
-명세서 보러가기 : [API Docs](https://www.notion.so/API-005abc837a1a4f54b88da402ae031ef2)
-<br><br>
 
 ## 📦 ERD
 <img width="752" alt="스크린샷 2024-01-08 오전 12 27 24" src="https://github.com/Link-MIND/TOASTER-Server/assets/92644651/2c749077-5136-4578-9002-c1d244b7cab7">
