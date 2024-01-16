@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDateTime;
+import java.time.format.TextStyle;
+import java.util.Locale;
 import java.util.Random;
 
 @Slf4j
@@ -14,7 +17,6 @@ import java.util.Random;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FCMPushRequestDto {
 
-    private final int PUSH_MESSAGE_NUMBER = 5;
 
     private String targetToken;
 
@@ -33,30 +35,6 @@ public class FCMPushRequestDto {
                 .title("🍞 토스트 ")
                 .body(comment)
                 .build();
-
-    }
-
-    private void getPushMessage(Reminder reminder){
-        Random random = new Random();
-        int randomNumber = random.nextInt(PUSH_MESSAGE_NUMBER);
-
-        switch (randomNumber) {
-            case 0 -> {
-
-            }
-            case 1 -> {
-
-            }
-            case 2 -> {
-
-            }
-            case 3 -> {
-
-            }
-            case 4 -> {
-
-            }
-        };
 
     }
 

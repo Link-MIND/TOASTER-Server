@@ -1,10 +1,13 @@
 package com.app.toaster.external.client.fcm;
 
+import com.app.toaster.domain.Category;
 import com.app.toaster.external.client.sqs.SqsProducer;
 import com.app.toaster.domain.Reminder;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.NotFoundException;
+import com.app.toaster.infrastructure.CategoryRepository;
 import com.app.toaster.infrastructure.TimerRepository;
+import com.app.toaster.infrastructure.ToastRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -15,7 +18,11 @@ import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.scheduling.TaskScheduler;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.ScheduledFuture;
 
 import lombok.RequiredArgsConstructor;
@@ -41,6 +48,8 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 @Service
 @RequiredArgsConstructor
 public class FCMService {
+    private final CategoryRepository categoryRepository;
+    private final ToastRepository toastRepository;
     private final TimerRepository timerRepository;
 
     private final ObjectMapper objectMapper;  // FCM의 body 형태에 따라 생성한 값을 문자열로 저장하기 위한 Mapper 클래스
@@ -60,6 +69,9 @@ public class FCMService {
 
     @PersistenceContext
     private EntityManager em;
+
+
+    private final int PUSH_MESSAGE_NUMBER = 5;
 
     /**
      * 단일 기기
@@ -148,11 +160,11 @@ public class FCMService {
                 if(timer.getIsAlarm() && timer.getUser().getFcmIsAllowed() && cronExpression.equals(cron)) {
                     System.out.println("================= 전송시간 =================");
                     //sqs 푸시
-                    FCMPushRequestDto request = FCMPushRequestDto.builder().title("🍞토스터 🍞")
-                            .targetToken(timer.getUser().getFcmToken())
-                            .body(timer.getComment()).image("empty").build();
+                    FCMPushRequestDto request = getPushMessage(timer,toastRepository.getUnReadToastNumber(timer.getUser().getUserId()) );
 
                     sqsProducer.sendMessage(request);
+
+                    System.out.println("========="+request.getTitle() + request.getBody()+"=========");
 
                 }
 
@@ -174,5 +186,47 @@ public class FCMService {
             scheduledFuture.cancel(false);
         }
         log.info("ScheduledFuture: {}", scheduledFuture);
+    }
+
+    private FCMPushRequestDto getPushMessage(Reminder reminder, int unReadToastNumber){
+        Random random = new Random();
+        int randomNumber = random.nextInt(PUSH_MESSAGE_NUMBER);
+
+        System.out.println("==========timer=========");
+
+        String title="";
+        String body="";
+
+//        switch (randomNumber) {
+//            case 0 -> {
+//                title = reminder.getUser().getNickname()+PushMessage.ALARM_MESSAGE_0.getTitle();
+//                body = categoryTitle+PushMessage.ALARM_MESSAGE_0.getBody();
+//            }
+//            case 1 -> {
+//                title = "띵동! " + categoryTitle+PushMessage.ALARM_MESSAGE_1.getTitle();
+//                body = PushMessage.ALARM_MESSAGE_1.getBody();
+//            }
+//            case 2 -> {
+//                title = reminder.getUser().getNickname()+"님, "+categoryTitle+PushMessage.ALARM_MESSAGE_2.getTitle();
+//                body = PushMessage.ALARM_MESSAGE_2.getBody();
+//            }
+//            case 3 -> {
+//                LocalDateTime now = LocalDateTime.now();
+//
+//                title =  now.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.KOREA)+"요일 "+now.getHour()+"시에는 "
+//                        +categoryTitle+PushMessage.ALARM_MESSAGE_3.getTitle();
+//                body = PushMessage.ALARM_MESSAGE_3.getBody();
+//            }
+//            case 4 -> {
+//                title = reminder.getUser().getNickname()+"님, " +categoryTitle+PushMessage.ALARM_MESSAGE_4.getTitle();
+//                body = PushMessage.ALARM_MESSAGE_4.getBody()+unReadToastNumber+"개 남아있어요";
+//            }
+//        };
+
+        return FCMPushRequestDto.builder()
+                .targetToken(reminder.getUser().getFcmToken())
+                .title("title")
+                .body("body")
+                .build();
     }
 }
