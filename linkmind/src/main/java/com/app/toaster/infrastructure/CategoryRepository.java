@@ -23,8 +23,8 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("delete from Category c where c.categoryId in :ids")
     void deleteALLByCategoryIdInQuery(@Param("ids") List<Long> categoryIds);
 
-    @Query("SELECT COALESCE(MAX(c.priority), 0) FROM Category c")
-    int findMaxPriority();
+    @Query("SELECT COALESCE(MAX(c.priority), 0) FROM Category c WHERE c.user = :user")
+    int findMaxPriorityByUser(@Param("user") User user);
 
     ArrayList<Category> findAllByUserOrderByPriority(User user);
 

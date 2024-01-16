@@ -43,8 +43,8 @@ public class CategoryService {
     public void createCategory(final Long userId, final CreateCategoryDto createCategoryDto){
         User presentUser = findUser(userId);
 
-        // 현재 최대 우선순위를 가져와서 새로운 우선순위를 설정
-        val maxPriority = categoryRepository.findMaxPriority();
+        // 현재 유저의 최대 우선순위를 가져와서 새로운 우선순위를 설정
+        val maxPriority = categoryRepository.findMaxPriorityByUser(presentUser);
 
         val categoryNum= categoryRepository.findAllByUser(presentUser).size();
 
@@ -144,6 +144,26 @@ public class CategoryService {
             .allToastNum(toasts.size())
             .toastListDto(toastListDto)
             .build();
+    }
+
+    //순서 업데이트
+    @Transactional
+    public void editCategoriePriority(ChangeCateoryPriorityDto changeCateoryPriorityDto){
+
+        val newPriority = changeCateoryPriorityDto.newPriority();
+
+        Category category = categoryRepository.findById(changeCateoryPriorityDto.categoryId())
+                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
+
+        int currentPriority = category.getPriority();
+        category.updateCategoryPriority(changeCateoryPriorityDto.newPriority());
+
+        if(currentPriority < newPriority)
+            categoryRepository.decreasePriorityByOne(changeCateoryPriorityDto.categoryId(), currentPriority, newPriority);
+        else if (currentPriority > newPriority)
+            categoryRepository.increasePriorityByOne(changeCateoryPriorityDto.categoryId(), currentPriority, newPriority);
+
+
     }
 
     //해당 유저 탐색
