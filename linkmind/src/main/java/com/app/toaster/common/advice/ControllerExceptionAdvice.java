@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -42,10 +44,6 @@ public class ControllerExceptionAdvice {
 				.body(ApiResponse.error(e.getError(), e.getMessage()));
 	}
 
-	// @ExceptionHandler(IllegalArgumentException.class)
-	// public ResponseEntity<Void> handleIllegalArgumentException(final IllegalArgumentException e) {
-	// 	return ResponseEntity.badRequest().build();
-	// }
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	protected ResponseEntity<ApiResponse> handleConstraintDefinitionException(final MethodArgumentNotValidException e) {
@@ -66,6 +64,19 @@ public class ControllerExceptionAdvice {
 	protected ApiResponse handleDateTimeParseException(final DateTimeParseException e) {
 		return ApiResponse.error(Error.BAD_REQUEST_REMIND_TIME, Error.BAD_REQUEST_REMIND_TIME.getMessage());
 	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+	protected ApiResponse handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException e) {
+		return ApiResponse.error(Error.REQUEST_METHOD_VALIDATION_EXCEPTION, e.getMessage());
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+	protected ApiResponse handleHttpMediaTypeNotSupportedException(final HttpMediaTypeNotSupportedException e) {
+		return ApiResponse.error(Error.REQUEST_MEDIA_TYPE_VALIDATION_EXCEPTION, e.getMessage());
+	}
+
 	
    /**
 	 * 500 Internal Server Error
