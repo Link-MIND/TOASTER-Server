@@ -67,7 +67,7 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse editCategoryTitle(
             @UserId Long userId,
-            @RequestBody ChangeCateoryTitleDto changeCateoryTitleDto
+            @Valid @RequestBody ChangeCateoryTitleDto changeCateoryTitleDto
     ){
         categoryService.editCategoryTitle(changeCateoryTitleDto);
         return ApiResponse.success(Success.UPDATE_CATEGORY_TITLE_SUCCESS);
