@@ -39,7 +39,7 @@ public class TitleValidator implements ConstraintValidator<TitleValid, String> {
 			return false;
 		}
 
-		if(title.length()>=15){
+		if(title.length()>15){
 			context.buildConstraintViolationWithTemplate("이름은 최대 15자까지 입력 가능해요")
 					.addConstraintViolation();
 			return false;
