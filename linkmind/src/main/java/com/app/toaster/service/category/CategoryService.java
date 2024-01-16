@@ -43,8 +43,8 @@ public class CategoryService {
     public void createCategory(final Long userId, final CreateCategoryDto createCategoryDto){
         User presentUser = findUser(userId);
 
-        // 현재 최대 우선순위를 가져와서 새로운 우선순위를 설정
-        val maxPriority = categoryRepository.findMaxPriority();
+        // 현재 유저의 최대 우선순위를 가져와서 새로운 우선순위를 설정
+        val maxPriority = categoryRepository.findMaxPriorityByUser(presentUser);
 
         val categoryNum= categoryRepository.findAllByUser(presentUser).size();
 
@@ -95,32 +95,6 @@ public class CategoryService {
 
     }
 
-    @Transactional
-    public void editCategories(final EditCategoryRequestDto editCategoryRequestDto){
-        //제목 업데이트
-        editCategoryRequestDto.changeCategoryTitleList().forEach(request ->
-                categoryRepository.updateCategoryTitle(request.categoryId(), request.newTitle()));
-
-        //순서 업데이트
-        for (ChangeCateoryPriorityDto changeCateoryPriorityDto : editCategoryRequestDto.changeCategoryPriorityList()) {
-            Long categoryId = changeCateoryPriorityDto.categoryId();
-            int newPriority = changeCateoryPriorityDto.newPriority();
-
-            Category category = categoryRepository.findById(categoryId)
-                    .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
-
-            int currentPriority = category.getPriority();
-            category.updateCategoryPriority(changeCateoryPriorityDto.newPriority());
-
-            if(currentPriority < newPriority)
-                categoryRepository.decreasePriorityByOne(categoryId, currentPriority, newPriority);
-            else if (currentPriority > newPriority)
-                categoryRepository.increasePriorityByOne(categoryId, currentPriority, newPriority);
-
-        }
-
-    }
-
     public GetCategoryResponseDto getCategory(final Long userId, final Long categoryId, final ToastFilter filter) {
         User presentUser = findUser(userId);
         if (categoryId ==0){
@@ -144,6 +118,32 @@ public class CategoryService {
             .allToastNum(toasts.size())
             .toastListDto(toastListDto)
             .build();
+    }
+
+    //순서 업데이트
+    @Transactional
+    public void editCategoryPriority(ChangeCateoryPriorityDto changeCateoryPriorityDto){
+
+        val newPriority = changeCateoryPriorityDto.newPriority();
+
+        Category category = categoryRepository.findById(changeCateoryPriorityDto.categoryId())
+                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
+
+        int currentPriority = category.getPriority();
+        category.updateCategoryPriority(changeCateoryPriorityDto.newPriority());
+
+        if(currentPriority < newPriority)
+            categoryRepository.decreasePriorityByOne(changeCateoryPriorityDto.categoryId(), currentPriority, newPriority);
+        else if (currentPriority > newPriority)
+            categoryRepository.increasePriorityByOne(changeCateoryPriorityDto.categoryId(), currentPriority, newPriority);
+
+
+    }
+
+    @Transactional
+    public void editCategoryTitle(ChangeCateoryTitleDto changeCateoryTitleDto){
+
+        categoryRepository.updateCategoryTitle(changeCateoryTitleDto.categoryId(), changeCateoryTitleDto.newTitle());
     }
 
     //해당 유저 탐색
