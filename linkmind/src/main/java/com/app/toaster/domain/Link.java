@@ -1,5 +1,7 @@
 package com.app.toaster.domain;
 
+import com.fasterxml.jackson.annotation.JsonRootName;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -16,8 +18,10 @@ public class Link {
 
     private String title;
 
+    @Column(columnDefinition = "TEXT")
     private String linkUrl;
 
+    @Column(columnDefinition = "TEXT")
     private String thumbnailUrl;
 
     @Builder

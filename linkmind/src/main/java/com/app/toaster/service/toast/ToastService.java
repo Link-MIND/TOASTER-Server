@@ -138,10 +138,7 @@ public class ToastService {
 			(Toast::getId)).collect(Collectors.toList()));
 }
 
-	public List<WeekSiteDto> getWeekLinks(){
-		return toastRepository.findAll().subList(0,Math.min(3,toastRepository.findAll().size()))
-				.stream().map(WeekSiteDto::of).toList();
-	}
+
 
 	private void checkCategoryIsEmpty(Toast toast, Long categoryId){
 		if (categoryId == null) {
