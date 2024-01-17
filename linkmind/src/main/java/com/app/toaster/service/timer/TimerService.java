@@ -157,6 +157,7 @@ public class TimerService {
         }
 
         reminder.changeAlarm();
+        reminder.setUpdatedAtNow();
     }
 
 
