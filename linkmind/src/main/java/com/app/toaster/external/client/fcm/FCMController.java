@@ -6,11 +6,14 @@ import com.app.toaster.external.client.fcm.FCMPushRequestDto;
 import com.app.toaster.exception.Success;
 import com.app.toaster.external.client.fcm.FCMService;
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+
+import static com.app.toaster.external.client.fcm.FCMService.clearScheduledTasks;
 
 @RestController
 @RequestMapping("/alarm")
@@ -41,5 +44,12 @@ public class FCMController {
     public ApiResponse sendTopicScheduledTest(@RequestBody FCMPushRequestDto request) {
         sqsProducer.sendMessage(request);
         return ApiResponse.success(Success.PUSH_ALARM_PERIODIC_SUCCESS);
+    }
+
+    @DeleteMapping("/clear")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse deleteScheduledTasks(){
+        clearScheduledTasks();
+        return ApiResponse.success(Success.CLEAR_SCHEDULED_TASKS_SUCCESS);
     }
 }
