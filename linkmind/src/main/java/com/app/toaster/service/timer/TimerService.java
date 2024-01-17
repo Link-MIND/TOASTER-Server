@@ -16,6 +16,7 @@ import com.app.toaster.exception.model.ForbiddenException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.exception.model.UnauthorizedException;
 import com.app.toaster.external.client.fcm.FCMPushRequestDto;
+import com.app.toaster.external.client.fcm.FCMService;
 import com.app.toaster.infrastructure.CategoryRepository;
 import com.app.toaster.infrastructure.TimerRepository;
 import com.app.toaster.infrastructure.UserRepository;
@@ -37,6 +38,8 @@ public class TimerService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final TimerRepository timerRepository;
+
+    private final FCMService fcmService;
 
 
     private final Locale locale = Locale.KOREA;
@@ -98,6 +101,13 @@ public class TimerService {
         }
         reminder.updateRemindDates(updateTimerDateTimeDto.remindDates());
         reminder.updateRemindTime(updateTimerDateTimeDto.remindTime());
+
+        LocalDateTime now = LocalDateTime.now();
+//        if(now.isBefore(reminder.getRemindTime()))
+//
+//        String cronExpression = String.format("0 %s %s * * ?", reminder.getRemindTime().getMinute(),reminder.getRemindTime().getHour());
+//
+//        fcmService.schedulePushAlarm(cronExpression, reminder.getId());
 
     }
 
@@ -204,6 +214,7 @@ public class TimerService {
 
     // 대기중인 타이머 날짜,시간 포맷
     private WaitingTimerDto createWaitingTimerDto(Reminder reminder) {
+        LocalDateTime now = LocalDateTime.now();
         String time = (reminder.getRemindTime().getMinute() == 0)
                 ? reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시"))
                 : reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시 mm분"));
@@ -211,6 +222,15 @@ public class TimerService {
         String dates = reminder.getRemindDates().stream()
                 .map(this::mapIndexToDayString)
                 .collect(Collectors.joining(", "));
+
+
+        // 바뀐 타이머가 오늘 이후 설정되어있으면 새로운 schedule 추가
+        if (reminder.getRemindDates().contains(now.getDayOfWeek().getValue()))
+            if(reminder.getRemindTime().isAfter(LocalTime.now())){
+                String cronExpression = String.format("0 %s %s * * ?", reminder.getRemindTime().getMinute(),reminder.getRemindTime().getHour());
+
+                fcmService.schedulePushAlarm(cronExpression, reminder.getId());
+            }
 
         return WaitingTimerDto.of(reminder, time, dates);
     }

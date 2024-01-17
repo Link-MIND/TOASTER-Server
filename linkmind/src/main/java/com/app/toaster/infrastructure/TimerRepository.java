@@ -16,9 +16,15 @@ import java.util.List;
 public interface TimerRepository extends JpaRepository<Reminder, Long> {
 
     ArrayList<Reminder> findAllByUser(User user);
+
     void deleteAllByUser(User user);
 
     ArrayList<Reminder> findAllByCategory(Category category);
 
     Reminder findByCategory_CategoryId(Long categoryId);
+
+    @Query("select r.category from Reminder r where r.id = :id")
+    Category findCategoryByReminderId(@Param("id") Long reminderId);
+
+
 }

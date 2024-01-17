@@ -191,42 +191,47 @@ public class FCMService {
     private FCMPushRequestDto getPushMessage(Reminder reminder, int unReadToastNumber){
         Random random = new Random();
         int randomNumber = random.nextInt(PUSH_MESSAGE_NUMBER);
+        String categoryTitle = "전체";
 
-        System.out.println("==========timer=========");
+                Category category = timerRepository.findCategoryByReminderId(reminder.getId());
+        if(category != null){
+            categoryTitle = category.getTitle();
+        }
+
 
         String title="";
         String body="";
 
-//        switch (randomNumber) {
-//            case 0 -> {
-//                title = reminder.getUser().getNickname()+PushMessage.ALARM_MESSAGE_0.getTitle();
-//                body = categoryTitle+PushMessage.ALARM_MESSAGE_0.getBody();
-//            }
-//            case 1 -> {
-//                title = "띵동! " + categoryTitle+PushMessage.ALARM_MESSAGE_1.getTitle();
-//                body = PushMessage.ALARM_MESSAGE_1.getBody();
-//            }
-//            case 2 -> {
-//                title = reminder.getUser().getNickname()+"님, "+categoryTitle+PushMessage.ALARM_MESSAGE_2.getTitle();
-//                body = PushMessage.ALARM_MESSAGE_2.getBody();
-//            }
-//            case 3 -> {
-//                LocalDateTime now = LocalDateTime.now();
-//
-//                title =  now.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.KOREA)+"요일 "+now.getHour()+"시에는 "
-//                        +categoryTitle+PushMessage.ALARM_MESSAGE_3.getTitle();
-//                body = PushMessage.ALARM_MESSAGE_3.getBody();
-//            }
-//            case 4 -> {
-//                title = reminder.getUser().getNickname()+"님, " +categoryTitle+PushMessage.ALARM_MESSAGE_4.getTitle();
-//                body = PushMessage.ALARM_MESSAGE_4.getBody()+unReadToastNumber+"개 남아있어요";
-//            }
-//        };
+        switch (randomNumber) {
+            case 0 -> {
+                title = reminder.getUser().getNickname()+PushMessage.ALARM_MESSAGE_0.getTitle();
+                body = categoryTitle+PushMessage.ALARM_MESSAGE_0.getBody();
+            }
+            case 1 -> {
+                title = "띵동! " + categoryTitle+PushMessage.ALARM_MESSAGE_1.getTitle();
+                body = PushMessage.ALARM_MESSAGE_1.getBody();
+            }
+            case 2 -> {
+                title = reminder.getUser().getNickname()+"님, "+categoryTitle+PushMessage.ALARM_MESSAGE_2.getTitle();
+                body = PushMessage.ALARM_MESSAGE_2.getBody();
+            }
+            case 3 -> {
+                LocalDateTime now = LocalDateTime.now();
+
+                title =  now.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.KOREA)+"요일 "+now.getHour()+"시에는 "
+                        +categoryTitle+PushMessage.ALARM_MESSAGE_3.getTitle();
+                body = PushMessage.ALARM_MESSAGE_3.getBody();
+            }
+            case 4 -> {
+                title = reminder.getUser().getNickname()+"님, " +categoryTitle+PushMessage.ALARM_MESSAGE_4.getTitle();
+                body = PushMessage.ALARM_MESSAGE_4.getBody()+unReadToastNumber+"개 남아있어요";
+            }
+        };
 
         return FCMPushRequestDto.builder()
                 .targetToken(reminder.getUser().getFcmToken())
-                .title("title")
-                .body("body")
+                .title(title)
+                .body(body)
                 .build();
     }
 }
