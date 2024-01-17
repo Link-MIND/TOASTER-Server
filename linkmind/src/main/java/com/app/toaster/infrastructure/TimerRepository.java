@@ -19,7 +19,7 @@ public interface TimerRepository extends JpaRepository<Reminder, Long> {
 
     void deleteAllByUser(User user);
 
-    ArrayList<Reminder> findAllByCategory(Category category);
+    ArrayList<Reminder> findAllByCategoryAndUser(Category category, User user);
 
     Reminder findByCategory_CategoryId(Long categoryId);
 

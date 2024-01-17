@@ -64,8 +64,7 @@ public class TimerService {
                     .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
             comment = category.getTitle();
         }
-
-        if(!timerRepository.findAllByCategory(category).isEmpty()){
+        if(!timerRepository.findAllByCategoryAndUser(category,presentUser).isEmpty()){
             throw new CustomException(Error.UNPROCESSABLE_CREATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_CREATE_TIMER_EXCEPTION.getMessage());
         }
 

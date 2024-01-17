@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import com.app.toaster.config.jwt.JwtService;
 import com.app.toaster.controller.request.auth.SignInRequestDto;
@@ -60,11 +61,12 @@ public class AuthService {
 		LoginResult loginResult = login(socialType, socialAccessToken);
 		String socialId = loginResult.id();
 		String profileImage = loginResult.profile();
+		String nickname = loginResult.nickname();
 		Boolean isRegistered = userRepository.existsBySocialIdAndSocialType(socialId, socialType);
 
 		if (!isRegistered) {
 			User newUser = User.builder()
-				.nickname("토스터"+socialId)
+				.nickname(nickname==null?"토스터"+socialId.substring(5):nickname)
 				.socialId(socialId)
 				.socialType(socialType).build();
 			newUser.updateFcmIsAllowed(true); //신규 유저면 true박고
@@ -84,8 +86,9 @@ public class AuthService {
 		user.updateRefreshToken(refreshToken);
 		user.updateFcmToken(fcmToken);
 		user.updateProfile(profileImage == null ? BASIC_ROOT+BASIC_THUMBNAIL : profileImage);
-
-
+		if (nickname!=null){		//탈퇴 안했던 유저들도 수정될 수 있도록 변경
+			user.updateNickname(nickname);
+		}
 		return SignInResponseDto.of(user.getUserId(), accessToken, refreshToken, fcmToken, isRegistered,user.getFcmIsAllowed(),
 			user.getProfile());
 	}
@@ -123,14 +126,17 @@ public class AuthService {
 			return kakaoSignInService.getKaKaoId(socialAccessToken);
 		}
 		else{
-			return LoginResult.of("test", "뭔가 로직에 문제가 있음.");
+			return LoginResult.of("test", "뭔가 로직에 문제가 있음.","닉네임에 문제가 있음.");
 		}
 	}
 
 	@Transactional
-	public void withdraw(Long userId) {
+	public void withdraw(Long userId, String accessToken) {
 		User user = userRepository.findByUserId(userId).orElseThrow(
 			()->new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
+		if (user.getSocialType() == SocialType.KAKAO){
+			kakaoSignInService.withdrawKakao(accessToken);
+		}
 		try {
 			toastService.deleteAllToast(user);
 		}catch (IOException e){
@@ -146,4 +152,5 @@ public class AuthService {
 			throw new UnprocessableEntityException(Error.UNPROCESSABLE_ENTITY_DELETE_EXCEPTION, Error.UNPROCESSABLE_ENTITY_DELETE_EXCEPTION.getMessage());
 		}
 	}
+
 }
