@@ -18,6 +18,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import com.app.toaster.common.dto.ApiResponse;
 import com.app.toaster.exception.Error;
@@ -27,6 +28,7 @@ import com.app.toaster.external.client.slack.SlackApi;
 import io.sentry.Sentry;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintDefinitionException;
+import jakarta.validation.ConstraintViolationException;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
@@ -96,6 +98,15 @@ public class ControllerExceptionAdvice {
 		return ResponseEntity.status(Error.BAD_REQUEST_VALIDATION.getErrorCode())
 			.body(ApiResponse.error(Error.BAD_REQUEST_VALIDATION, Error.BAD_REQUEST_VALIDATION.getMessage()));
 	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST) // 커스텀 validation 에러 핸들링.
+	@ExceptionHandler(HandlerMethodValidationException.class)
+	protected ResponseEntity<ApiResponse> ConstraintViolationException(final HandlerMethodValidationException e) {
+		Sentry.captureException(e);
+		return ResponseEntity.status(Error.BAD_REQUEST_VALIDATION.getErrorCode())
+			.body(ApiResponse.error(Error.BAD_REQUEST_VALIDATION, Error.BAD_REQUEST_VALIDATION.getMessage()));
+	}
+
 
 
 	

@@ -45,6 +45,12 @@ public class TitleValidator implements ConstraintValidator<TitleValid, String> {
 			return false;
 		}
 
+		if(!title.matches("^[\\S][가-힣a-zA-Z0-9\\s]{0,20}$")){
+			context.buildConstraintViolationWithTemplate("특수 문자로는 검색할 수 없어요.")
+				.addConstraintViolation();
+			return false;
+		}
+
 		return true;
 	}
 }
