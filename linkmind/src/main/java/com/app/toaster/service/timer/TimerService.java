@@ -103,11 +103,15 @@ public class TimerService {
         reminder.updateRemindTime(updateTimerDateTimeDto.remindTime());
 
         LocalDateTime now = LocalDateTime.now();
-//        if(now.isBefore(reminder.getRemindTime()))
-//
-//        String cronExpression = String.format("0 %s %s * * ?", reminder.getRemindTime().getMinute(),reminder.getRemindTime().getHour());
-//
-//        fcmService.schedulePushAlarm(cronExpression, reminder.getId());
+
+        // 바뀐 타이머가 오늘 이후 설정되어있으면 새로운 schedule 추가
+        if (reminder.getRemindDates().contains(now.getDayOfWeek().getValue()))
+            if(reminder.getRemindTime().isAfter(LocalTime.now())){
+                String cronExpression = String.format("0 %s %s * * ?", reminder.getRemindTime().getMinute(),reminder.getRemindTime().getHour());
+
+                fcmService.schedulePushAlarm(cronExpression, reminder.getId());
+            }
+
 
     }
 
@@ -222,15 +226,6 @@ public class TimerService {
         String dates = reminder.getRemindDates().stream()
                 .map(this::mapIndexToDayString)
                 .collect(Collectors.joining(", "));
-
-
-        // 바뀐 타이머가 오늘 이후 설정되어있으면 새로운 schedule 추가
-        if (reminder.getRemindDates().contains(now.getDayOfWeek().getValue()))
-            if(reminder.getRemindTime().isAfter(LocalTime.now())){
-                String cronExpression = String.format("0 %s %s * * ?", reminder.getRemindTime().getMinute(),reminder.getRemindTime().getHour());
-
-                fcmService.schedulePushAlarm(cronExpression, reminder.getId());
-            }
 
         return WaitingTimerDto.of(reminder, time, dates);
     }
