@@ -157,6 +157,7 @@ public class TimerService {
         }
 
         reminder.changeAlarm();
+        reminder.setUpdatedAtNow();
     }
 
 
@@ -190,7 +191,7 @@ public class TimerService {
                 .map(this::createWaitingTimerDto)
                 .sorted(
                         Comparator.comparing(WaitingTimerDto::isAlarm)
-                                .thenComparing(WaitingTimerDto::updateAt).reversed()
+                                .thenComparing(WaitingTimerDto::updateAt)
                 )
                 .collect(Collectors.toList());
 
