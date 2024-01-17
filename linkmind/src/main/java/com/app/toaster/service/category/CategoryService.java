@@ -169,4 +169,5 @@ public class CategoryService {
         return DuplicatedResponse.of(categoryRepository.existsCategoriesByUserAndTitle(findUser(userId), title));
 
     }
+
 }
