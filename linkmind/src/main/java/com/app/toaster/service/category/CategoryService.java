@@ -12,6 +12,7 @@ import com.app.toaster.domain.Reminder;
 import com.app.toaster.domain.Toast;
 import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
+import com.app.toaster.exception.model.BadRequestException;
 import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.infrastructure.CategoryRepository;
@@ -63,11 +64,14 @@ public class CategoryService {
     }
 
     @Transactional
-    public void deleteCategory(final DeleteCategoryDto deleteCategoryDto){
+    public void deleteCategory(final ArrayList<Long> deleteCategoryDto){
+        if(deleteCategoryDto.isEmpty()){
+            throw new BadRequestException(Error.BAD_REQUEST_VALIDATION, Error.BAD_REQUEST_VALIDATION.getMessage());
+        }
 
-        toastRepository.updateCategoryIdsToNull(deleteCategoryDto.deleteCategoryList());
+        toastRepository.updateCategoryIdsToNull(deleteCategoryDto);
 
-        for (Long categoryId : deleteCategoryDto.deleteCategoryList()) {
+        for (Long categoryId : deleteCategoryDto) {
             Category category = categoryRepository.findById(categoryId)
                     .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
 
