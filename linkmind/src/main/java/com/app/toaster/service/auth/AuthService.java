@@ -131,12 +131,12 @@ public class AuthService {
 	}
 
 	@Transactional
-	public void withdraw(Long userId, String accessToken) {
+	public void withdraw(Long userId) {
 		User user = userRepository.findByUserId(userId).orElseThrow(
 			()->new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
-		if (user.getSocialType() == SocialType.KAKAO){
-			kakaoSignInService.withdrawKakao(accessToken);
-		}
+		// if (user.getSocialType() == SocialType.KAKAO){
+		// 	kakaoSignInService.withdrawKakao(accessToken);
+		// }
 		try {
 			toastService.deleteAllToast(user);
 		}catch (IOException e){

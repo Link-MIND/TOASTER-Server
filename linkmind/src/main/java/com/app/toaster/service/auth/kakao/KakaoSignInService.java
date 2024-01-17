@@ -34,13 +34,14 @@ public class KakaoSignInService {
 		return LoginResult.of(objectMapper.convertValue(responseData.getBody(), Map.class).get("id").toString(), profileResponse==null?null:profileResponse.get("profile_image").toString(),
 			profileResponse==null?null:profileResponse.get("nickname").toString()); //프로필 이미지 허용 x시 null로 넘기기.
 	}
+	// 인가코드 나중에 서버에서 한번에 처리 하는 방식으로 변경. ux 이슈
 
-	public String withdrawKakao(String accessToken){
-		ResponseEntity<Object> responseData = requestKakaoServer(accessToken, Strategy.WITHDRAWAL);
-		ObjectMapper objectMapper = new ObjectMapper();
-		HashMap profileResponse = (HashMap)objectMapper.convertValue( responseData.getBody(),Map.class);
-		return profileResponse.get("id").toString();
-	}
+	// public String withdrawKakao(String accessToken){
+	// 	ResponseEntity<Object> responseData = requestKakaoServer(accessToken, Strategy.WITHDRAWAL);
+	// 	ObjectMapper objectMapper = new ObjectMapper();
+	// 	HashMap profileResponse = (HashMap)objectMapper.convertValue( responseData.getBody(),Map.class);
+	// 	return profileResponse.get("id").toString();
+	// }
 
 	private ResponseEntity<Object> requestKakaoServer(String accessToken, Strategy strategy){
 		RestTemplate restTemplate = new RestTemplate();
