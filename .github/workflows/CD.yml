@@ -26,11 +26,11 @@ jobs:
       working-directory: ${{ env.working-directory }}
 
     - name: toaster-firebase-admin-sdk.json 생성
-      run: |
-          cd src/main/resources
-          touch ./toaster-firebase-admin-sdk.json
-          echo "${{ secrets.TOASTER_FIREBASE_ADMIN_SDK }}" > ./toaster-firebase-admin-sdk.json
-      working-directory: ${{ env.working-directory }}
+      id: create-json
+      uses: jsdaniell/create-json@1.1.2
+      with:
+          name: "toaster-firebase-admin-sdk.json"
+          json: ${{ secrets.TOASTER_FIREBASE_ADMIN_SDK }}
         
     - name: 빌드
       run: |
