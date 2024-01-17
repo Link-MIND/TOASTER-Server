@@ -75,7 +75,7 @@ public class CategoryService {
             Category category = categoryRepository.findById(categoryId)
                     .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
 
-            categoryRepository.decreasePriorityNextDeleteCategory(categoryId, category.getPriority());
+            categoryRepository.decreasePriorityNextDeleteCategory(categoryId, category.getPriority(),category.getUser().getUserId());
 
             Reminder timer = timerRepository.findByCategory_CategoryId(categoryId);
             if(timer != null)
@@ -137,9 +137,9 @@ public class CategoryService {
         category.updateCategoryPriority(changeCateoryPriorityDto.newPriority());
 
         if(currentPriority < newPriority)
-            categoryRepository.decreasePriorityByOne(changeCateoryPriorityDto.categoryId(), currentPriority, newPriority);
+            categoryRepository.decreasePriorityByOne(changeCateoryPriorityDto.categoryId(), currentPriority, newPriority, category.getUser().getUserId());
         else if (currentPriority > newPriority)
-            categoryRepository.increasePriorityByOne(changeCateoryPriorityDto.categoryId(), currentPriority, newPriority);
+            categoryRepository.increasePriorityByOne(changeCateoryPriorityDto.categoryId(), currentPriority, newPriority,category.getUser().getUserId());
 
 
     }
@@ -173,4 +173,5 @@ public class CategoryService {
         return DuplicatedResponse.of(categoryRepository.existsCategoriesByUserAndTitle(findUser(userId), title));
 
     }
+
 }
