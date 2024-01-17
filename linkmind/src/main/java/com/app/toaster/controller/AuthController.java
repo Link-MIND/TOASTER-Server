@@ -52,8 +52,8 @@ public class AuthController {
 
 	@DeleteMapping("/withdraw")
 	@ResponseStatus(HttpStatus.OK)
-	public ApiResponse withdraw(@UserId Long userId, @RequestHeader("Authorization") String socialAccessToken) {
-		authService.withdraw(userId,socialAccessToken);
+	public ApiResponse withdraw(@UserId Long userId) {
+		authService.withdraw(userId);
 		return ApiResponse.success(Success.DELETE_USER_SUCCESS);
 	}
 }
