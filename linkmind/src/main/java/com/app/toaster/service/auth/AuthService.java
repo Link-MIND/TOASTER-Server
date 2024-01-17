@@ -66,7 +66,7 @@ public class AuthService {
 
 		if (!isRegistered) {
 			User newUser = User.builder()
-				.nickname(nickname==null?"토스터"+socialId.substring(5):nickname)
+				.nickname(nickname==null?"토스터":nickname)
 				.socialId(socialId)
 				.socialType(socialType).build();
 			newUser.updateFcmIsAllowed(true); //신규 유저면 true박고
