@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 import com.app.toaster.controller.response.toast.WeekSiteDto;
+import com.app.toaster.infrastructure.LinkRepository;
+import com.app.toaster.service.link.LinkService;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -41,6 +43,7 @@ import lombok.RequiredArgsConstructor;
 public class ToastController {
 	private final ToastService toastService;
 	private final ParsingService parsingService;
+	private final LinkService linkService;
 
 	@PostMapping("/og")
 	@ResponseStatus(HttpStatus.OK)
@@ -86,7 +89,7 @@ public class ToastController {
 	public ApiResponse<List<WeekSiteDto>> getWeekLinks(
 			@UserId Long userId
 	) {
-		return ApiResponse.success(Success.GET_LINKS_SUCCESS, toastService.getWeekLinks());
+		return ApiResponse.success(Success.GET_LINKS_SUCCESS, linkService.getWeekLinks());
 	}
 
 
