@@ -20,6 +20,7 @@ import com.app.toaster.external.client.fcm.FCMService;
 import com.app.toaster.infrastructure.CategoryRepository;
 import com.app.toaster.infrastructure.TimerRepository;
 import com.app.toaster.infrastructure.UserRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +42,8 @@ public class TimerService {
 
     private final FCMService fcmService;
 
+    private final EntityManager em;
+
 
     private final Locale locale = Locale.KOREA;
 
@@ -55,7 +58,7 @@ public class TimerService {
 
         int timerNum = timerRepository.findAllByUser(presentUser).size();
 
-        if(timerNum>MaxTimerNumber){
+        if(timerNum>=MaxTimerNumber){
             throw new CustomException(Error.BAD_REQUEST_CREATE_TIMER_EXCEPTION, Error.BAD_REQUEST_CREATE_TIMER_EXCEPTION.getMessage());
         }
 
@@ -77,16 +80,17 @@ public class TimerService {
                 .comment(comment)
                 .build();
 
+        timerRepository.save(reminder);
+        em.flush();
+
         if (reminder.getRemindDates().contains(LocalDateTime.now().getDayOfWeek().getValue()))
             if(reminder.getRemindTime().isAfter(LocalTime.now())){
                 String cronExpression = String.format("0 %s %s * * ?", reminder.getRemindTime().getMinute(),reminder.getRemindTime().getHour());
 
                 fcmService.schedulePushAlarm(cronExpression, reminder.getId());
+
                 System.out.println("test 성공");
             }
-
-
-        timerRepository.save(reminder);
     }
 
     public GetTimerResponseDto getTimer(Long userId, Long timerId){
@@ -108,6 +112,7 @@ public class TimerService {
         }
         reminder.updateRemindDates(updateTimerDateTimeDto.remindDates());
         reminder.updateRemindTime(updateTimerDateTimeDto.remindTime());
+        em.flush();
 
         LocalDateTime now = LocalDateTime.now();
 
