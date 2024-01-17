@@ -1,15 +1,10 @@
 package com.app.toaster.service.toast;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
-import org.slf4j.LoggerFactory;
-import com.app.toaster.controller.response.toast.WeekSiteDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +20,6 @@ import com.app.toaster.exception.model.BadRequestException;
 import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.exception.model.ForbiddenException;
 import com.app.toaster.exception.model.NotFoundException;
-import com.app.toaster.exception.model.UnauthorizedException;
 import com.app.toaster.external.client.aws.ImagePresignedUrlResponse;
 import com.app.toaster.external.client.aws.PresignedUrlVO;
 import com.app.toaster.external.client.aws.S3Service;
@@ -33,12 +27,9 @@ import com.app.toaster.infrastructure.CategoryRepository;
 import com.app.toaster.infrastructure.ToastRepository;
 import com.app.toaster.infrastructure.UserRepository;
 import com.app.toaster.service.parse.ParsingService;
-import com.google.api.client.util.IOUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.Response;
-import software.amazon.awssdk.utils.IoUtils;
 import software.amazon.awssdk.utils.Logger;
 
 @Service
