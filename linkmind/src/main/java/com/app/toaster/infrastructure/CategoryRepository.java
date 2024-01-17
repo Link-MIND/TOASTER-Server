@@ -33,22 +33,24 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     @Modifying
     @Query("UPDATE Category c SET c.priority = c.priority - 1 " +
-            "WHERE c.categoryId != :categoryId AND c.priority > :currentPriority AND c.priority <= :newPriority")
+            "WHERE c.categoryId != :categoryId AND c.user.userId =:userId AND c.priority > :currentPriority AND c.priority <= :newPriority")
     void decreasePriorityByOne(@Param("categoryId") Long categoryId,
                                @Param("currentPriority") int currentPriority,
-                               @Param("newPriority") int newPriority);
+                               @Param("newPriority") int newPriority,
+                               @Param("userId")Long userId);
 
     @Modifying
     @Query("UPDATE Category c SET c.priority = c.priority + 1 " +
-            "WHERE c.categoryId != :categoryId AND c.priority >= :newPriority AND c.priority < :currentPriority")
+            "WHERE c.categoryId != :categoryId AND c.user.userId =:userId AND c.priority >= :newPriority AND c.priority < :currentPriority")
     void increasePriorityByOne(@Param("categoryId") Long categoryId,
                                @Param("currentPriority") int currentPriority,
-                               @Param("newPriority") int newPriority);
+                               @Param("newPriority") int newPriority,
+                               @Param("userId")Long userId);
 
     @Modifying
     @Query("UPDATE Category c SET c.priority = c.priority - 1 " +
-            "WHERE c.categoryId != :categoryId AND c.priority > :currentPriority")
-    void decreasePriorityNextDeleteCategory(@Param("categoryId") Long categoryId, @Param("currentPriority") int currentPriority);
+            "WHERE c.categoryId != :categoryId AND c.user.userId =:userId AND c.priority > :currentPriority")
+    void decreasePriorityNextDeleteCategory(@Param("categoryId") Long categoryId, @Param("currentPriority") int currentPriority,@Param("userId")Long userId);
 
     @Query("SELECT c FROM Category c WHERE " +
       "c.user.userId = :userId and " +
