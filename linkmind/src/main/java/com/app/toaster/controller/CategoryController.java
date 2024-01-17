@@ -7,6 +7,7 @@ import com.app.toaster.controller.response.category.CategoriesResponse;
 import com.app.toaster.controller.response.toast.ToastFilter;
 import com.app.toaster.controller.response.category.CategoryResponse;
 import com.app.toaster.controller.response.category.GetCategoryResponseDto;
+import com.app.toaster.controller.valid.TitleValid;
 import com.app.toaster.exception.Success;
 import com.app.toaster.service.category.CategoryService;
 import com.app.toaster.service.search.SearchService;
@@ -87,7 +88,7 @@ public class CategoryController {
 
 
     @GetMapping("/search")
-    public ApiResponse searchProducts(@UserId Long userId ,@RequestParam("query") String query){
+    public ApiResponse searchProducts(@UserId Long userId ,@NotNull @RequestParam("query") String query){
       return searchService.searchMain(userId,query);
     }
 
