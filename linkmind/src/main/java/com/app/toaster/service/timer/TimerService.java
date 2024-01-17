@@ -190,7 +190,7 @@ public class TimerService {
                 .filter(reminder -> !isCompletedTimer(reminder))
                 .map(this::createWaitingTimerDto)
                 .sorted(
-                        Comparator.comparing(WaitingTimerDto::isAlarm)
+                        Comparator.comparing((WaitingTimerDto dto) -> !dto.isAlarm())
                                 .thenComparing(WaitingTimerDto::updateAt)
                 )
                 .collect(Collectors.toList());
