@@ -31,6 +31,7 @@ jobs:
       with:
           name: "toaster-firebase-admin-sdk.json"
           json: ${{ secrets.TOASTER_FIREBASE_ADMIN_SDK }}
+          dir: '${{ env.working-directory }}/src/main/resources/'
         
     - name: 빌드
       run: |
