@@ -55,8 +55,8 @@ public class TimerService {
 
         int timerNum = timerRepository.findAllByUser(presentUser).size();
 
-        if(timerNum>=MaxTimerNumber){
-            throw new CustomException(Error.UNPROCESSABLE_ENTITY_CREATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CREATE_TIMER_EXCEPTION.getMessage());
+        if(timerNum>MaxTimerNumber){
+            throw new CustomException(Error.BAD_REQUEST_CREATE_TIMER_EXCEPTION, Error.BAD_REQUEST_CREATE_TIMER_EXCEPTION.getMessage());
         }
 
         if(createTimerRequestDto.categoryId() != 0) {
@@ -218,8 +218,8 @@ public class TimerService {
 
     // 완료된 타이머 날짜,시간 포맷
     private CompletedTimerDto createCompletedTimerDto(Reminder reminder) {
-        String time = reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a hh:mm"));
-        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("E요일"));
+        String time = reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a hh:mm",locale));
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("E요일",locale));
         return CompletedTimerDto.of(reminder, time, date);
     }
 
@@ -227,8 +227,8 @@ public class TimerService {
     private WaitingTimerDto createWaitingTimerDto(Reminder reminder) {
         LocalDateTime now = LocalDateTime.now();
         String time = (reminder.getRemindTime().getMinute() == 0)
-                ? reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시"))
-                : reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시 mm분"));
+                ? reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시",locale))
+                : reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시 mm분",locale));
 
         String dates = reminder.getRemindDates().stream()
                 .map(this::mapIndexToDayString)
@@ -240,7 +240,7 @@ public class TimerService {
     // 인덱스로 요일 알아내기
     private String mapIndexToDayString(int index) {
         DayOfWeek dayOfWeek = DayOfWeek.of(index);
-        String dayName = dayOfWeek.getDisplayName(java.time.format.TextStyle.FULL, Locale.getDefault());
+        String dayName = dayOfWeek.getDisplayName(java.time.format.TextStyle.FULL, locale);
 
         return dayName.substring(0, 1);
     }
