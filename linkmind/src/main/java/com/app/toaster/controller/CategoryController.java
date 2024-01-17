@@ -7,11 +7,14 @@ import com.app.toaster.controller.response.category.CategoriesResponse;
 import com.app.toaster.controller.response.toast.ToastFilter;
 import com.app.toaster.controller.response.category.CategoryResponse;
 import com.app.toaster.controller.response.category.GetCategoryResponseDto;
+import com.app.toaster.controller.valid.Severity;
+import com.app.toaster.controller.valid.TitleValid;
 import com.app.toaster.exception.Success;
 import com.app.toaster.service.category.CategoryService;
 import com.app.toaster.service.search.SearchService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -87,7 +90,7 @@ public class CategoryController {
 
 
     @GetMapping("/search")
-    public ApiResponse searchProducts(@UserId Long userId ,@RequestParam("query") String query){
+    public ApiResponse searchProducts(@UserId Long userId , @TitleValid(payload = Severity.Error.class) @RequestParam("query") String query){
       return searchService.searchMain(userId,query);
     }
 

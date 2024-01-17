@@ -16,6 +16,7 @@ import com.app.toaster.domain.Toast;
 import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.Success;
+import com.app.toaster.exception.model.BadRequestException;
 import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.infrastructure.CategoryRepository;
@@ -23,6 +24,7 @@ import com.app.toaster.infrastructure.ToastRepository;
 import com.app.toaster.infrastructure.UserRepository;
 import com.google.protobuf.Api;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -33,6 +35,10 @@ public class SearchService {
 	private final CategoryRepository categoryRepository;
 
 	public ApiResponse<SearchMainResult> searchMain(Long userId, String searchParam){
+		if(searchParam.isBlank()){
+			throw new BadRequestException(Error.BAD_REQUEST_VALIDATION, Error.BAD_REQUEST_URL.getMessage());
+		}
+
 		User presentUser =  userRepository.findByUserId(userId).orElseThrow(
 			()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage())
 		);

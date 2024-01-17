@@ -7,15 +7,18 @@ import java.time.format.DateTimeParseException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import com.app.toaster.common.dto.ApiResponse;
 import com.app.toaster.exception.Error;
@@ -25,6 +28,7 @@ import com.app.toaster.external.client.slack.SlackApi;
 import io.sentry.Sentry;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintDefinitionException;
+import jakarta.validation.ConstraintViolationException;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
@@ -54,28 +58,56 @@ public class ControllerExceptionAdvice {
 	}
 
 	@ExceptionHandler(MalformedURLException.class)
-	protected ApiResponse handleConstraintDefinitionException(final MalformedURLException e) {
+	protected ResponseEntity<ApiResponse> handleConstraintDefinitionException(final MalformedURLException e) {
 		Sentry.captureException(e);
-		return ApiResponse.error(Error.MALFORMED_URL_EXEPTION, Error.MALFORMED_URL_EXEPTION.getMessage());
+		return ResponseEntity.status(Error.MALFORMED_URL_EXEPTION.getErrorCode())
+			.body(ApiResponse.error(Error.MALFORMED_URL_EXEPTION, Error.MALFORMED_URL_EXEPTION.getMessage()));
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(DateTimeParseException.class)
-	protected ApiResponse handleDateTimeParseException(final DateTimeParseException e) {
-		return ApiResponse.error(Error.BAD_REQUEST_REMIND_TIME, Error.BAD_REQUEST_REMIND_TIME.getMessage());
+	protected ResponseEntity<ApiResponse> handleDateTimeParseException(final DateTimeParseException e) {
+		return ResponseEntity.status(Error.BAD_REQUEST_REMIND_TIME.getErrorCode())
+			.body(ApiResponse.error(Error.BAD_REQUEST_REMIND_TIME, Error.BAD_REQUEST_REMIND_TIME.getMessage()));
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-	protected ApiResponse handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException e) {
-		return ApiResponse.error(Error.REQUEST_METHOD_VALIDATION_EXCEPTION, e.getMessage());
+	protected ResponseEntity<ApiResponse> handleHttpRequestMethodNotSupportedException(final HttpRequestMethodNotSupportedException e) {
+		return ResponseEntity.status(e.getStatusCode())
+			.body(ApiResponse.error(Error.REQUEST_METHOD_VALIDATION_EXCEPTION, Error.REQUEST_METHOD_VALIDATION_EXCEPTION.getMessage()));
 	}
 
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-	protected ApiResponse handleHttpMediaTypeNotSupportedException(final HttpMediaTypeNotSupportedException e) {
-		return ApiResponse.error(Error.REQUEST_MEDIA_TYPE_VALIDATION_EXCEPTION, e.getMessage());
+	protected ResponseEntity<ApiResponse> handleHttpMediaTypeNotSupportedException(final HttpMediaTypeNotSupportedException e) {
+		return ResponseEntity.status(e.getStatusCode())
+			.body(ApiResponse.error(Error.REQUEST_MEDIA_TYPE_VALIDATION_EXCEPTION, Error.REQUEST_MEDIA_TYPE_VALIDATION_EXCEPTION.getMessage()));
 	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(MissingServletRequestParameterException.class)
+	protected ResponseEntity<ApiResponse> MissingServletRequestParameterException(final MissingServletRequestParameterException e) {
+		return ResponseEntity.status(e.getStatusCode())
+			.body(ApiResponse.error(Error.BAD_REQUEST_VALIDATION, Error.BAD_REQUEST_VALIDATION.getMessage()));
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	protected ResponseEntity<ApiResponse> MissingServletRequestParameterException(final HttpMessageNotReadableException e) {
+		return ResponseEntity.status(Error.BAD_REQUEST_VALIDATION.getErrorCode())
+			.body(ApiResponse.error(Error.BAD_REQUEST_VALIDATION, Error.BAD_REQUEST_VALIDATION.getMessage()));
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST) // 커스텀 validation 에러 핸들링.
+	@ExceptionHandler(HandlerMethodValidationException.class)
+	protected ResponseEntity<ApiResponse> ConstraintViolationException(final HandlerMethodValidationException e) {
+		Sentry.captureException(e);
+		return ResponseEntity.status(Error.BAD_REQUEST_VALIDATION.getErrorCode())
+			.body(ApiResponse.error(Error.BAD_REQUEST_VALIDATION, Error.BAD_REQUEST_VALIDATION.getMessage()));
+	}
+
+
 
 	
    /**
