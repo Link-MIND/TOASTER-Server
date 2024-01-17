@@ -11,11 +11,13 @@ import com.app.toaster.exception.Success;
 import com.app.toaster.service.category.CategoryService;
 import com.app.toaster.service.search.SearchService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -41,7 +43,7 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse deleteCategory(
             @UserId Long userId,
-            @RequestBody DeleteCategoryDto deleteCategoryDto
+            @NotNull @RequestParam(value = "deleteCategoryDto") ArrayList<Long> deleteCategoryDto
     ){
         categoryService.deleteCategory(deleteCategoryDto);
         return ApiResponse.success(Success.DELETE_CATEGORY_SUCCESS);
