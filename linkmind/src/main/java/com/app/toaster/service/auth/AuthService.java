@@ -66,7 +66,7 @@ public class AuthService {
 
 		if (!isRegistered) {
 			User newUser = User.builder()
-				.nickname(nickname==null?"애플토스터"+socialId.substring(5):nickname)
+				.nickname(nickname==null?"토스터"+socialId.substring(5):nickname)
 				.socialId(socialId)
 				.socialType(socialType).build();
 			newUser.updateFcmIsAllowed(true); //신규 유저면 true박고
@@ -86,7 +86,7 @@ public class AuthService {
 		user.updateRefreshToken(refreshToken);
 		user.updateFcmToken(fcmToken);
 		user.updateProfile(profileImage == null ? BASIC_ROOT+BASIC_THUMBNAIL : profileImage);
-		if (nickname!=null){
+		if (nickname!=null){		//탈퇴 안했던 유저들도 수정될 수 있도록 변경
 			user.updateNickname(nickname);
 		}
 		return SignInResponseDto.of(user.getUserId(), accessToken, refreshToken, fcmToken, isRegistered,user.getFcmIsAllowed(),
@@ -131,9 +131,12 @@ public class AuthService {
 	}
 
 	@Transactional
-	public void withdraw(Long userId) {
+	public void withdraw(Long userId, String accessToken) {
 		User user = userRepository.findByUserId(userId).orElseThrow(
 			()->new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
+		if (user.getSocialType() == SocialType.KAKAO){
+			kakaoSignInService.withdrawKakao(accessToken);
+		}
 		try {
 			toastService.deleteAllToast(user);
 		}catch (IOException e){
