@@ -78,6 +78,14 @@ public class TimerService {
                 .comment(comment)
                 .build();
 
+        if (reminder.getRemindDates().contains(LocalDateTime.now().getDayOfWeek().getValue()))
+            if(reminder.getRemindTime().isAfter(LocalTime.now())){
+                String cronExpression = String.format("0 %s %s * * ?", reminder.getRemindTime().getMinute(),reminder.getRemindTime().getHour());
+
+                fcmService.schedulePushAlarm(cronExpression, reminder.getId());
+                System.out.println("test 성공");
+            }
+
 
         timerRepository.save(reminder);
     }
