@@ -55,7 +55,7 @@ public class TimerService {
 
         int timerNum = timerRepository.findAllByUser(presentUser).size();
 
-        if(timerNum>MaxTimerNumber){
+        if(timerNum>=MaxTimerNumber){
             throw new CustomException(Error.BAD_REQUEST_CREATE_TIMER_EXCEPTION, Error.BAD_REQUEST_CREATE_TIMER_EXCEPTION.getMessage());
         }
 
