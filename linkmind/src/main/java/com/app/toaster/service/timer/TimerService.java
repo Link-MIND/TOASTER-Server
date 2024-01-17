@@ -112,6 +112,8 @@ public class TimerService {
         }
         reminder.updateRemindDates(updateTimerDateTimeDto.remindDates());
         reminder.updateRemindTime(updateTimerDateTimeDto.remindTime());
+
+        reminder.setUpdatedAtNow();
         em.flush();
 
         LocalDateTime now = LocalDateTime.now();
@@ -139,6 +141,7 @@ public class TimerService {
         }
 
         reminder.updateComment(updateTimerCommentDto.newComment());
+        reminder.setUpdatedAtNow();
 
     }
 
