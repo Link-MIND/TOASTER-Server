@@ -47,9 +47,10 @@ public class CategoryService {
         // 현재 유저의 최대 우선순위를 가져와서 새로운 우선순위를 설정
         val maxPriority = categoryRepository.findMaxPriorityByUser(presentUser);
 
-        val categoryNum= categoryRepository.findAllByUser(presentUser).size();
+        val categoryNum= categoryRepository.countAllByUser(presentUser);
+        System.out.println(categoryNum);
 
-        if(categoryNum > MAX_CATERGORY_NUMBER){
+        if(categoryNum >= MAX_CATERGORY_NUMBER){
             throw new CustomException(Error.BAD_REQUEST_CREATE_CLIP_EXCEPTION, Error.BAD_REQUEST_CREATE_CLIP_EXCEPTION.getMessage());
         }
 

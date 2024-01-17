@@ -60,4 +60,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Boolean existsCategoriesByUserAndTitle(User user, String title);
 
+    Long countAllByUser(User user);
+
 }
