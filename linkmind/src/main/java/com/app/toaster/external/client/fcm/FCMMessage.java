@@ -1,4 +1,4 @@
-package com.app.toaster.domain;
+package com.app.toaster.external.client.fcm;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

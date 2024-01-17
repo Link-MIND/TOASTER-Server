@@ -34,10 +34,12 @@ public interface ToastRepository extends JpaRepository<Toast, Long> {
     )
     List<Toast> searchToastsByQuery(Long userId, String query);
 
-	Long countAllByUser(User user);
+    Long countAllByUser(User user);
 
-	Long countALLByUserAndIsReadTrue(User user);
+    Long countALLByUserAndIsReadTrue(User user);
 
-	Long countAllByUserAndIsReadFalse(User user);
+    Long countAllByUserAndIsReadFalse(User user);
 
+    @Query("SELECT COUNT(t) FROM Toast t WHERE t.user.userId = :userId AND t.isRead = false")
+    Integer getUnReadToastNumber(Long userId);
 }
