@@ -3,10 +3,8 @@ package com.app.toaster.controller;
 import java.io.IOException;
 import java.util.List;
 
-import com.app.toaster.controller.response.toast.WeekSiteDto;
-import com.app.toaster.infrastructure.LinkRepository;
+import com.app.toaster.controller.response.toast.WeekLinkDto;
 import com.app.toaster.service.link.LinkService;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,13 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.app.toaster.common.dto.ApiResponse;
 // import com.app.toaster.config.UserId;
@@ -33,7 +28,6 @@ import com.app.toaster.exception.Success;
 import com.app.toaster.service.parse.ParsingService;
 import com.app.toaster.service.toast.ToastService;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -86,7 +80,7 @@ public class ToastController {
 
 	@GetMapping("/week")
 	@ResponseStatus(HttpStatus.OK)
-	public ApiResponse<List<WeekSiteDto>> getWeekLinks(
+	public ApiResponse<List<WeekLinkDto>> getWeekLinks(
 			@UserId Long userId
 	) {
 		return ApiResponse.success(Success.GET_LINKS_SUCCESS, linkService.getWeekLinks());
