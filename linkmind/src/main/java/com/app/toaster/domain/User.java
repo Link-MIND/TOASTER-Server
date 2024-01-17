@@ -74,4 +74,5 @@ public class User {
 	public void updateProfile(String profile){
 		this.profile = profile;
 	}
+
 }

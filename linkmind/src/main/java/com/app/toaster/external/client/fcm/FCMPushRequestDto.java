@@ -1,10 +1,14 @@
-package com.app.toaster.controller.request.fcm;
+package com.app.toaster.external.client.fcm;
 
+import com.app.toaster.domain.Reminder;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
+import java.time.LocalDateTime;
+import java.time.format.TextStyle;
+import java.util.Locale;
+import java.util.Random;
 
 @Slf4j
 @Getter
@@ -12,6 +16,7 @@ import java.awt.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FCMPushRequestDto {
+
 
     private String targetToken;
 
@@ -23,12 +28,14 @@ public class FCMPushRequestDto {
 
     private String image;
 
-    public static FCMPushRequestDto sendTestPush(String targetToken) {
+    public static FCMPushRequestDto sendTestPush(String targetToken, String comment) {
 
         return FCMPushRequestDto.builder()
                 .targetToken(targetToken)
-                .title("🍞" + PushMessage.TODAY_QNA.getTitle())
-                .body(PushMessage.TODAY_QNA.getBody())
+                .title("🍞 토스트 ")
+                .body(comment)
                 .build();
+
     }
+
 }

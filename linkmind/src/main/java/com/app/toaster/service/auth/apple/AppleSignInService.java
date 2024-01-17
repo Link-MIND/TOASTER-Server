@@ -35,6 +35,6 @@ public class AppleSignInService {
 			.toEntity(ApplePublicKeys.class);
 		PublicKey publicKey = publicKeyGenerator.generatePublicKey(headers, result.getBody());
 		Claims claims = appleJwtParser.parsePublicKeyAndGetClaims(identityToken, publicKey);
-		return LoginResult.of(claims.getSubject(),null);
+		return LoginResult.of(claims.getSubject(),null,null);
 	}
 }

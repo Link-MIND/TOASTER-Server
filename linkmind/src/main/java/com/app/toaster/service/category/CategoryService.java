@@ -36,7 +36,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final ToastRepository toastRepository;
 
-    private final static int MAX_CATERGORY_NUMBER = 50;
+    private final static int MAX_CATERGORY_NUMBER = 15;
     private final TimerRepository timerRepository;
 
     @Transactional
@@ -48,7 +48,7 @@ public class CategoryService {
 
         val categoryNum= categoryRepository.findAllByUser(presentUser).size();
 
-        if(categoryNum >= MAX_CATERGORY_NUMBER){
+        if(categoryNum > MAX_CATERGORY_NUMBER){
             throw new CustomException(Error.UNPROCESSABLE_ENTITY_CREATE_CLIP_EXCEPTION, Error.UNPROCESSABLE_ENTITY_CREATE_CLIP_EXCEPTION.getMessage());
         }
 

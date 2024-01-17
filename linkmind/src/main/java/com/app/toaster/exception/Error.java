@@ -56,6 +56,7 @@ public enum Error {
 	UNPROCESSABLE_CREATE_TIMER_EXCEPTION(HttpStatus.UNPROCESSABLE_ENTITY, "이미 타이머가 존재하는 클립입니다."),
 	UNPROCESSABLE_ENTITY_CREATE_CLIP_EXCEPTION(HttpStatus.UNPROCESSABLE_ENTITY, "클립은 최대 50개까지만 등록가능합니다."),
 	UNPROCESSABLE_PRESIGNEDURL_EXCEPTION(HttpStatus.UNPROCESSABLE_ENTITY, "presignedUrl 발급 중 에러가 발생했습니다."),
+	UNPROCESSABLE_KAKAO_SERVER_EXCEPTION(HttpStatus.UNPROCESSABLE_ENTITY, "카카오서버와 통신 중 오류가 발생했습니다."),
 
 
 	/**
@@ -65,7 +66,7 @@ public enum Error {
 	INVALID_ENCRYPT_COMMUNICATION(HttpStatus.INTERNAL_SERVER_ERROR, "ios 통신 증명 과정 중 문제가 발생했습니다."),
 	CREATE_PUBLIC_KEY_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "publickey 생성 과정 중 문제가 발생했습니다."),
 	FAIL_TO_SEND_PUSH_ALARM(HttpStatus.INTERNAL_SERVER_ERROR, "다수기기 푸시메시지 전송 실패"),
-
+	FAIL_TO_SEND_SQS(HttpStatus.INTERNAL_SERVER_ERROR, "sqs 전송 실패"),
 
 	CREATE_TOAST_PROCCESS_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "토스트 저장 중 문제가 발생했습니다. 카테고리 또는 s3 관련 문제로 예상됩니다.")
 	;

@@ -1,6 +1,5 @@
 package com.app.toaster.service.timer;
 
-import com.app.toaster.controller.request.fcm.FCMPushRequestDto;
 import com.app.toaster.controller.request.timer.CreateTimerRequestDto;
 import com.app.toaster.controller.request.timer.UpdateTimerCommentDto;
 import com.app.toaster.controller.request.timer.UpdateTimerDateTimeDto;
@@ -16,15 +15,15 @@ import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.exception.model.ForbiddenException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.exception.model.UnauthorizedException;
+import com.app.toaster.external.client.fcm.FCMPushRequestDto;
+import com.app.toaster.external.client.fcm.FCMService;
 import com.app.toaster.infrastructure.CategoryRepository;
 import com.app.toaster.infrastructure.TimerRepository;
 import com.app.toaster.infrastructure.UserRepository;
-import com.app.toaster.service.fcm.FCMService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -39,6 +38,8 @@ public class TimerService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final TimerRepository timerRepository;
+
+    private final FCMService fcmService;
 
 
     private final Locale locale = Locale.KOREA;
@@ -76,6 +77,14 @@ public class TimerService {
                 .comment(comment)
                 .build();
 
+        if (reminder.getRemindDates().contains(LocalDateTime.now().getDayOfWeek().getValue()))
+            if(reminder.getRemindTime().isAfter(LocalTime.now())){
+                String cronExpression = String.format("0 %s %s * * ?", reminder.getRemindTime().getMinute(),reminder.getRemindTime().getHour());
+
+                fcmService.schedulePushAlarm(cronExpression, reminder.getId());
+                System.out.println("test 성공");
+            }
+
 
         timerRepository.save(reminder);
     }
@@ -95,10 +104,21 @@ public class TimerService {
                 .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_TIMER, Error.NOT_FOUND_TIMER.getMessage()));
 
         if (!presentUser.equals(reminder.getUser())){
-            throw new ForbiddenException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
+            throw new CustomException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
         }
         reminder.updateRemindDates(updateTimerDateTimeDto.remindDates());
         reminder.updateRemindTime(updateTimerDateTimeDto.remindTime());
+
+        LocalDateTime now = LocalDateTime.now();
+
+        // 바뀐 타이머가 오늘 이후 설정되어있으면 새로운 schedule 추가
+        if (reminder.getRemindDates().contains(now.getDayOfWeek().getValue()))
+            if(reminder.getRemindTime().isAfter(LocalTime.now())){
+                String cronExpression = String.format("0 %s %s * * ?", reminder.getRemindTime().getMinute(),reminder.getRemindTime().getHour());
+
+                fcmService.schedulePushAlarm(cronExpression, reminder.getId());
+            }
+
 
     }
 
@@ -110,26 +130,11 @@ public class TimerService {
                 .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_TIMER, Error.NOT_FOUND_TIMER.getMessage()));
 
         if (!presentUser.equals(reminder.getUser())){
-            throw new ForbiddenException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
+            throw new UnauthorizedException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
         }
 
         reminder.updateComment(updateTimerCommentDto.newComment());
 
-    }
-
-
-    @Transactional
-    public void deleteTimer(Long userId, Long timerId){
-        User presentUser = findUser(userId);
-
-        Reminder reminder = timerRepository.findById(timerId)
-                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_TIMER, Error.NOT_FOUND_TIMER.getMessage()));
-
-        if (!presentUser.equals(reminder.getUser())){
-            throw new ForbiddenException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
-        }
-
-        timerRepository.delete(reminder);
     }
 
     @Transactional
@@ -146,7 +151,22 @@ public class TimerService {
         reminder.changeAlarm();
     }
 
-    public GetTimerPageResponseDto getTimerPage(Long userId){
+
+    @Transactional
+    public void deleteTimer(Long userId, Long timerId){
+        User presentUser = findUser(userId);
+
+        Reminder reminder = timerRepository.findById(timerId)
+                .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_TIMER, Error.NOT_FOUND_TIMER.getMessage()));
+
+        if (!presentUser.equals(reminder.getUser())){
+            throw new UnauthorizedException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
+        }
+
+        timerRepository.delete(reminder);
+    }
+
+    public GetTimerPageResponseDto getTimerPage(Long userId) {
         User presentUser = findUser(userId);
         ArrayList<Reminder> reminders = timerRepository.findAllByUser(presentUser);
 
@@ -184,44 +204,31 @@ public class TimerService {
     private boolean isCompletedTimer(Reminder reminder){
         // 현재 시간
         LocalDateTime now = LocalDateTime.now();
-        List<LocalDateTime> resultDateTimeList = new ArrayList<>();
 
+        LocalTime futureDateTime = LocalTime.from(now.plusHours(1));
+        LocalTime pastDateTime = LocalTime.from(now.minusHours(1));
 
-        // 주어진 요일 인덱스에 대해 LocalDateTime 생성 및 리스트에 추가
-        for (Integer dayOfWeekIndex : reminder.getRemindDates()) {
-            DayOfWeek currentDayOfWeek = now.getDayOfWeek();
-
-            LocalDateTime newDateTime = now.plusDays(dayOfWeekIndex - currentDayOfWeek.getValue());
-            newDateTime = LocalDateTime.of(newDateTime.toLocalDate(), reminder.getRemindTime());
-
-            resultDateTimeList.add(newDateTime);
-
-            if (currentDayOfWeek.getValue() == 1 || currentDayOfWeek.getValue() == 7) {
-                resultDateTimeList.add(currentDayOfWeek.getValue() == 1 ? newDateTime.minusWeeks(1) : newDateTime.plusWeeks(1));
-            }
+        if (reminder.getRemindDates().contains(now.getDayOfWeek().getValue())) {
+            LocalTime reminderTime = reminder.getRemindTime();
+            return !reminderTime.isBefore(pastDateTime) && !reminderTime.isAfter(futureDateTime) && reminder.getIsAlarm();
         }
 
-        for(LocalDateTime remind : resultDateTimeList){
-            Duration duration = Duration.between(now, remind);
-            if (Math.abs(duration.toMinutes()) <= TimeIntervalInHours) {
-                return true;
-            }
-        }
         return false;
     }
 
     // 완료된 타이머 날짜,시간 포맷
     private CompletedTimerDto createCompletedTimerDto(Reminder reminder) {
-        String time = reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a hh:mm",locale));
-        String date = getRemindDate(reminder);
+        String time = reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a hh:mm"));
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("E요일"));
         return CompletedTimerDto.of(reminder, time, date);
     }
 
     // 대기중인 타이머 날짜,시간 포맷
     private WaitingTimerDto createWaitingTimerDto(Reminder reminder) {
+        LocalDateTime now = LocalDateTime.now();
         String time = (reminder.getRemindTime().getMinute() == 0)
-                ? reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시",locale))
-                : reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시 mm분",locale));
+                ? reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시"))
+                : reminder.getRemindTime().format(DateTimeFormatter.ofPattern("a h시 mm분"));
 
         String dates = reminder.getRemindDates().stream()
                 .map(this::mapIndexToDayString)
@@ -233,34 +240,9 @@ public class TimerService {
     // 인덱스로 요일 알아내기
     private String mapIndexToDayString(int index) {
         DayOfWeek dayOfWeek = DayOfWeek.of(index);
-        String dayName = dayOfWeek.getDisplayName(java.time.format.TextStyle.FULL,locale);
+        String dayName = dayOfWeek.getDisplayName(java.time.format.TextStyle.FULL, Locale.getDefault());
 
         return dayName.substring(0, 1);
-    }
-
-    private String getRemindDate(Reminder reminder){
-        LocalDateTime remindDate = LocalDateTime.now();
-        LocalTime now = LocalTime.now();
-
-        // 비교할 시간 범위를 설정합니다.
-        LocalTime startTime = LocalTime.of(23, 0);   // 11시
-        LocalTime endTime = LocalTime.of(1, 0);      // 1시
-
-        // 현재 시간이 11시 이후 또는 1시 이전인지 확인합니다.
-        if (reminder.getRemindTime().isAfter(startTime) && now.isBefore(startTime)) {
-            if(remindDate.getDayOfWeek().getValue() == 1 )
-                remindDate = remindDate.plusDays(6);
-            else
-                remindDate = remindDate.minusDays(1);
-        }
-        if (reminder.getRemindTime().isBefore(endTime) && now.isAfter(endTime)) {
-            if(remindDate.getDayOfWeek().getValue() == 7 )
-                remindDate = remindDate.minusDays(6);
-            else
-                remindDate = remindDate.plusDays(1);
-        }
-
-        return remindDate.format(DateTimeFormatter.ofPattern("E요일",locale));
     }
 
 }
