@@ -43,11 +43,8 @@ public class Link {
         this.thisWeekLink = false;
     }
 
-    public void setWeekLinkTrue(){
-        this.thisWeekLink =true;
-    }
-
-    public void setUpdateAtNow(){
+    public void updateWeekLink(){
         this.updateAt = LocalDateTime.now();
+        this.thisWeekLink =true;
     }
 }

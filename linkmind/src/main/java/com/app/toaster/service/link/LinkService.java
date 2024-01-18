@@ -30,8 +30,7 @@ public class LinkService {
         if(days>7){
             lists.forEach(Link::setWeekLinkFalse);
             lists = linkRepository.findRandom3Links().stream()
-                    .peek(Link::setUpdateAtNow)
-                    .peek(Link::setWeekLinkTrue)
+                    .peek(Link::updateWeekLink)
                     .toList();
         }
 
