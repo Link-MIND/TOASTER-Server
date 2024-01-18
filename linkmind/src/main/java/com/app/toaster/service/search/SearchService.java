@@ -47,7 +47,7 @@ public class SearchService {
 					toast -> ToastDto.of(toast))
 				.collect(Collectors.toList()),
 			searchCategoryList.stream().map(
-					category -> CategoryResult.of(category.getCategoryId(), category.getTitle(),toastRepository.countAllByUser(presentUser)))
+					category -> CategoryResult.of(category.getCategoryId(), category.getTitle(),toastRepository.countAllByCategory(category)))
 				.collect(Collectors.toList())
 			));
 	}
