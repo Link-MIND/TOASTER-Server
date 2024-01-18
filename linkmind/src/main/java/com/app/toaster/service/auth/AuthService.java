@@ -136,9 +136,10 @@ public class AuthService {
 	public void withdraw(Long userId) {
 		User user = userRepository.findByUserId(userId).orElseThrow(
 			()->new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
-		// if (user.getSocialType() == SocialType.KAKAO){
-		// 	kakaoSignInService.withdrawKakao(accessToken);
-		// }
+		if (user.getSocialType() == SocialType.KAKAO){
+			String deleteSocialId = kakaoSignInService.withdrawKakao(user.getSocialId());
+			System.out.println(deleteSocialId);
+		}
 		try {
 			toastService.deleteAllToast(user);
 		}catch (IOException e){
