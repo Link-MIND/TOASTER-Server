@@ -14,13 +14,13 @@ import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 import software.amazon.awssdk.services.sqs.model.DeleteMessageRequest;
 
 import java.util.Map;
-
 /**
  * 큐 대기열에 있는 메시지 목록을 조회하여 받아오는(pull) 역할
  *
  */
 @Slf4j
 @Component
+
 @RequiredArgsConstructor
 public class SqsConsumer {
 
