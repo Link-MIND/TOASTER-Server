@@ -145,33 +145,23 @@ public class FCMService {
                 throw new RuntimeException(e);
             }
 
-            TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-            TransactionStatus transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
-            try {
+            Reminder timer = timerRepository.findById(timerId).orElseThrow(
+                    ()-> new NotFoundException(Error.NOT_FOUND_TIMER, Error.NOT_FOUND_TIMER.getMessage())
+            );
 
-                Reminder timer = timerRepository.findById(timerId).orElseThrow(
-                        ()-> new NotFoundException(Error.NOT_FOUND_TIMER, Error.NOT_FOUND_TIMER.getMessage())
-                );
+            String cron = String.format("0 %s %s * * ?", timer.getRemindTime().getMinute(),timer.getRemindTime().getHour());
 
-                String cron = String.format("0 %s %s * * ?", timer.getRemindTime().getMinute(),timer.getRemindTime().getHour());
+            // 현재 알람이 커져있고 설정값이 동일하면 알람 전송
+            if(timer.getIsAlarm() && timer.getUser().getFcmIsAllowed() && cronExpression.equals(cron)) {
+                System.out.println("================= 전송시간 =================");
+                //sqs 푸시
+                FCMPushRequestDto request = getPushMessage(timer,toastRepository.getUnReadToastNumber(timer.getUser().getUserId()) );
 
-                // 현재 알람이 커져있고 설정값이 동일하면 알람 전송
-                if(timer.getIsAlarm() && timer.getUser().getFcmIsAllowed() && cronExpression.equals(cron)) {
-                    System.out.println("================= 전송시간 =================");
-                    //sqs 푸시
-                    FCMPushRequestDto request = getPushMessage(timer,toastRepository.getUnReadToastNumber(timer.getUser().getUserId()) );
+                sqsProducer.sendMessage(request);
 
-                    sqsProducer.sendMessage(request);
+                System.out.println("========="+request.getTitle() + request.getBody()+"=========");
 
-                    System.out.println("========="+request.getTitle() + request.getBody()+"=========");
-
-                }
-
-            } catch (PessimisticLockingFailureException | PessimisticLockException e) {
-                transactionManager.rollback(transactionStatus);
-            } finally {
-                em.close();
             }
 
 
