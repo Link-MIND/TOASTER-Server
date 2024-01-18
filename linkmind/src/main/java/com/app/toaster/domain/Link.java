@@ -7,6 +7,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,10 +27,27 @@ public class Link {
     @Column(columnDefinition = "TEXT")
     private String thumbnailUrl;
 
+    private LocalDateTime updateAt;
+
+    private boolean thisWeekLink = false;
+
+
     @Builder
     public Link(String title, String linkUrl, String thumbnailUrl) {
         this.title = title;
         this.linkUrl = linkUrl;
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public void setWeekLinkFalse(){
+        this.thisWeekLink = false;
+    }
+
+    public void setWeekLinkTrue(){
+        this.thisWeekLink =true;
+    }
+
+    public void setUpdateAtNow(){
+        this.updateAt = LocalDateTime.now();
     }
 }
