@@ -100,7 +100,8 @@ public class ToastService {
 		if(isReadDto.isRead())
 			toast.setUpdateAt();
 
-		toast.updateIsRead(toast.getIsRead());
+		toast.updateIsRead(isReadDto.isRead());
+
 		return IsReadResponse.of(isReadDto.isRead());
 	}
 
