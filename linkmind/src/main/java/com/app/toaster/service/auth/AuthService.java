@@ -85,7 +85,9 @@ public class AuthService {
 
 		user.updateRefreshToken(refreshToken);
 		user.updateFcmToken(fcmToken);
-		user.updateProfile(profileImage == null ? BASIC_ROOT+BASIC_THUMBNAIL : profileImage);
+		// user.updateProfile(profileImage == null ? BASIC_ROOT+BASIC_THUMBNAIL : profileImage);
+		user.updateProfile(BASIC_ROOT+BASIC_THUMBNAIL);
+
 		if (nickname!=null){		//탈퇴 안했던 유저들도 수정될 수 있도록 변경
 			user.updateNickname(nickname);
 		}
