@@ -90,7 +90,7 @@ public class CategoryService {
 		}
 
 	}
-
+	@Transactional(readOnly = true)
 	public CategoriesResponse getCategories(final Long userId) {
 		User presentUser = findUser(userId);
 
@@ -104,7 +104,7 @@ public class CategoryService {
 				).collect(Collectors.toList()));
 
 	}
-
+	@Transactional
 	public GetCategoryResponseDto getCategory(final Long userId, final Long categoryId, final ToastFilter filter) {
 		User presentUser = findUser(userId);
 		if (categoryId == 0) {
@@ -165,7 +165,7 @@ public class CategoryService {
 			() -> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage())
 		);
 	}
-
+	@Transactional(readOnly = true)
 	public DuplicatedResponse checkDuplicatedTitle(Long userId, String title) {
 		return DuplicatedResponse.of(categoryRepository.existsCategoriesByUserAndTitle(findUser(userId), title));
 

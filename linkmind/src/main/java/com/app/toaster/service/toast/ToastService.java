@@ -81,7 +81,6 @@ public class ToastService {
 		}
 
 	}
-
 	@Transactional
 	public IsReadResponse readToast(Long userId, IsReadDto isReadDto){
 		User presentUser =  userRepository.findByUserId(userId).orElseThrow(

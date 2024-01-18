@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.app.toaster.common.dto.ApiResponse;
 import com.app.toaster.controller.response.search.CategoryResult;
@@ -34,6 +35,7 @@ public class SearchService {
 	private final UserRepository userRepository;
 	private final CategoryRepository categoryRepository;
 
+	@Transactional(readOnly = true)
 	public ApiResponse<SearchMainResult> searchMain(Long userId, String searchParam){
 		if(searchParam.isBlank()){
 			throw new BadRequestException(Error.BAD_REQUEST_VALIDATION, Error.BAD_REQUEST_URL.getMessage());

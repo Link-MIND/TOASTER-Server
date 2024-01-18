@@ -33,6 +33,7 @@ public class UserService {
 	private final ToastRepository toastRepository;
 	private final CategoryRepository categoryRepository;
 
+	@Transactional(readOnly = true)
 	public MyPageResponse getMyPage(Long userId){
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
@@ -59,6 +60,7 @@ public class UserService {
 		return fcmIsAllowed;
 	}
 
+	@Transactional(readOnly = true)
 	public SettingResponse getSettings(Long userId){
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
@@ -68,6 +70,7 @@ public class UserService {
 		);
 	}
 
+	@Transactional(readOnly = true)
 	public MainPageResponseDto getMainPage(Long userId){
 		User user = userRepository.findByUserId(userId)
 				.orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));

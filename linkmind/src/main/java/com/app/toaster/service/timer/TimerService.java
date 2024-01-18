@@ -92,7 +92,7 @@ public class TimerService {
                 System.out.println("test 성공");
             }
     }
-
+    @Transactional(readOnly = true)
     public GetTimerResponseDto getTimer(Long userId, Long timerId){
         Reminder reminder = timerRepository.findById(timerId)
                 .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_TIMER, Error.NOT_FOUND_TIMER.getMessage()));
