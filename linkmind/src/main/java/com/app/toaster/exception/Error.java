@@ -38,6 +38,7 @@ public enum Error {
 	BAD_REQUEST_CREATE_TIMER_EXCEPTION(HttpStatus.BAD_REQUEST, "타이머는 최대 5개까지만 등록가능합니다."),
 	BAD_REQUEST_CREATE_CLIP_EXCEPTION(HttpStatus.BAD_REQUEST, "클립은 최대 15개까지만 등록가능합니다."),
 
+
 	/**
 	 * 401 UNAUTHORIZED EXCEPTION
 	 */
