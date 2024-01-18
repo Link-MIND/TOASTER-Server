@@ -42,7 +42,6 @@ public class TimerService {
 
     private final FCMService fcmService;
 
-    private final EntityManager em;
 
 
     private final Locale locale = Locale.KOREA;
@@ -81,15 +80,13 @@ public class TimerService {
                 .build();
 
         timerRepository.save(reminder);
-        em.flush();
 
-        if (reminder.getRemindDates().contains(LocalDateTime.now().getDayOfWeek().getValue()))
-            if(reminder.getRemindTime().isAfter(LocalTime.now())){
-                String cronExpression = String.format("0 %s %s * * ?", reminder.getRemindTime().getMinute(),reminder.getRemindTime().getHour());
+        // 바뀐 타이머가 오늘 이후 설정되어있으면 새로운 schedule 추가
+        if (createTimerRequestDto.remindDates().contains(LocalDateTime.now().getDayOfWeek().getValue()))
+            if(LocalTime.parse(createTimerRequestDto.remindTime()).isAfter(LocalTime.now())){
+                String cronExpression = String.format("0 %s %s * * ?", LocalTime.parse(createTimerRequestDto.remindTime()).getMinute(),LocalTime.parse(createTimerRequestDto.remindTime()).getHour());
 
                 fcmService.schedulePushAlarm(cronExpression, reminder.getId());
-
-                System.out.println("test 성공");
             }
     }
 
@@ -114,14 +111,13 @@ public class TimerService {
         reminder.updateRemindTime(updateTimerDateTimeDto.remindTime());
 
         reminder.setUpdatedAtNow();
-        em.flush();
 
         LocalDateTime now = LocalDateTime.now();
 
         // 바뀐 타이머가 오늘 이후 설정되어있으면 새로운 schedule 추가
-        if (reminder.getRemindDates().contains(now.getDayOfWeek().getValue()))
-            if(reminder.getRemindTime().isAfter(LocalTime.now())){
-                String cronExpression = String.format("0 %s %s * * ?", reminder.getRemindTime().getMinute(),reminder.getRemindTime().getHour());
+        if (updateTimerDateTimeDto.remindDates().contains(now.getDayOfWeek().getValue()))
+            if(LocalTime.parse(updateTimerDateTimeDto.remindTime()).isAfter(LocalTime.now())){
+                String cronExpression = String.format("0 %s %s * * ?", LocalTime.parse(updateTimerDateTimeDto.remindTime()).getMinute(),LocalTime.parse(updateTimerDateTimeDto.remindTime()).getHour());
 
                 fcmService.schedulePushAlarm(cronExpression, reminder.getId());
             }
