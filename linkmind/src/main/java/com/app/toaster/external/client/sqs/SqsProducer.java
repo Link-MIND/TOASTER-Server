@@ -23,12 +23,12 @@ public class SqsProducer {
     private static final String SQS_QUEUE_REQUEST_LOG_MESSAGE = "====> [SQS Queue Request] : %s ";
 
 
-    public void sendMessage(FCMPushRequestDto requestDto) {
+    public void sendMessage(FCMPushRequestDto requestDto,String timerId) {
         System.out.println("Sender: " + requestDto.getBody());
         template.send(to -> {
             try {
                 to.queue(QUEUE_NAME)
-                        .messageGroupId(GROUP_ID)
+                        .messageGroupId(timerId)
                         .payload(objectMapper.writeValueAsString(requestDto));
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
