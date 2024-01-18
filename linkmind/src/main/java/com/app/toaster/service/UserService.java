@@ -19,6 +19,9 @@ import com.app.toaster.infrastructure.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
+import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -33,12 +36,13 @@ public class UserService {
 	public MyPageResponse getMyPage(Long userId){
 		User user = userRepository.findByUserId(userId)
 			.orElseThrow(()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
+
 		return MyPageResponse.of(
 			user.getNickname(),
 			user.getProfile(),
-			toastRepository.countAllByUser(user),
 			toastRepository.countALLByUserAndIsReadTrue(user),
-			toastRepository.countAllByUserAndIsReadFalse(user)
+			toastRepository.countAllByUpdateAtThisWeek(getStartOfWeek(), getEndOfWeek()),
+			toastRepository.countAllByCreatedAtThisWeek(getStartOfWeek(), getEndOfWeek())
 		);
 	}
 	//푸시알림 동의 여부 수정 api
@@ -71,7 +75,8 @@ public class UserService {
         int allToastNum = toastRepository.getAllByUser(user).size();
         int readToastNum = toastRepository.getAllByUserAndIsReadIsTrue(user).size();
 
-        MainPageResponseDto mainPageResponseDto = MainPageResponseDto.builder().nickname(user.getNickname())
+
+		MainPageResponseDto mainPageResponseDto = MainPageResponseDto.builder().nickname(user.getNickname())
                 .allToastNum(allToastNum)
                 .readToastNum(readToastNum)
                 .mainCategoryListDto(getCategory(user).stream()
@@ -95,6 +100,15 @@ public class UserService {
 
 		return categoryRepository.findTop3ByUserOrderByLatestReadTimeDesc(user);
 
+	}
+
+
+	private LocalDateTime getStartOfWeek() {
+		return LocalDateTime.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+	}
+
+	private LocalDateTime getEndOfWeek() {
+		return LocalDateTime.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
 	}
 
 }

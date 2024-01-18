@@ -1,5 +1,6 @@
 package com.app.toaster.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,10 @@ public class Toast {
 	@Column(columnDefinition = "TEXT")
 	private String thumbnailUrl;
 
+	private LocalDateTime createdAt;
+
+	private LocalDateTime updateAt;
+
 	@Builder
 	public Toast(User user, Category category, String title, String linkUrl, String thumbnailUrl) {
 		this.category = category;
@@ -43,6 +48,7 @@ public class Toast {
 		this.title = title;
 		this.linkUrl = linkUrl;
 		this.isRead = false;
+		this.createdAt = LocalDateTime.now();
 		this.thumbnailUrl = thumbnailUrl;
 	}
 
@@ -58,6 +64,10 @@ public class Toast {
 
 	public void updateThumbnail(String thumbnailUrl){
 		this.thumbnailUrl = thumbnailUrl;
+	}
+
+	public void setUpdateAt(){
+		this.updateAt=LocalDateTime.now();
 	}
 
 }
