@@ -89,7 +89,7 @@ public class TimerService {
                 fcmService.schedulePushAlarm(cronExpression, reminder.getId());
             }
     }
-
+    @Transactional(readOnly = true)
     public GetTimerResponseDto getTimer(Long userId, Long timerId){
         Reminder reminder = timerRepository.findById(timerId)
                 .orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_TIMER, Error.NOT_FOUND_TIMER.getMessage()));
