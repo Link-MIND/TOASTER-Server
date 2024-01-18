@@ -162,7 +162,7 @@ public class FCMService {
                     //sqs 푸시
                     FCMPushRequestDto request = getPushMessage(timer,toastRepository.getUnReadToastNumber(timer.getUser().getUserId()) );
 
-                    sqsProducer.sendMessage(request);
+                    sqsProducer.sendMessage(request, timer.getId().toString());
 
                     System.out.println("========="+request.getTitle() + request.getBody()+"=========");
 

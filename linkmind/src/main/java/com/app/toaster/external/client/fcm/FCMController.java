@@ -39,12 +39,12 @@ public class FCMController {
     /**
      * 새로운 질문이 도착했음을 알리는 푸시 알림 활성화 API
      */
-    @PostMapping("/qna")
-    @ResponseStatus(HttpStatus.OK)
-    public ApiResponse sendTopicScheduledTest(@RequestBody FCMPushRequestDto request) {
-        sqsProducer.sendMessage(request);
-        return ApiResponse.success(Success.PUSH_ALARM_PERIODIC_SUCCESS);
-    }
+//    @PostMapping("/qna")
+//    @ResponseStatus(HttpStatus.OK)
+//    public ApiResponse sendTopicScheduledTest(@RequestBody FCMPushRequestDto request) {
+//        sqsProducer.sendMessage(request);
+//        return ApiResponse.success(Success.PUSH_ALARM_PERIODIC_SUCCESS);
+//    }
 
     @DeleteMapping("/clear")
     @ResponseStatus(HttpStatus.OK)

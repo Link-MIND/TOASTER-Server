@@ -8,6 +8,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.app.toaster.exception.Error;
@@ -27,6 +29,9 @@ public class KakaoSignInService {
 	@Value("${jwt.KAKAO_WITHDRAW}")
 	private String KAKAO_WITHDRAW;
 
+	@Value("${jwt.KAKAO_AK}")
+	private String KAKAO_AK;
+
 	public LoginResult getKaKaoId(String accessToken) {
 		ResponseEntity<Object> responseData = requestKakaoServer(accessToken, Strategy.LOGIN);
 		ObjectMapper objectMapper = new ObjectMapper();
@@ -36,25 +41,32 @@ public class KakaoSignInService {
 	}
 	// 인가코드 나중에 서버에서 한번에 처리 하는 방식으로 변경. ux 이슈
 
-	// public String withdrawKakao(String accessToken){
-	// 	ResponseEntity<Object> responseData = requestKakaoServer(accessToken, Strategy.WITHDRAWAL);
-	// 	ObjectMapper objectMapper = new ObjectMapper();
-	// 	HashMap profileResponse = (HashMap)objectMapper.convertValue( responseData.getBody(),Map.class);
-	// 	return profileResponse.get("id").toString();
-	// }
+	public String withdrawKakao(String socialId){
+		ResponseEntity<Object> responseData = requestKakaoServer(socialId, Strategy.WITHDRAWAL);
+		ObjectMapper objectMapper = new ObjectMapper();
+		HashMap profileResponse = (HashMap)objectMapper.convertValue( responseData.getBody(),Map.class);
+		return profileResponse.get("id").toString();
+	}
 
-	private ResponseEntity<Object> requestKakaoServer(String accessToken, Strategy strategy){
+	private ResponseEntity<Object> requestKakaoServer(String idOrAccessToken, Strategy strategy){
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization","Bearer "+ accessToken);
 
-		HttpEntity<JsonArray> httpEntity = new HttpEntity<>(headers);
-		ResponseEntity<Object> responseData;
 		switch (strategy){
 			case WITHDRAWAL -> {
+				headers.add("Authorization","KakaoAK "+ KAKAO_AK);
+
+				MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
+				param.set("target_id_type", "user_id");
+				param.set("target_id", idOrAccessToken);
+				HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(param, headers);
+
 				return restTemplate.postForEntity(KAKAO_WITHDRAW,httpEntity,Object.class);
 			}
 			case LOGIN -> {
+				headers.add("Authorization","Bearer "+ idOrAccessToken);
+
+				HttpEntity<JsonArray> httpEntity = new HttpEntity<>(headers);
 				return restTemplate.postForEntity(KAKAO_URL, httpEntity, Object.class);
 			}
 		}

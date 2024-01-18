@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 
 @Getter
 @Entity
@@ -16,15 +18,15 @@ public class RecommendSite {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long siteId;
 
-    String siteTitle;
+    private String siteTitle;
 
-    String siteUrl;
+    @Column(columnDefinition = "TEXT")
+    private String siteUrl;
 
-    String siteImg;
+    private String siteImg;
 
     @Enumerated(EnumType.STRING)
-    Topic siteSub;
-
+    private Topic siteSub;
 
     @Builder
     public RecommendSite(String siteTitle, String siteUrl, String siteImg, Topic siteSub) {

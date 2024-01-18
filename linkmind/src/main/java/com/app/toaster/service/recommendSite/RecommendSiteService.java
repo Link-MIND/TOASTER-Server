@@ -6,6 +6,7 @@ import com.app.toaster.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,4 +20,5 @@ public class RecommendSiteService {
 
         return recommedSiteRepository.findAll().subList(0, Math.min(9, recommedSiteRepository.findAll().size()));
     }
+
 }
