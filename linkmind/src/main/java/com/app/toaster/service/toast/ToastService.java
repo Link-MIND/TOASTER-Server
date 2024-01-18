@@ -97,6 +97,8 @@ public class ToastService {
 			throw new BadRequestException(Error.BAD_REQUEST_ISREAD, Error.BAD_REQUEST_ISREAD.getMessage());
 		}
 		toast.updateIsRead(isReadDto.isRead());
+		if(!toast.getIsRead())
+			toast.setUpdateAt();
 		return IsReadResponse.of(isReadDto.isRead());
 	}
 
