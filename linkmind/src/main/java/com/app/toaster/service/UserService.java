@@ -41,8 +41,8 @@ public class UserService {
 			user.getNickname(),
 			user.getProfile(),
 			toastRepository.countALLByUserAndIsReadTrue(user),
-			toastRepository.countAllByUpdateAtThisWeek(getStartOfWeek(), getEndOfWeek()),
-			toastRepository.countAllByCreatedAtThisWeek(getStartOfWeek(), getEndOfWeek())
+			toastRepository.countAllByUpdateAtThisWeek(getStartOfWeek(), getEndOfWeek(), user),
+			toastRepository.countAllByCreatedAtThisWeek(getStartOfWeek(), getEndOfWeek(), user)
 		);
 	}
 	//푸시알림 동의 여부 수정 api
