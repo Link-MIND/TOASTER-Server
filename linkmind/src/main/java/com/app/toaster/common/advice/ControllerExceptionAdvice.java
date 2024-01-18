@@ -2,6 +2,7 @@ package com.app.toaster.common.advice;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.UnknownHostException;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
@@ -107,6 +108,13 @@ public class ControllerExceptionAdvice {
 			.body(ApiResponse.error(Error.BAD_REQUEST_VALIDATION, Error.BAD_REQUEST_VALIDATION.getMessage()));
 	}
 
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(UnknownHostException.class)
+	protected ResponseEntity<ApiResponse> UnknownHostException(final UnknownHostException e) {
+		Sentry.captureException(e);
+		return ResponseEntity.status(Error.BAD_REQUEST_VALIDATION.getErrorCode())
+			.body(ApiResponse.error(Error.BAD_REQUEST_VALIDATION, Error.BAD_REQUEST_VALIDATION.getMessage()));
+	}
 
 
 	
