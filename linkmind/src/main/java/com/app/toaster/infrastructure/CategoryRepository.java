@@ -64,7 +64,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     Long countAllByUser(User user);
 
-    Long countAllByTitleAndUser(String title);
+    Long countAllByTitleAndUser(String title, User user);
 
 
 
