@@ -57,7 +57,7 @@ public class CategoryService {
 					Error.BAD_REQUEST_CREATE_CLIP_EXCEPTION.getMessage());
 		}
 
-		if(categoryRepository.countAllByTitle(createCategoryDto.categoryTitle())>0){
+		if(categoryRepository.countAllByTitleAndUser(createCategoryDto.categoryTitle())>0){
 			throw new CustomException(Error.UNPROCESSABLE_CREATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_CREATE_TIMER_EXCEPTION.getMessage());
 		}
 
