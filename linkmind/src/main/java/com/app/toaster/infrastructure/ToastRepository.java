@@ -52,12 +52,14 @@ public interface ToastRepository extends JpaRepository<Toast, Long> {
 	@Query("SELECT COUNT(t) FROM Toast t WHERE t.user.userId = :userId AND t.isRead = false")
 	Integer getUnReadToastNumber(Long userId);
 
-	@Query("SELECT COUNT(t) FROM Toast t WHERE t.createdAt >= :startOfWeek AND t.createdAt <= :endOfWeek")
-	Long countAllByCreatedAtThisWeek(@Param("startOfWeek") LocalDateTime startOfWeek,
-		@Param("endOfWeek") LocalDateTime endOfWeek);
 
-	@Query("SELECT COUNT(t) FROM Toast t WHERE t.isRead = true AND t.updateAt >= :startOfWeek AND t.updateAt <= :endOfWeek")
-	Long countAllByUpdateAtThisWeek(@Param("startOfWeek") LocalDateTime startOfWeek,
-		@Param("endOfWeek") LocalDateTime endOfWeek);
+  @Query("SELECT COUNT(t) FROM Toast t WHERE t.user=:user AND t.createdAt >= :startOfWeek AND t.createdAt <= :endOfWeek")
+  Long countAllByCreatedAtThisWeek(@Param("startOfWeek") LocalDateTime startOfWeek,
+                            @Param("endOfWeek") LocalDateTime endOfWeek, @Param("user") User user);
+
+  @Query("SELECT COUNT(t) FROM Toast t WHERE t.user=:user AND t.isRead = true AND t.updateAt >= :startOfWeek AND t.updateAt <= :endOfWeek")
+  Long countAllByUpdateAtThisWeek(@Param("startOfWeek") LocalDateTime startOfWeek,
+                                     @Param("endOfWeek") LocalDateTime endOfWeek,
+                                        @Param("user") User user);
 
 }
