@@ -13,7 +13,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class RecommendSiteService {
-    private final UserRepository userRepository;
     private final RecommedSiteRepository recommedSiteRepository;
 
     public List<RecommendSite> getRecommendSites(){

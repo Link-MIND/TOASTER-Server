@@ -61,12 +61,12 @@ public class CategoryService {
 			throw new CustomException(Error.UNPROCESSABLE_CREATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_CREATE_TIMER_EXCEPTION.getMessage());
 		}
 
-			//카테고리 생성
-			Category newCategory = Category.builder()
-					.title(createCategoryDto.categoryTitle())
-					.user(presentUser)
-					.priority(maxPriority + 1)
-					.build();
+		//카테고리 생성
+		Category newCategory = Category.builder()
+				.title(createCategoryDto.categoryTitle())
+				.user(presentUser)
+				.priority(maxPriority + 1)
+				.build();
 
 		categoryRepository.save(newCategory);
 	}
@@ -94,6 +94,7 @@ public class CategoryService {
 		}
 
 	}
+
 	@Transactional(readOnly = true)
 	public CategoriesResponse getCategories(final Long userId) {
 		User presentUser = findUser(userId);
@@ -108,11 +109,12 @@ public class CategoryService {
 						).collect(Collectors.toList()));
 
 	}
+
 	@Transactional
 	public GetCategoryResponseDto getCategory(final Long userId, final Long categoryId, final ToastFilter filter) {
 		User presentUser = findUser(userId);
 		if (categoryId == 0) {
-			List<Toast> toastAllList = toastRepository.getAllByUser(presentUser);
+			List<Toast> toastAllList = toastRepository.getAllByUserOrderByCreatedAtDesc(presentUser);
 			List<ToastDto> toastListDto = mapToToastDtoList(toastAllList, filter, null);
 			return GetCategoryResponseDto.builder()
 					.allToastNum(countToToast(filter,null,presentUser,true))
@@ -169,6 +171,7 @@ public class CategoryService {
 				() -> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage())
 		);
 	}
+
 	@Transactional(readOnly = true)
 	public DuplicatedResponse checkDuplicatedTitle(Long userId, String title) {
 		return DuplicatedResponse.of(categoryRepository.existsCategoriesByUserAndTitle(findUser(userId), title));
