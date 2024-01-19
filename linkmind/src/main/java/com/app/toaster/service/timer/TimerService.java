@@ -70,6 +70,8 @@ public class TimerService {
             throw new CustomException(Error.UNPROCESSABLE_CREATE_TIMER_EXCEPTION, Error.UNPROCESSABLE_CREATE_TIMER_EXCEPTION.getMessage());
         }
 
+        createTimerRequestDto.remindDates().sort(Comparator.naturalOrder());
+
         Reminder reminder = Reminder.builder()
                 .user(presentUser)
                 .category(category)
@@ -107,6 +109,7 @@ public class TimerService {
         if (!presentUser.equals(reminder.getUser())){
             throw new CustomException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
         }
+        updateTimerDateTimeDto.remindDates().sort(Comparator.naturalOrder());
         reminder.updateRemindDates(updateTimerDateTimeDto.remindDates());
         reminder.updateRemindTime(updateTimerDateTimeDto.remindTime());
 
