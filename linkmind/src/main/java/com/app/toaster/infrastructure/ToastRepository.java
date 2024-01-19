@@ -25,6 +25,8 @@ public interface ToastRepository extends JpaRepository<Toast, Long> {
 
 	ArrayList<Toast> getAllByUser(User user);
 
+	List<Toast> getAllByUserOrderByCreatedAtDesc(User user);
+
 	ArrayList<Toast> getAllByUserAndIsReadIsTrue(User user);
 
 	@Modifying
@@ -32,8 +34,8 @@ public interface ToastRepository extends JpaRepository<Toast, Long> {
 	void updateCategoryIdsToNull(@Param("categoryIds") List<Long> categoryIds);
 
 	@Query("SELECT t FROM Toast t WHERE " +
-		"t.user.userId = :userId and " +
-		"t.title LIKE CONCAT('%',:query, '%')"
+			"t.user.userId = :userId and " +
+			"t.title LIKE CONCAT('%',:query, '%')"
 	)
 	List<Toast> searchToastsByQuery(Long userId, String query);
 
