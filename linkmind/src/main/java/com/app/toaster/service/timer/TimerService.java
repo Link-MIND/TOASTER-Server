@@ -184,6 +184,10 @@ public class TimerService {
                 .sorted(Comparator.comparing(CompletedTimerDto::remindTime))
                 .collect(Collectors.toList());
 
+        for(Reminder reminder : reminders){
+            System.out.println(reminder.getId());
+            System.out.println(isCompletedTimer(reminder));
+        }
 
         List<WaitingTimerDto> waitingTimerList = reminders.stream()
                 .filter(reminder -> !isCompletedTimer(reminder))
@@ -213,12 +217,15 @@ public class TimerService {
         // 현재 시간
         LocalDateTime now = LocalDateTime.now();
 
-        LocalTime futureDateTime = LocalTime.from(now.plusHours(1));
-        LocalTime pastDateTime = LocalTime.from(now.minusHours(1));
+        LocalDateTime pastDateTime = now.minusHours(1);
+        LocalDateTime futureDateTime = now.plusHours(1);
+
+//        System.out.println(pastDateTime + ", " + now + ", " + futureDateTime);
 
         if (reminder.getRemindDates().contains(now.getDayOfWeek().getValue())) {
-            LocalTime reminderTime = reminder.getRemindTime();
-            return !reminderTime.isBefore(pastDateTime) && !reminderTime.isAfter(futureDateTime) && reminder.getIsAlarm();
+            LocalDateTime reminderDateTime = LocalDateTime.of(now.toLocalDate(), reminder.getRemindTime());
+
+            return !reminderDateTime.isBefore(pastDateTime) && !reminderDateTime.isAfter(futureDateTime) && reminder.getIsAlarm();
         }
 
         return false;
