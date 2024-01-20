@@ -19,6 +19,9 @@ import org.springframework.scheduling.TaskScheduler;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.TextStyle;
 import java.util.List;
 import java.util.Locale;
@@ -154,10 +157,18 @@ public class FCMService {
                         ()-> new NotFoundException(Error.NOT_FOUND_TIMER, Error.NOT_FOUND_TIMER.getMessage())
                 );
 
-                String cron = String.format("0 %s %s * * ?", timer.getRemindTime().getMinute(),timer.getRemindTime().getHour());
+                LocalTime now = LocalTime.now();
+
+                // 한국 시간대로 변환
+                //ZoneId koreaTimeZone = ZoneId.of("Asia/Seoul");
+                //ZonedDateTime koreaTime = localTime.atDate(ZonedDateTime.now().toLocalDate()).atZone(koreaTimeZone);
+
+                // ZonedDateTime에서 LocalTime 추출
+                //LocalTime koreaLocalTime = koreaTime.toLocalTime();
+
 
                 // 현재 알람이 커져있고 설정값이 동일하면 알람 전송
-                if(timer.getIsAlarm() && timer.getUser().getFcmIsAllowed() && cronExpression.equals(cron)) {
+                if(timer.getIsAlarm() && timer.getUser().getFcmIsAllowed() && timer.getRemindTime().equals(now)) {
                     System.out.println("================= 전송시간 =================");
                     //sqs 푸시
                     FCMPushRequestDto request = getPushMessage(timer,toastRepository.getUnReadToastNumber(timer.getUser().getUserId()) );
