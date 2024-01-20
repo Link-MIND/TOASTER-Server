@@ -82,12 +82,12 @@ public class TimerService {
         timerRepository.save(reminder);
 
         // 바뀐 타이머가 오늘 이후 설정되어있으면 새로운 schedule 추가
-        if (createTimerRequestDto.remindDates().contains(LocalDateTime.now().getDayOfWeek().getValue()))
-            if(LocalTime.parse(createTimerRequestDto.remindTime()).isAfter(LocalTime.now())){
-                String cronExpression = String.format("0 %s %s * * ?", LocalTime.parse(createTimerRequestDto.remindTime()).getMinute(),LocalTime.parse(createTimerRequestDto.remindTime()).getHour());
-
-                fcmService.schedulePushAlarm(cronExpression, reminder.getId());
-            }
+//        if (createTimerRequestDto.remindDates().contains(LocalDateTime.now().getDayOfWeek().getValue()))
+//            if(LocalTime.parse(createTimerRequestDto.remindTime()).isAfter(LocalTime.now())){
+//                String cronExpression = String.format("0 %s %s * * ?", LocalTime.parse(createTimerRequestDto.remindTime()).getMinute(),LocalTime.parse(createTimerRequestDto.remindTime()).getHour());
+//
+//                fcmService.schedulePushAlarm(cronExpression, reminder.getId());
+//            }
     }
     @Transactional(readOnly = true)
     public GetTimerResponseDto getTimer(Long userId, Long timerId){
@@ -115,12 +115,12 @@ public class TimerService {
         LocalDateTime now = LocalDateTime.now();
 
         // 바뀐 타이머가 오늘 이후 설정되어있으면 새로운 schedule 추가
-        if (updateTimerDateTimeDto.remindDates().contains(now.getDayOfWeek().getValue()))
-            if(LocalTime.parse(updateTimerDateTimeDto.remindTime()).isAfter(LocalTime.now())){
-                String cronExpression = String.format("0 %s %s * * ?", LocalTime.parse(updateTimerDateTimeDto.remindTime()).getMinute(),LocalTime.parse(updateTimerDateTimeDto.remindTime()).getHour());
-
-                fcmService.schedulePushAlarm(cronExpression, reminder.getId());
-            }
+//        if (updateTimerDateTimeDto.remindDates().contains(now.getDayOfWeek().getValue()))
+//            if(LocalTime.parse(updateTimerDateTimeDto.remindTime()).isAfter(LocalTime.now())){
+//                String cronExpression = String.format("0 %s %s * * ?", LocalTime.parse(updateTimerDateTimeDto.remindTime()).getMinute(),LocalTime.parse(updateTimerDateTimeDto.remindTime()).getHour());
+//
+//                fcmService.schedulePushAlarm(cronExpression, reminder.getId());
+//            }
 
 
     }
