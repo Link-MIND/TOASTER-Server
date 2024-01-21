@@ -53,7 +53,7 @@ public class FCMScheduler {
 
 
     private final int PUSH_MESSAGE_NUMBER = 5;
-    @Scheduled(cron = "1 * * * * *", zone = "Asia/Seoul")
+    //@Scheduled(cron = "1 * * * * *", zone = "Asia/Seoul")
     public String pushTodayTimer()  {
 
         log.info("리마인드 알람");
