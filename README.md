@@ -33,12 +33,12 @@
 
 
 ## 📦 ERD
-<img width="752" alt="스크린샷 2024-01-08 오전 12 27 24" src="https://github.com/Link-MIND/TOASTER-Server/assets/92644651/2c749077-5136-4578-9002-c1d244b7cab7">
+<img width="780" alt="스크린샷 2024-01-19 오후 10 31 57" src="https://github.com/Link-MIND/TOASTER-Server/assets/92644651/c641f995-92b3-41fb-9e29-19b4062cad14">
 
 <br><br>
 
 ## 🧬 Architecture
-![image](https://github.com/Link-MIND/TOASTER-Server/assets/92644651/45b842c7-f1d2-49a5-94f3-3bad54944116)
+<img width="730" alt="스크린샷 2024-01-19 오후 10 11 03" src="https://github.com/Link-MIND/TOASTER-Server/assets/92644651/d05b1336-434b-422d-8902-a90a8c3b3ea2">
 
 <br><br>
 
@@ -164,5 +164,5 @@ branch 이름: 관련브랜치 분류/#[Issue tracker]
 | Refactor | (Cleanup) 코드 정리/리팩토링 |
 
 - 이슈번호와 함께 커밋 내용을 적는다.
-- 예시 : [#1] feat : ~
+- 예시 : [#1] feataure : ~
 
