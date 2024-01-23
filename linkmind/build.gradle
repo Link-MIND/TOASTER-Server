@@ -71,11 +71,6 @@ dependencies {
 
 	implementation 'io.sentry:sentry-spring-boot-starter:5.7.0'
 
-	//sqs
-	implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:3.0.1")
-	implementation 'io.awspring.cloud:spring-cloud-aws-starter-sqs'
-	implementation "org.springframework.cloud:spring-cloud-aws-messaging:2.2.6.RELEASE"
-
 }
 
 

@@ -15,18 +15,14 @@ import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.exception.model.ForbiddenException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.exception.model.UnauthorizedException;
-import com.app.toaster.external.client.fcm.FCMPushRequestDto;
-import com.app.toaster.external.client.fcm.FCMService;
 import com.app.toaster.infrastructure.CategoryRepository;
 import com.app.toaster.infrastructure.TimerRepository;
 import com.app.toaster.infrastructure.UserRepository;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.DayOfWeek;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -40,14 +36,11 @@ public class TimerService {
     private final CategoryRepository categoryRepository;
     private final TimerRepository timerRepository;
 
-    private final FCMService fcmService;
-
 
 
     private final Locale locale = Locale.KOREA;
 
     private final int MaxTimerNumber = 5;
-    private final int TimeIntervalInHours = 60;
 
     @Transactional
     public void createTimer(Long userId, CreateTimerRequestDto createTimerRequestDto){
@@ -82,14 +75,6 @@ public class TimerService {
                 .build();
 
         timerRepository.save(reminder);
-
-        // 바뀐 타이머가 오늘 이후 설정되어있으면 새로운 schedule 추가
-        if (createTimerRequestDto.remindDates().contains(LocalDateTime.now().getDayOfWeek().getValue()))
-            if(LocalTime.parse(createTimerRequestDto.remindTime()).isAfter(LocalTime.now())){
-                String cronExpression = String.format("0 %s %s * * ?", LocalTime.parse(createTimerRequestDto.remindTime()).getMinute(),LocalTime.parse(createTimerRequestDto.remindTime()).getHour());
-
-                fcmService.schedulePushAlarm(cronExpression, reminder.getId());
-            }
     }
     @Transactional(readOnly = true)
     public GetTimerResponseDto getTimer(Long userId, Long timerId){
@@ -114,16 +99,6 @@ public class TimerService {
         reminder.updateRemindTime(updateTimerDateTimeDto.remindTime());
 
         reminder.setUpdatedAtNow();
-
-        LocalDateTime now = LocalDateTime.now();
-
-        // 바뀐 타이머가 오늘 이후 설정되어있으면 새로운 schedule 추가
-        if (updateTimerDateTimeDto.remindDates().contains(now.getDayOfWeek().getValue()))
-            if(LocalTime.parse(updateTimerDateTimeDto.remindTime()).isAfter(LocalTime.now())){
-                String cronExpression = String.format("0 %s %s * * ?", LocalTime.parse(updateTimerDateTimeDto.remindTime()).getMinute(),LocalTime.parse(updateTimerDateTimeDto.remindTime()).getHour());
-
-                fcmService.schedulePushAlarm(cronExpression, reminder.getId());
-            }
 
 
     }
