@@ -36,8 +36,9 @@ public class KakaoSignInService {
 		ResponseEntity<Object> responseData = requestKakaoServer(accessToken, Strategy.LOGIN);
 		ObjectMapper objectMapper = new ObjectMapper();
 		HashMap profileResponse = (HashMap)objectMapper.convertValue( responseData.getBody(),Map.class).get("properties");
-		return LoginResult.of(objectMapper.convertValue(responseData.getBody(), Map.class).get("id").toString(), profileResponse==null?null:profileResponse.get("profile_image").toString(),
-			profileResponse==null?null:profileResponse.get("nickname").toString()); //프로필 이미지 허용 x시 null로 넘기기.
+		return LoginResult.of(objectMapper.convertValue(responseData.getBody(), Map.class).get("id").toString(),
+			profileResponse==null||profileResponse.get("profile_image")==null?null:profileResponse.get("profile_image").toString(),
+			profileResponse==null||profileResponse.get("nickname")==null?null:profileResponse.get("nickname").toString()); //프로필 이미지 허용 x시 null로 넘기기.
 	}
 	// 인가코드 나중에 서버에서 한번에 처리 하는 방식으로 변경. ux 이슈
 
