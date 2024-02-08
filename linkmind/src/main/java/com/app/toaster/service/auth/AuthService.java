@@ -45,8 +45,8 @@ public class AuthService {
 	private final SlackApi slackApi;
 
 
-	private final Long TOKEN_EXPIRATION_TIME_ACCESS =  3*24*60 * 60 * 1000L; //3일
-	private final Long TOKEN_EXPIRATION_TIME_REFRESH = 8*24*60 * 60 * 1000L; //8일
+	private final Long TOKEN_EXPIRATION_TIME_ACCESS =  7*24*60 * 60 * 1000L; //7일
+	private final Long TOKEN_EXPIRATION_TIME_REFRESH = 14*24*60 * 60 * 1000L; //14일
 	@Value("${static-image.root}")
 	private String BASIC_ROOT;
 
