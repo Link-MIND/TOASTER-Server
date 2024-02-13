@@ -3,6 +3,8 @@ package com.app.toaster.controller;
 import java.io.IOException;
 import java.util.List;
 
+import com.app.toaster.controller.request.toast.UpdateToastDto;
+import com.app.toaster.controller.response.toast.ModifiedTitle;
 import com.app.toaster.controller.response.toast.WeekLinkDto;
 import com.app.toaster.service.link.LinkService;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,7 @@ import com.app.toaster.exception.Success;
 import com.app.toaster.service.parse.ParsingService;
 import com.app.toaster.service.toast.ToastService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -86,6 +89,14 @@ public class ToastController {
 		return ApiResponse.success(Success.GET_LINKS_SUCCESS, linkService.getWeekLinks());
 	}
 
+	@PatchMapping("")
+	@ResponseStatus(HttpStatus.OK)
+	public ApiResponse<ModifiedTitle> modifyTitle(
+		@UserId Long userId,
+		@Valid @RequestBody UpdateToastDto updateToastDto
+	){
+		return ApiResponse.success(Success.UPDATE_TOAST_TITLE_SUCCESS, toastService.modifyTitle(userId,updateToastDto));
+	}
 
 
 }
