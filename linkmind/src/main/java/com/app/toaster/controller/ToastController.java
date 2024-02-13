@@ -89,7 +89,7 @@ public class ToastController {
 		return ApiResponse.success(Success.GET_LINKS_SUCCESS, linkService.getWeekLinks());
 	}
 
-	@PatchMapping("")
+	@PatchMapping("/title")
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse<ModifiedTitle> modifyTitle(
 		@UserId Long userId,
