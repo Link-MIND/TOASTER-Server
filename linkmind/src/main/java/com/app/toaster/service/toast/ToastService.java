@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.app.toaster.controller.request.toast.IsReadDto;
 import com.app.toaster.controller.request.toast.SaveToastDto;
+import com.app.toaster.controller.request.toast.UpdateToastDto;
 import com.app.toaster.controller.response.parse.OgResponse;
 import com.app.toaster.controller.response.toast.IsReadResponse;
+import com.app.toaster.controller.response.toast.ModifiedTitle;
 import com.app.toaster.domain.Category;
 import com.app.toaster.domain.Toast;
 import com.app.toaster.domain.User;
@@ -131,7 +133,23 @@ public class ToastService {
 		// s3Service.deleteImages(imageKeyList);
 		toastRepository.deleteAllById(toasts.stream().map(
 			(Toast::getId)).collect(Collectors.toList()));
-}
+	}
+
+	@Transactional
+	public ModifiedTitle modifyTitle(Long userId, UpdateToastDto updateToastDto){
+		User presentUser =  userRepository.findByUserId(userId).orElseThrow(
+			()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage())
+		);
+		Toast toast = toastRepository.findById(updateToastDto.toastId()).orElseThrow(
+			() -> new BadRequestException(Error.BAD_REQUEST_ID, Error.BAD_REQUEST_ID.getMessage())
+		);
+		if (!presentUser.equals(toast.getUser())){
+			throw new ForbiddenException(Error.UNAUTHORIZED_ACCESS, Error.UNAUTHORIZED_ACCESS.getMessage());
+		}
+		toast.updateTitle(updateToastDto.title());
+		return ModifiedTitle.of(updateToastDto.title());
+
+	}
 
 
 
