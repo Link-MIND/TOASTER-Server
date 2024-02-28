@@ -9,8 +9,11 @@ import javax.annotation.PostConstruct;
 import java.time.LocalTime;
 import java.util.TimeZone;
 
+import lombok.Generated;
+
 @SpringBootApplication
 @EnableJpaAuditing
+// @Generated
 public class ToasterApplication {
 
 	public static void main(String[] args) {

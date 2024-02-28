@@ -28,23 +28,21 @@ import com.app.toaster.external.client.aws.S3Service;
 import com.app.toaster.infrastructure.CategoryRepository;
 import com.app.toaster.infrastructure.ToastRepository;
 import com.app.toaster.infrastructure.UserRepository;
-import com.app.toaster.service.parse.ParsingService;
+import com.app.toaster.service.parse.ParsingServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import software.amazon.awssdk.utils.Logger;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
+// @Slf4j
 public class ToastService {
 	private final UserRepository userRepository;
 	private final ToastRepository toastRepository;
 	private final CategoryRepository categoryRepository;
 	private final S3Service s3Service;
-	private final ParsingService parsingService;
+	private final ParsingServiceImpl parsingService;
 	private static final String TOAST_IMAGE_FOLDER_NAME = "toast/";
-	private static Logger logger;
 
 	@Value("${static-image.root}")
 	private String BASIC_ROOT;
@@ -60,9 +58,9 @@ public class ToastService {
 		try {
 			System.out.println(saveToastDto.linkUrl());
 			OgResponse res = parsingService.getOg(saveToastDto.linkUrl());
-			//byte 배열로 읽어들임.
-			log.info(res.titleAdvanced());
-			log.info(res.imageAdvanced());
+			// //byte 배열로 읽어들임.
+			// log.info(res.titleAdvanced());
+			// log.info(res.imageAdvanced());
 			String imageString = checkIsBasicImage(res.imageAdvanced());
 			// // ImagePresignedUrlResponse realRes = getUploadPreSignedUrl(res.imageAdvanced());
 			// log.info(realRes.fileName());
@@ -164,28 +162,28 @@ public class ToastService {
 		}
 	}
 	// presigned url로 저장하는 로직
-	private void convertToBytes(){
-		// RestClient restClient = RestClient.create(BASIC_ROOT+res.imageAdvanced());
-		// Response response = restClient.get();
-		// byte[] imageBytes = response.content().asByteArray();
-	}
+	// private void convertToBytes(){
+	// 	// RestClient restClient = RestClient.create(BASIC_ROOT+res.imageAdvanced());
+	// 	// Response response = restClient.get();
+	// 	// byte[] imageBytes = response.content().asByteArray();
+	// }
 
-	public ImagePresignedUrlResponse getUploadPreSignedUrl(String filename) {
-		try {
-
-			PresignedUrlVO presignedUrlVO = s3Service.getUploadPreSignedUrl(filename ,TOAST_IMAGE_FOLDER_NAME);
-			return new ImagePresignedUrlResponse(
-				presignedUrlVO.fileName(),
-				presignedUrlVO.url()
-			);
-		} catch (Exception e) {
-
-			System.out.println(e.getMessage());
-			System.out.println(String.valueOf(e.getCause()));
-			System.out.println(Arrays.toString(e.getStackTrace()));
-			throw e;
-		}
-	}
+	// public ImagePresignedUrlResponse getUploadPreSignedUrl(String filename) {
+	// 	try {
+	//
+	// 		PresignedUrlVO presignedUrlVO = s3Service.getUploadPreSignedUrl(filename ,TOAST_IMAGE_FOLDER_NAME);
+	// 		return new ImagePresignedUrlResponse(
+	// 			presignedUrlVO.fileName(),
+	// 			presignedUrlVO.url()
+	// 		);
+	// 	} catch (Exception e) {
+	//
+	// 		System.out.println(e.getMessage());
+	// 		System.out.println(String.valueOf(e.getCause()));
+	// 		System.out.println(Arrays.toString(e.getStackTrace()));
+	// 		throw e;
+	// 	}
+	// }
 	// presign url로 요청 보내는 api
 	private void requestPreSignedUrl(){
 		// HttpHeaders headers = new HttpHeaders();
