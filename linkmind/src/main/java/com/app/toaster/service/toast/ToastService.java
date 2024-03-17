@@ -105,7 +105,7 @@ public class ToastService {
 	}
 
 	@Transactional
-	public void deleteToast(Long userId, Long toastId) throws IOException {
+	public void deleteToast(Long userId, Long toastId) {
 		User presentUser =  userRepository.findByUserId(userId).orElseThrow(
 			()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage())
 		);
