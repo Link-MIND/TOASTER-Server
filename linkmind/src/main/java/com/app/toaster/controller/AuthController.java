@@ -58,9 +58,9 @@ public class AuthController {
 		return ApiResponse.success(Success.DELETE_USER_SUCCESS);
 	}
 
-	@PostMapping("/token-vaild")
+	@PostMapping("/token/health")
 	@ResponseStatus(HttpStatus.OK)
-	public ApiResponse<TokenHealthDto> checkHealthOfToken(@RequestHeader String refreshToken) {
-		return ApiResponse.success(Success.TOKEN_HEALTH_CHECKED_SUCCESS, authService.checkHealthOfToken(refreshToken));
+	public ApiResponse<TokenHealthDto> checkHealthOfToken(@RequestHeader String token) {
+		return ApiResponse.success(Success.TOKEN_HEALTH_CHECKED_SUCCESS, authService.checkHealthOfToken(token));
 	}
 }
