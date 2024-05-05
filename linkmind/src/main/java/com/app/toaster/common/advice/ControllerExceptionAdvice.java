@@ -38,7 +38,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class ControllerExceptionAdvice {
-	private final SlackApi slackApi;
+	// private final SlackApi slackApi;
 
 	/**
 	 * custom error
@@ -134,7 +134,7 @@ public class ControllerExceptionAdvice {
 	@ExceptionHandler(Exception.class)
 	protected ApiResponse<Object> handleException(final Exception error, final HttpServletRequest request) throws
 		IOException {
-		slackApi.sendAlert(error, request);
+		// slackApi.sendAlert(error, request);
 		Sentry.captureException(error);
 		return ApiResponse.error(Error.INTERNAL_SERVER_ERROR);
 	}

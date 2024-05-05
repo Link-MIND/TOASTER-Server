@@ -28,7 +28,7 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 @Component
-@Slf4j
+// @Slf4j
 public class S3Service {
 	private final String bucketName;
 	private final AWSConfig awsConfig;
@@ -150,9 +150,9 @@ public class S3Service {
 	public PresignedUrlVO getUploadPreSignedUrl(final String filename, final String folder) {
 		final String fileName = createFileName(filename);
 		final String key = folder + fileName;
-		System.out.println("하이");
-		log.info(fileName);
-		log.info(key);
+		// System.out.println("하이");
+		// log.info(fileName);
+		// log.info(key);
 
 		S3Presigner preSigner = awsConfig.getS3Presigner();
 
@@ -160,12 +160,12 @@ public class S3Service {
 			.bucket(bucketName)
 			.key(key)
 			.build();
-		log.info("-----");
+		// log.info("-----");
 		PutObjectPresignRequest preSignedUrlRequest = PutObjectPresignRequest.builder()
 			.signatureDuration(Duration.ofMinutes(PRE_SIGNED_URL_EXPIRE_MINUTE))
 			.putObjectRequest(putObjectRequest)
 			.build();
-		log.info("-----");
+		// log.info("-----");
 		String url = preSigner.presignPutObject(preSignedUrlRequest).url().toString();
 
 		return PresignedUrlVO.of(fileName, url);

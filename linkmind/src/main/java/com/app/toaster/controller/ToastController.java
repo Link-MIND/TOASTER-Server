@@ -27,7 +27,7 @@ import com.app.toaster.controller.request.toast.OgRequestDto;
 import com.app.toaster.controller.request.toast.SaveToastDto;
 import com.app.toaster.controller.response.toast.IsReadResponse;
 import com.app.toaster.exception.Success;
-import com.app.toaster.service.parse.ParsingService;
+import com.app.toaster.service.parse.ParsingServiceImpl;
 import com.app.toaster.service.toast.ToastService;
 
 import jakarta.validation.Valid;
@@ -39,7 +39,7 @@ import lombok.RequiredArgsConstructor;
 @Validated
 public class ToastController {
 	private final ToastService toastService;
-	private final ParsingService parsingService;
+	private final ParsingServiceImpl parsingService;
 	private final LinkService linkService;
 
 	@PostMapping("/og")

@@ -44,3 +44,5 @@ application-local.yml
 /src/main/resources/toaster-firebase-admin-sdk.json
 /src/main/resources/toaster-firebase-admindk.json
 /src/main/resources/toaster-firebase-admin-sdk.json
+
+extension 'jacoco'
