@@ -16,6 +16,7 @@ import com.app.toaster.exception.model.BadRequestException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.infrastructure.ToastRepository;
 import com.app.toaster.infrastructure.UserRepository;
+import com.app.toaster.infrastructure.querydsl.CustomToastRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +32,7 @@ public class UserService {
 
 	private final UserRepository userRepository;
 	private final ToastRepository toastRepository;
+	private final CustomToastRepository customToastRepository;
 	private final CategoryRepository categoryRepository;
 
 	@Transactional(readOnly = true)
@@ -76,6 +78,7 @@ public class UserService {
 				.orElseThrow(() -> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage()));
 
         int allToastNum = toastRepository.getAllByUser(user).size();
+
         int readToastNum = toastRepository.getAllByUserAndIsReadIsTrue(user).size();
 
 
@@ -86,7 +89,7 @@ public class UserService {
                 .map(category -> CategoryResponse.builder()
                         .categoryId(category.getCategoryId())
                         .categoryTitle(category.getTitle())
-                        .toastNum(toastRepository.getAllByCategory(category).size()).build()
+                        .toastNum(customToastRepository.getAllByCategory(category).size()).build() //커스텀으로 바꿔보고 쿼리 테스트
                 ).collect(Collectors.toList())).build();
 
         return mainPageResponseDto;

@@ -40,7 +40,7 @@ public class AuthController {
 
 	@PostMapping("/token")
 	@ResponseStatus(HttpStatus.OK)
-	public ApiResponse<TokenResponseDto> reissueToken(@RequestHeader String refreshToken) {
+	public ApiResponse<TokenResponseDto> reissueToken(@RequestHeader("refreshToken") String refreshToken) {
 		return ApiResponse.success(Success.RE_ISSUE_TOKEN_SUCCESS, authService.issueToken(refreshToken));
 	}
 
@@ -60,7 +60,7 @@ public class AuthController {
 
 	@PostMapping("/token/health")
 	@ResponseStatus(HttpStatus.OK)
-	public ApiResponse<TokenHealthDto> checkHealthOfToken(@RequestHeader String token) {
+	public ApiResponse<TokenHealthDto> checkHealthOfToken(@RequestHeader("token") String token) {
 		return ApiResponse.success(Success.TOKEN_HEALTH_CHECKED_SUCCESS, authService.checkHealthOfToken(token));
 	}
 }

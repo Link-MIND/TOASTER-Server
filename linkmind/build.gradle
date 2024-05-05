@@ -35,6 +35,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation group: 'com.h2database', name: 'h2', version: '2.2.224'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
@@ -72,7 +73,14 @@ dependencies {
 	implementation 'io.sentry:sentry-spring-boot-starter:5.7.0'
 
 }
-
+sourceSets {
+	main {
+		java {
+			srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+		}
+	}
+}
+compileJava {	options.compilerArgs << '-parameters'}
 
 tasks.named('test') {
 	useJUnitPlatform()
