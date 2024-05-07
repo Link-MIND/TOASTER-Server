@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-// @Table(name = "\"USER\"")  //h2에러 나면 주석처리 풀어서 사용하기!
+@Table(name = "\"USER\"")  //h2에러 나면 주석처리 풀어서 사용하기!
 public class User {
 
 	@Id

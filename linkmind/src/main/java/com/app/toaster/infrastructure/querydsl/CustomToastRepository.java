@@ -1,5 +1,7 @@
 package com.app.toaster.infrastructure.querydsl;
 
+import static com.app.toaster.domain.QToast.*;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CustomToastRepository {
 	private final JPAQueryFactory queryFactory;
-	QToast toast = QToast.toast;
 	public List<Toast> getAllByCategory(Category category){
 		return queryFactory.select(toast)
 			.from(toast)
