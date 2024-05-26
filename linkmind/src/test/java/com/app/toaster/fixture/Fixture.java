@@ -28,21 +28,21 @@ public class Fixture {
 		.user(USER_1)
 		.category(CATEGORY_1)
 		.thumbnailUrl("dd")
-		.title("toast1")
+		.title("검색이 되나나")
 		.linkUrl("toast링크url")
 		.build();
 	public static final Toast TOAST_2 = Toast.builder()
 		.user(USER_1)
 		.category(CATEGORY_1)
 		.thumbnailUrl("ddd")
-		.title("toast2")
+		.title("검색이 될까?")
 		.linkUrl("toast링크url2")
 		.build();
 	public static final Toast TOAST_3 = Toast.builder()
 		.user(USER_1)
 		.category(CATEGORY_1)
 		.thumbnailUrl("dd")
-		.title("toast3")
+		.title("검색이 되나도?")
 		.linkUrl("toast링크url3")
 		.build();
 }

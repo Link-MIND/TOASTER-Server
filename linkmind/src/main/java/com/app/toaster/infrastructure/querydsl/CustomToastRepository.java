@@ -61,12 +61,13 @@ public class CustomToastRepository {
 	}
 
 
-	@Query("SELECT t FROM Toast t WHERE " +
-		"t.user.userId = :userId and " +
-		"t.title LIKE CONCAT('%',:query, '%')"
-	)
 	List<Toast> searchToastsByQuery(Long userId, String query){
-		return null;
+		return queryFactory.selectFrom(toast)
+			.where(
+				toast.user.userId.eq(userId),
+				toast.title.containsIgnoreCase(query)
+				)
+			.fetch();
 	}
 
 

@@ -24,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.app.toaster.config.JpaQueryFactoryConfig;
 import com.app.toaster.domain.Category;
@@ -89,46 +90,111 @@ class CustomToastRepositoryTest {
 	@DisplayName("토스트 jpa repository test")
 	class 토스트_JpaRepository_Test {
 
-		@Test
-		@DisplayName("토스트의 getAllByCategory test")
-		@Transactional
-		void test_ToastJpaRepository_조회() {
-			List<Toast> toast = toastRepository.getAllByCategory(CATEGORY_1);
-			Assertions.assertThat(toast.get(0).getId()).isEqualTo(Fixture.TOAST_1.getId());
-			Assertions.assertThat(toast.get(1).getId()).isEqualTo(Fixture.TOAST_2.getId());
-			Assertions.assertThat(toast.get(2).getId()).isEqualTo(Fixture.TOAST_3.getId());
+		@Nested
+		@DisplayName("토스트 카테고리 jpa repository test")
+		class 토스트_카테고리_jpa_test{
+			@Test
+			@DisplayName("토스트의 getAllByCategory test")
+			void test_ToastJpaRepository_조회() {
+
+				List<Toast> toastList = toastRepository.getAllByCategory(CATEGORY_1);
+
+
+				Assertions.assertThat(toastList.get(0).getId()).isEqualTo(Fixture.TOAST_1.getId());
+				Assertions.assertThat(toastList.get(1).getId()).isEqualTo(Fixture.TOAST_2.getId());
+				Assertions.assertThat(toastList.get(2).getId()).isEqualTo(Fixture.TOAST_3.getId());
+			}
+		}
+		@Nested
+		@DisplayName("토스트 jpa repository 검색 test")
+		class 토스트_JPA_검색_test{
+
+			@Test
+			@DisplayName("토스트의 검색 쿼리 문자열이 앞에 있는 경우 test")
+			void test_ToastJpaRepository_검색1(){
+				List<Toast> toastList = toastRepository.searchToastsByQuery(USER_1.getUserId(),"검색");
+
+				Assertions.assertThat(toastList.get(0).getId()).isEqualTo(Fixture.TOAST_1.getId());
+				Assertions.assertThat(toastList.get(1).getId()).isEqualTo(Fixture.TOAST_2.getId());
+				Assertions.assertThat(toastList.get(2).getId()).isEqualTo(Fixture.TOAST_3.getId());
+			}
+
+			@Test
+			@DisplayName("토스트의 검색 쿼리 문자열이 뒤에 있는 경우 test")
+			void test_ToastJpaRepository_검색2(){
+				List<Toast> toastList = toastRepository.searchToastsByQuery(USER_1.getUserId(),"되나");
+
+				Assertions.assertThat(toastList.get(0).getId()).isEqualTo(TOAST_1.getId());
+				Assertions.assertThat(toastList.get(1).getId()).isEqualTo(TOAST_3.getId());
+				// Assertions.assertThat(toastList.get(2).getId()).isEqualTo(Fixture.TOAST_3.getId());
+			}
 		}
 	}
-
 	@Nested
-	@DisplayName("토스트 QueryDSL test")
-	class 토스트_QueryDSL_Test {
+	@DisplayName("토스트 querydsl test")
+	class 토스트_QueryDSL_Test{
+		@Nested
+		@DisplayName("토스트 QueryDSL category test")
+		class 토스트_QueryDSL_Category_Test {
 
-		@Test
-		@DisplayName("토스트의 queryDSL getAllByCategory test")
-		void ToastQueryRepository_getAllByCategory_테스트() {
-			QToast qToast = toast;
+			@Test
+			@DisplayName("토스트의 queryDSL getAllByCategory test")
+			void ToastQueryRepository_getAllByCategory_테스트() {
+				QToast qToast = toast;
 
-			List<Toast> toasts = customToastRepository.getAllByCategory(CATEGORY_1);
+				List<Toast> toasts = customToastRepository.getAllByCategory(CATEGORY_1);
 
-			Assertions.assertThat(toasts.get(0).getId()).isEqualTo(Fixture.TOAST_1.getId());
-			Assertions.assertThat(toasts.get(1).getId()).isEqualTo(Fixture.TOAST_2.getId());
-			Assertions.assertThat(toasts.get(2).getId()).isEqualTo(Fixture.TOAST_3.getId());
+				Assertions.assertThat(toasts.get(0).getId()).isEqualTo(Fixture.TOAST_1.getId());
+				Assertions.assertThat(toasts.get(1).getId()).isEqualTo(Fixture.TOAST_2.getId());
+				Assertions.assertThat(toasts.get(2).getId()).isEqualTo(Fixture.TOAST_3.getId());
+			}
+
+			@Test
+			@DisplayName("categoryid 결과를 찾지 못했을 때 test")
+			void ToastQueryRepository_Category_id_2_테스트() {
+				QToast qToast = toast;
+
+				List<Toast> toasts = jpaQueryFactory.selectFrom(qToast)
+					.where(eqCategoryId(CATEGORY_2.getCategoryId()))
+					.fetch();
+				assertNotNull(toasts, "조회 데이터가 없습니다.");
+				// Assertions.assertThat(toasts.get(0).getId()).isEqualTo(Fixture.TOAST_2.getId());
+				// Assertions.assertThat(toasts.get(0).getId()).isEqualTo(Fixture.TOAST_3.getId());
+			}
+
 		}
 
-		@Test
-		@DisplayName("categoryid 결과를 찾지 못했을 때 test")
-		void ToastQueryRepository_Category_id_2_테스트() {
-			QToast qToast = toast;
-			List<Toast> toasts = jpaQueryFactory.selectFrom(qToast)
-				.where(eqCategoryId(CATEGORY_2.getCategoryId()))
-				.fetch();
-			assertNotNull(toasts, "조회 데이터가 없습니다.");
-			// Assertions.assertThat(toasts.get(0).getId()).isEqualTo(Fixture.TOAST_2.getId());
-			// Assertions.assertThat(toasts.get(0).getId()).isEqualTo(Fixture.TOAST_3.getId());
-		}
+		@Nested
+		@DisplayName("토스트 QueryDSL search test")
+		class 토스트_QueryDSL_검색쿼리_test{
+			@Test
+			@DisplayName("토스트의 queryDSL 문자열이 앞에 있을 때 쿼리 검색 test")
+			void ToastQueryRepository_searchToastsByQuery_테스트() {
+				QToast qToast = toast;
 
+				List<Toast> toasts = customToastRepository.searchToastsByQuery(USER_1.getUserId(), "검색");
+
+				Assertions.assertThat(toasts.get(0).getId()).isEqualTo(Fixture.TOAST_1.getId());
+				Assertions.assertThat(toasts.get(1).getId()).isEqualTo(Fixture.TOAST_2.getId());
+				Assertions.assertThat(toasts.get(2).getId()).isEqualTo(Fixture.TOAST_3.getId());
+			}
+
+			@Test
+			@DisplayName("토스트의 queryDSL 문자열이 뒤에 있을 때 쿼리 검색 test")
+			void ToastQueryRepository_searchToastsByQuery_테스트2() {
+				QToast qToast = toast;
+
+				List<Toast> toasts = customToastRepository.searchToastsByQuery(USER_1.getUserId(), "되나");
+
+				Assertions.assertThat(toasts.get(0).getId()).isEqualTo(Fixture.TOAST_1.getId());
+				Assertions.assertThat(toasts.get(1).getId()).isEqualTo(Fixture.TOAST_3.getId());
+				// Assertions.assertThat(toasts.get(2).getId()).isEqualTo(Fixture.TOAST_3.getId());
+			}
+		}
 	}
+
+
+
 	private BooleanExpression eqCategoryId(Long id){
 		return id!=null?toast.category.categoryId.eq(id):null;
 	}
