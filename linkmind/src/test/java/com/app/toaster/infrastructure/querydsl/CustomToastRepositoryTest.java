@@ -107,7 +107,7 @@ class CustomToastRepositoryTest {
 		@Test
 		@DisplayName("토스트의 queryDSL getAllByCategory test")
 		void ToastQueryRepository_getAllByCategory_테스트() {
-			QToast qToast = new QToast("toast");
+			QToast qToast = toast;
 
 			List<Toast> toasts = customToastRepository.getAllByCategory(CATEGORY_1);
 
@@ -119,9 +119,8 @@ class CustomToastRepositoryTest {
 		@Test
 		@DisplayName("categoryid 결과를 찾지 못했을 때 test")
 		void ToastQueryRepository_Category_id_2_테스트() {
-			QToast qtoast = new QToast("toast");
-			List<Toast> toasts = jpaQueryFactory.select(qtoast)
-				.from(qtoast)
+			QToast qToast = toast;
+			List<Toast> toasts = jpaQueryFactory.selectFrom(qToast)
 				.where(eqCategoryId(CATEGORY_2.getCategoryId()))
 				.fetch();
 			assertNotNull(toasts, "조회 데이터가 없습니다.");
@@ -131,10 +130,7 @@ class CustomToastRepositoryTest {
 
 	}
 	private BooleanExpression eqCategoryId(Long id){
-		if (id == null){
-			return null;
-		}
-		return toast.category.categoryId.eq(id);
+		return id!=null?toast.category.categoryId.eq(id):null;
 	}
 
 }
