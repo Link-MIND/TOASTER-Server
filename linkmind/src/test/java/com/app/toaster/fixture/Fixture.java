@@ -12,6 +12,12 @@ public class Fixture {
 		.socialType(SocialType.KAKAO)
 		.build();
 
+	public static final User USER_2 = User.builder()
+		.nickname("유저 두번째")
+		.socialId("유저아이디2")
+		.socialType(SocialType.KAKAO)
+		.build();
+
 	public static final Category CATEGORY_1 = Category.builder()
 		.title("카테고리 1번째")
 		.priority(3)
@@ -22,6 +28,12 @@ public class Fixture {
 		.title("카테고리 2번째")
 		.priority(3)
 		.user(USER_1)
+		.build();
+
+	public static final Category CATEGORY_1_USER_2 = Category.builder()
+		.title("카테고리 1번째")
+		.priority(3)
+		.user(USER_2)
 		.build();
 
 	public static final Toast TOAST_1 = Toast.builder()
@@ -44,5 +56,13 @@ public class Fixture {
 		.thumbnailUrl("dd")
 		.title("검색이 되나도?")
 		.linkUrl("toast링크url3")
+		.build();
+
+	public static final Toast USER_2_TOAST_3 = Toast.builder()
+		.user(USER_2)
+		.category(CATEGORY_1_USER_2)
+		.thumbnailUrl("dd")
+		.title("검색이 되나도?")
+		.linkUrl("toast링크url4")
 		.build();
 }

@@ -24,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.app.toaster.config.JpaQueryFactoryConfig;
@@ -40,7 +41,6 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -140,7 +140,6 @@ class CustomToastRepositoryTest {
 			@Test
 			@DisplayName("토스트의 queryDSL getAllByCategory test")
 			void ToastQueryRepository_getAllByCategory_테스트() {
-				QToast qToast = toast;
 
 				List<Toast> toasts = customToastRepository.getAllByCategory(CATEGORY_1);
 
@@ -152,9 +151,8 @@ class CustomToastRepositoryTest {
 			@Test
 			@DisplayName("categoryid 결과를 찾지 못했을 때 test")
 			void ToastQueryRepository_Category_id_2_테스트() {
-				QToast qToast = toast;
 
-				List<Toast> toasts = jpaQueryFactory.selectFrom(qToast)
+				List<Toast> toasts = jpaQueryFactory.selectFrom(toast)
 					.where(eqCategoryId(CATEGORY_2.getCategoryId()))
 					.fetch();
 				assertNotNull(toasts, "조회 데이터가 없습니다.");
@@ -169,8 +167,8 @@ class CustomToastRepositoryTest {
 		class 토스트_QueryDSL_검색쿼리_test{
 			@Test
 			@DisplayName("토스트의 queryDSL 문자열이 앞에 있을 때 쿼리 검색 test")
+			@Transactional(readOnly = true)
 			void ToastQueryRepository_searchToastsByQuery_테스트() {
-				QToast qToast = toast;
 
 				List<Toast> toasts = customToastRepository.searchToastsByQuery(USER_1.getUserId(), "검색");
 
@@ -181,14 +179,26 @@ class CustomToastRepositoryTest {
 
 			@Test
 			@DisplayName("토스트의 queryDSL 문자열이 뒤에 있을 때 쿼리 검색 test")
+			@Transactional(readOnly = true)
 			void ToastQueryRepository_searchToastsByQuery_테스트2() {
-				QToast qToast = toast;
 
 				List<Toast> toasts = customToastRepository.searchToastsByQuery(USER_1.getUserId(), "되나");
 
 				Assertions.assertThat(toasts.get(0).getId()).isEqualTo(Fixture.TOAST_1.getId());
 				Assertions.assertThat(toasts.get(1).getId()).isEqualTo(Fixture.TOAST_3.getId());
 				// Assertions.assertThat(toasts.get(2).getId()).isEqualTo(Fixture.TOAST_3.getId());
+			}
+
+			@Test
+			@DisplayName("검색 쿼리가 비어있을 때")
+			@Transactional(readOnly = true)
+			void ToastQueryRepository_searchToastsByQuery_테스트3() {
+
+				List<Toast> toasts = customToastRepository.searchToastsByQuery(USER_1.getUserId(), "");
+
+				Assertions.assertThat(toasts.get(0).getId()).isEqualTo(Fixture.TOAST_1.getId());
+				Assertions.assertThat(toasts.get(1).getId()).isEqualTo(Fixture.TOAST_2.getId());
+				Assertions.assertThat(toasts.get(2).getId()).isEqualTo(Fixture.TOAST_3.getId());
 			}
 		}
 	}

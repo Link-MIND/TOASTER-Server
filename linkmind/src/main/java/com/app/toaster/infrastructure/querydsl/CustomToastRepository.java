@@ -1,6 +1,7 @@
 package com.app.toaster.infrastructure.querydsl;
 
 import static com.app.toaster.domain.QToast.*;
+import static com.app.toaster.domain.QUser.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import com.app.toaster.domain.Category;
 import com.app.toaster.domain.QToast;
+import com.app.toaster.domain.QUser;
 import com.app.toaster.domain.Toast;
 import com.app.toaster.domain.User;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -62,13 +64,23 @@ public class CustomToastRepository {
 
 
 	List<Toast> searchToastsByQuery(Long userId, String query){
-		return queryFactory.selectFrom(toast)
-			.where(
-				toast.user.userId.eq(userId),
-				toast.title.containsIgnoreCase(query)
-				)
+		return queryFactory.select(toast)
+			.from(toast)
+			.leftJoin(toast.user, user).fetchJoin()
+			.where(eqToastOwner(userId), containToastTitle(query))
 			.fetch();
 	}
+	private BooleanExpression eqToastOwner(Long userId){
+		return userId != null?toast.user.userId.eq(userId):null;
+	}
+
+	private BooleanExpression containToastTitle(String query){
+		if (query == null || query.isEmpty() || query.isBlank()){
+			return null;
+		}
+		return toast.title.containsIgnoreCase(query);
+	}
+
 
 
 	Long countAllByUser(User user){
