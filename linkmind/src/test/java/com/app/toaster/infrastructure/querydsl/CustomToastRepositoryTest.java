@@ -231,7 +231,7 @@ class CustomToastRepositoryTest {
 		@Nested
 		class 토스트_QUERYDSL_수정_TEST{
 			@Test
-			@DisplayName("토스트 수정 쿼리 jpa test")
+			@DisplayName("토스트 수정 쿼리 querydsl test")
 			@Transactional
 			void updateCategoryIdsToNull(){
 				//given
