@@ -16,15 +16,18 @@ import com.app.toaster.domain.QToast;
 import com.app.toaster.domain.QUser;
 import com.app.toaster.domain.Toast;
 import com.app.toaster.domain.User;
+import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 
 @Repository
 @RequiredArgsConstructor
 public class CustomToastRepository {
 	private final JPAQueryFactory queryFactory;
+	// private final EntityManager em;
 	public List<Toast> getAllByCategory(Category category){
 		return queryFactory.select(toast)
 			.from(toast)
@@ -57,9 +60,19 @@ public class CustomToastRepository {
 	}
 
 
-	@Modifying
-	@Query("UPDATE Toast t SET t.category = null WHERE t.category.categoryId IN :categoryIds")
-	void updateCategoryIdsToNull(@Param("categoryIds") List<Long> categoryIds){
+	// @Modifying
+	// @Query("UPDATE Toast t SET t.category = null WHERE t.category.categoryId IN :categoryIds")
+	// void updateCategoryIdsToNull(@Param("categoryIds") List<Long> categoryIds){
+	// }
+
+	//querydsl의 수정은 bulkupdate라 영속성컨텍스트를 안거치기 때문에 무조건 flush,clear해주자.
+	void updateCategoryIdsToNull(List<Long> categoryIds){
+		queryFactory.update(toast)
+			.set((Path<Category>)toast.category, (Category)null)
+			.where(toast.category.categoryId.in(categoryIds))
+			.execute();
+		// em.flush(); //test 코드에서는 따로 em을 주입하는 중이므로 테스트 후 넣자.
+		// em.clear();
 	}
 
 

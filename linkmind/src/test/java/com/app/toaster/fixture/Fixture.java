@@ -65,4 +65,12 @@ public class Fixture {
 		.title("검색이 되나도?")
 		.linkUrl("toast링크url4")
 		.build();
+
+	public static final Toast TOAST_3_CATEGORY_2 = Toast.builder()
+		.user(USER_1)
+		.category(CATEGORY_2)
+		.thumbnailUrl("dd")
+		.title("검색이 되나도?")
+		.linkUrl("toast링크url3")
+		.build();
 }

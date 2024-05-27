@@ -4,6 +4,7 @@ import static com.app.toaster.domain.QToast.*;
 import static com.app.toaster.fixture.Fixture.*;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -128,6 +129,30 @@ class CustomToastRepositoryTest {
 				Assertions.assertThat(toastList.get(1).getId()).isEqualTo(TOAST_3.getId());
 				// Assertions.assertThat(toastList.get(2).getId()).isEqualTo(Fixture.TOAST_3.getId());
 			}
+
+		}
+
+		@DisplayName("토스트 수정 관련 jpa test")
+		@Nested
+		class 토스트_JPA_수정_TEST{
+			@Test
+			@DisplayName("토스트 수정 쿼리 jpa test")
+			@Transactional
+			void updateCategoryIdsToNull(){
+				//given
+				List<Long> categoryIds = new ArrayList<>();
+				categoryIds.add(CATEGORY_1.getCategoryId());
+				categoryIds.add(CATEGORY_2.getCategoryId());
+
+				//when
+				toastRepository.updateCategoryIdsToNull(categoryIds);
+
+				//then
+				Assertions.assertThat(TOAST_1.getCategory() == null);
+				Assertions.assertThat(TOAST_2.getCategory() == null);
+				Assertions.assertThat(TOAST_3.getCategory() == null);
+				Assertions.assertThat(TOAST_3_CATEGORY_2.getCategory() == null);
+			}
 		}
 	}
 	@Nested
@@ -199,6 +224,32 @@ class CustomToastRepositoryTest {
 				Assertions.assertThat(toasts.get(0).getId()).isEqualTo(Fixture.TOAST_1.getId());
 				Assertions.assertThat(toasts.get(1).getId()).isEqualTo(Fixture.TOAST_2.getId());
 				Assertions.assertThat(toasts.get(2).getId()).isEqualTo(Fixture.TOAST_3.getId());
+			}
+		}
+		//적용하더라도 프로덕션 코드의 em부분 em.flush, em.clear체크.
+		@DisplayName("토스트 수정 관련 querydsl test")
+		@Nested
+		class 토스트_QUERYDSL_수정_TEST{
+			@Test
+			@DisplayName("토스트 수정 쿼리 jpa test")
+			@Transactional
+			void updateCategoryIdsToNull(){
+				//given
+				List<Long> categoryIds = new ArrayList<>();
+				categoryIds.add(CATEGORY_1.getCategoryId());
+				categoryIds.add(CATEGORY_2.getCategoryId());
+
+				//when
+				customToastRepository.updateCategoryIdsToNull(categoryIds);
+				//
+				em.flush();
+				em.clear();
+
+				//then
+				Assertions.assertThat(TOAST_1.getCategory() == null);
+				Assertions.assertThat(TOAST_2.getCategory() == null);
+				Assertions.assertThat(TOAST_3.getCategory() == null);
+				Assertions.assertThat(TOAST_3_CATEGORY_2.getCategory() == null);
 			}
 		}
 	}
