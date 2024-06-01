@@ -16,6 +16,7 @@ import com.app.toaster.common.dto.ApiResponse;
 import com.app.toaster.config.UserId;
 import com.app.toaster.controller.request.auth.SignInRequestDto;
 import com.app.toaster.controller.response.auth.SignInResponseDto;
+import com.app.toaster.controller.response.auth.TokenHealthDto;
 import com.app.toaster.controller.response.auth.TokenResponseDto;
 import com.app.toaster.exception.Success;
 import com.app.toaster.service.auth.AuthService;
@@ -39,7 +40,7 @@ public class AuthController {
 
 	@PostMapping("/token")
 	@ResponseStatus(HttpStatus.OK)
-	public ApiResponse<TokenResponseDto> reissueToken(@RequestHeader String refreshToken) {
+	public ApiResponse<TokenResponseDto> reissueToken(@RequestHeader("refreshToken") String refreshToken) {
 		return ApiResponse.success(Success.RE_ISSUE_TOKEN_SUCCESS, authService.issueToken(refreshToken));
 	}
 
@@ -55,5 +56,11 @@ public class AuthController {
 	public ApiResponse withdraw(@UserId Long userId) {
 		authService.withdraw(userId);
 		return ApiResponse.success(Success.DELETE_USER_SUCCESS);
+	}
+
+	@PostMapping("/token/health")
+	@ResponseStatus(HttpStatus.OK)
+	public ApiResponse<TokenHealthDto> checkHealthOfToken(@RequestHeader("token") String token) {
+		return ApiResponse.success(Success.TOKEN_HEALTH_CHECKED_SUCCESS, authService.checkHealthOfToken(token));
 	}
 }

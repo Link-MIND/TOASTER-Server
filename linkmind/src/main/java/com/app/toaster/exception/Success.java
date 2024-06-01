@@ -33,6 +33,7 @@ public enum Success {
 
   	LOGIN_SUCCESS(HttpStatus.OK, "로그인 성공"),
 	RE_ISSUE_TOKEN_SUCCESS(HttpStatus.OK, "토큰 재발급 성공"),
+	TOKEN_HEALTH_CHECKED_SUCCESS(HttpStatus.OK, "토큰 헬스체크 성공"),
 	SIGNOUT_SUCCESS(HttpStatus.OK, "로그아웃 성공"),
 	DELETE_USER_SUCCESS(HttpStatus.OK, "회원 탈퇴가 정상적으로 이루어졌습니다."),
 	DELETE_TOAST_SUCCESS(HttpStatus.OK, "토스트 삭제 성공"),

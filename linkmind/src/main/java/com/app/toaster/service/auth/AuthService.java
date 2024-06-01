@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import com.app.toaster.common.dto.ApiResponse;
 import com.app.toaster.config.jwt.JwtService;
 import com.app.toaster.controller.request.auth.SignInRequestDto;
 import com.app.toaster.controller.response.auth.SignInResponseDto;
+import com.app.toaster.controller.response.auth.TokenHealthDto;
 import com.app.toaster.controller.response.auth.TokenResponseDto;
 import com.app.toaster.domain.SocialType;
 import com.app.toaster.domain.User;
@@ -154,6 +156,11 @@ public class AuthService {
 		if (res!=1){
 			throw new UnprocessableEntityException(Error.UNPROCESSABLE_ENTITY_DELETE_EXCEPTION, Error.UNPROCESSABLE_ENTITY_DELETE_EXCEPTION.getMessage());
 		}
+	}
+
+	@Transactional(readOnly = true)
+	public TokenHealthDto checkHealthOfToken(String refreshToken){
+		return TokenHealthDto.of(jwtService.verifyToken(refreshToken));
 	}
 
 }

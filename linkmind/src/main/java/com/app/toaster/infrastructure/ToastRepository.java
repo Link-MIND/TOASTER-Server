@@ -37,7 +37,7 @@ public interface ToastRepository extends JpaRepository<Toast, Long> {
 			"t.user.userId = :userId and " +
 			"t.title LIKE CONCAT('%',:query, '%')"
 	)
-	List<Toast> searchToastsByQuery(Long userId, String query);
+	List<Toast> searchToastsByQuery(Long userId, @Param(value = "query")String query);
 
 	Long countAllByUser(User user);
 

@@ -15,6 +15,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -111,6 +112,14 @@ public class ControllerExceptionAdvice {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(UnknownHostException.class)
 	protected ResponseEntity<ApiResponse> UnknownHostException(final UnknownHostException e) {
+		Sentry.captureException(e);
+		return ResponseEntity.status(Error.BAD_REQUEST_VALIDATION.getErrorCode())
+			.body(ApiResponse.error(Error.BAD_REQUEST_VALIDATION, Error.BAD_REQUEST_VALIDATION.getMessage()));
+	}
+
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(MissingRequestHeaderException.class)
+	protected ResponseEntity<ApiResponse> MissingRequestHeaderException(final MissingRequestHeaderException e){
 		Sentry.captureException(e);
 		return ResponseEntity.status(Error.BAD_REQUEST_VALIDATION.getErrorCode())
 			.body(ApiResponse.error(Error.BAD_REQUEST_VALIDATION, Error.BAD_REQUEST_VALIDATION.getMessage()));
