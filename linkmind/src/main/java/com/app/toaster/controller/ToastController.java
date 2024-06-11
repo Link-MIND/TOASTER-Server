@@ -76,7 +76,7 @@ public class ToastController {
 	public ApiResponse deleteToast(		//나중에 softDelete로 변경
 		@UserId Long userId,
 		@RequestParam Long toastId
-	) throws IOException {
+	) {
 		toastService.deleteToast(userId, toastId);
 		return ApiResponse.success(Success.DELETE_TOAST_SUCCESS);
 	}

@@ -1,8 +1,13 @@
 package com.app.toaster.service.parse;
 
+import static org.springframework.web.util.UriUtils.*;
+
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.net.ssl.SSLHandshakeException;
 
@@ -86,11 +91,13 @@ public class ParsingServiceImpl implements ParsingService{
 	}
 
 	private String findImageAnywhere(Elements metaCase, Elements imgCase, Elements iframeCase){
-		if (!metaCase.isEmpty()){
-			return metaCase.get(0).attr("content");
+		if (!metaCase.isEmpty()) {    //naver,brunch
+			String excludeSlug = metaCase.get(0).attr("content");
+			String responseUrl = extractSlugUrl(excludeSlug);
+			return responseUrl == null ? excludeSlug : responseUrl;
 		}
 		else if(!imgCase.isEmpty()){
-			return metaCase.get(0).text();
+			return imgCase.get(0).text();
 		}
 		else if(!iframeCase.isEmpty()){
 			return iframeCase.get(0).attr("content");
@@ -98,6 +105,23 @@ public class ParsingServiceImpl implements ParsingService{
 		else{
 			return null;
 		}
+	}
+
+	private String extractSlugUrl(String slug) {
+		// 정규표현식 패턴 설정
+		Pattern pattern = Pattern.compile("(?<=fname=)([^&]+(?:%[0-9a-fA-F]{2})*)"); //fname=이라는게 앞에 나오면 그때부터 패턴 시작. &는 파라미터 구별하니 제외.
+		// "/"같은거 16진수로 나오는 패턴이 %XX형태로 나오니 %이후에 16진수로 올수있는거 2자리가 *로 반복해서 올 수 있다를 명시.
+		Matcher matcher = pattern.matcher(slug);
+
+		// 매칭된 URL 추출
+		if (matcher.find()) {
+			// URL 디코딩 수행
+			String url = matcher.group();
+			url = decode(url, StandardCharsets.UTF_8);
+			return url;
+		}
+
+		return null;
 	}
 
 }
