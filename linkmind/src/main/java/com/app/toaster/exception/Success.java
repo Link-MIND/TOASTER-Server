@@ -24,6 +24,7 @@ public enum Success {
 	GET_LINKS_SUCCESS(HttpStatus.OK, "이주의 링크 조회 성공"),
 	GET_SITES_SUCCESS(HttpStatus.OK, "추천 사이트 조회 성공"),
 	GET_SETTINGS_SUCCESS(HttpStatus.OK, "설정 페이지 조회 성공"),
+	GET_POPUP_SUCCESS(HttpStatus.OK, "팝업 정보 조회 성공"),
 
 	GET_CATEORIES_SUCCESS(HttpStatus.OK, "전체 카테고리 조회 성공"),
 	GET_CATEORY_SUCCESS(HttpStatus.OK, "세부 카테고리 조회 성공"),
@@ -52,6 +53,7 @@ public enum Success {
 	PUSH_ALARM_PERIODIC_SUCCESS(HttpStatus.OK, "푸시알림 활성에 성공했습니다."),
 	PUSH_ALARM_SUCCESS(HttpStatus.OK, "푸시알림 전송에 성공했습니다."),
 	CLEAR_SCHEDULED_TASKS_SUCCESS(HttpStatus.OK, "스케줄러에서 예약된 작업을 제거했습니다."),
+	UPDATE_POPUP_SUCCESS(HttpStatus.OK, "팝업 데이터 수정 성공"),
 
 
 	/**
