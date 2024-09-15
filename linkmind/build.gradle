@@ -34,17 +34,7 @@ dependencies {
 	implementation 'mysql:mysql-connector-java:8.0.32'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-<<<<<<< HEAD
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-	implementation 'io.sentry:sentry-spring-boot-starter:5.7.0'
-	//JWT
-	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
-	implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
-	implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
-=======
     runtimeOnly 'com.h2database:h2'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -60,30 +50,20 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
     implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
     implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
->>>>>>> e290d55 (#239 fix: queryDSL 의존성 제거 및 관련 내용들 주석처리)
 
 
 	// FCM
 	implementation 'com.google.firebase:firebase-admin:9.1.1'
 	implementation 'com.squareup.okhttp3:okhttp:4.10.0'  // Firebase 서버로 푸시 메시지 전송 시 필요
 
-<<<<<<< HEAD
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-	//Query DSL
-	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
-	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
-	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
-=======
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-//
-//    //Query DSL
+
+//Query DSL
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
->>>>>>> e290d55 (#239 fix: queryDSL 의존성 제거 및 관련 내용들 주석처리)
 
 	// S3 AWS
 	implementation("software.amazon.awssdk:bom:2.21.0")
@@ -100,12 +80,6 @@ dependencies {
 	implementation 'io.sentry:sentry-spring-boot-starter:5.7.0'
 
 }
-<<<<<<< HEAD
-
-
-tasks.named('test') {
-	useJUnitPlatform()
-=======
 //sourceSets {
 //	main {
 //		java {
@@ -119,7 +93,6 @@ tasks.named('test') {
 tasks.named('test') {
     useJUnitPlatform()
 //    finalizedBy 'jacocoTestReport' // test가 끝나면 jacocoTestReport 동작
->>>>>>> e290d55 (#239 fix: queryDSL 의존성 제거 및 관련 내용들 주석처리)
 }
 //// jacoco report 설정
 //jacocoTestReport {
