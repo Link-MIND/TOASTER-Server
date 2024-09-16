@@ -25,13 +25,13 @@ public class PopupController {
 	private final PopupService popupService;
 
 
-	@PatchMapping("/{userId}")
-	public ApiResponse<InvisibleResponseDto> updateInvisible(@PathVariable Long userId, @RequestBody PopUpRequestDto popUpRequestDto){
+	@PatchMapping
+	public ApiResponse<InvisibleResponseDto> updateInvisible(@UserId Long userId, @RequestBody PopUpRequestDto popUpRequestDto){
 		return ApiResponse.success(Success.UPDATE_POPUP_SUCCESS, popupService.updatePopupInvisible(userId,popUpRequestDto));
 	}
 
-	@GetMapping("/{userId}")
-	public ApiResponse<PopupResponseDto> getPopUpInformation(@PathVariable(name = "userId") Long userId){
+	@GetMapping
+	public ApiResponse<PopupResponseDto> getPopUpInformation(@UserId Long userId){
 		return ApiResponse.success(Success.GET_POPUP_SUCCESS, popupService.findPopupInformation(userId));
 	}
 

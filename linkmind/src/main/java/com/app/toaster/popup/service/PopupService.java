@@ -29,7 +29,7 @@ public class PopupService {
 
 		PopupInvisibleManager manager = findManagerWithUserIdAndPopup(userId, popup, popUpRequestDto.invisible());
 
-		manager.updateInvisible(popUpRequestDto.invisible()); // 어차피 더티체킹시에 똑같으면 쿼리 안나가겠지?
+		manager.updateInvisible(popUpRequestDto.invisible());
 		return InvisibleResponseDto.of(popup.getId(), manager.isWantToInvisible());
 	}
 
