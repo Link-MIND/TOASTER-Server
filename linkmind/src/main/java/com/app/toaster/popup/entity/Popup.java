@@ -1,5 +1,6 @@
 package com.app.toaster.popup.entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,20 +29,22 @@ public class Popup {
 	@Column(columnDefinition = "TEXT", name = "image")
 	private String image;
 
-	@Column(name = "active")
-	private boolean active;
+	private LocalDate activeStartDate;
+
+	private LocalDate activeEndDate;
 
 	@Column(name = "link_url")
 	private String linkUrl;
 
 	@Builder
-	private Popup(String image, boolean active, String linkUrl) {
+	private Popup(String image, LocalDate activeStartDate, LocalDate activeEndDate, String linkUrl) {
 		this.image = image;
-		this.active = active;
+		this.activeStartDate = activeStartDate;
+		this.activeEndDate = activeEndDate;
 		this.linkUrl = linkUrl;
 	}
 
-	public void updateIsActive(boolean isActive){
-		this.active = active;
+	public boolean isActivePopup(LocalDate today){
+		return !today.isBefore(activeStartDate)&&!today.isAfter(activeEndDate);
 	}
 }

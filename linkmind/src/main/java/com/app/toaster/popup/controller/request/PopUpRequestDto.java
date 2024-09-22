@@ -1,11 +1,10 @@
 package com.app.toaster.popup.controller.request;
 
-import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 public record PopUpRequestDto(
-	@Valid
 	Long popupId,
-	@Valid
-	boolean invisible
+	@NotNull
+	Long hideDate
 ) {
 }
