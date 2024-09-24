@@ -17,6 +17,8 @@ import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.infrastructure.ToastRepository;
 import com.app.toaster.infrastructure.UserRepository;
 
+// import com.app.toaster.infrastructure.querydsl.CustomToastRepository;
+
 import lombok.RequiredArgsConstructor;
 
 import java.time.DayOfWeek;
@@ -31,6 +33,8 @@ public class UserService {
 
 	private final UserRepository userRepository;
 	private final ToastRepository toastRepository;
+
+	// private final CustomToastRepository customToastRepository;
 	private final CategoryRepository categoryRepository;
 
 	@Transactional(readOnly = true)
@@ -87,6 +91,7 @@ public class UserService {
                         .categoryId(category.getCategoryId())
                         .categoryTitle(category.getTitle())
                         .toastNum(toastRepository.getAllByCategory(category).size()).build()
+
                 ).collect(Collectors.toList())).build();
 
         return mainPageResponseDto;

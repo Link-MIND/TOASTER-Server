@@ -1,17 +1,17 @@
-package com.app.toaster.config;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import com.querydsl.jpa.impl.JPAQueryFactory;
-
-import jakarta.persistence.EntityManager;
-
-@Configuration
-public class JpaQueryFactoryConfig {
-
-	@Bean
-	JPAQueryFactory jpaQueryFactory(EntityManager em) {
-		return new JPAQueryFactory(em);
-	}
-}
+// package com.app.toaster.config;
+//
+// import org.springframework.context.annotation.Bean;
+// import org.springframework.context.annotation.Configuration;
+//
+// import com.querydsl.jpa.impl.JPAQueryFactory;
+//
+// import jakarta.persistence.EntityManager;
+//
+// @Configuration
+// public class JpaQueryFactoryConfig {
+//
+// 	@Bean
+// 	JPAQueryFactory jpaQueryFactory(EntityManager em) {
+// 		return new JPAQueryFactory(em);
+// 	}
+// }

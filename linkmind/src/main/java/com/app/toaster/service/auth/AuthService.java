@@ -26,6 +26,8 @@ import com.app.toaster.infrastructure.CategoryRepository;
 import com.app.toaster.infrastructure.TimerRepository;
 import com.app.toaster.infrastructure.ToastRepository;
 import com.app.toaster.infrastructure.UserRepository;
+import com.app.toaster.popup.entity.PopupInvisibleManager;
+import com.app.toaster.popup.infrastructure.PopupManagerRepository;
 import com.app.toaster.service.auth.apple.AppleSignInService;
 import com.app.toaster.service.auth.kakao.KakaoSignInService;
 import com.app.toaster.service.auth.kakao.LoginResult;
@@ -43,6 +45,7 @@ public class AuthService {
 
 	private final UserRepository userRepository;
 	private final CategoryRepository categoryRepository;
+	private final PopupManagerRepository popupManagerRepository;
 
 	private final SlackApi slackApi;
 
@@ -149,6 +152,7 @@ public class AuthService {
 		}
 		timerRepository.deleteAllByUser(user);
 		categoryRepository.deleteAllByUser(user);
+		popupManagerRepository.deleteAllByUserId(userId);
 
 		Long res = userRepository.deleteByUserId(userId); //res가 삭제된 컬럼의 개수 즉, 1이 아니면 뭔가 알 수 없는 에러.
 
