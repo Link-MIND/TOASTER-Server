@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.app.toaster.controller.request.toast.MoveToastDto;
+import com.app.toaster.controller.response.toast.ModifiedCategory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -148,7 +150,24 @@ public class ToastService {
 		}
 		toast.updateTitle(updateToastDto.title());
 		return ModifiedTitle.of(updateToastDto.title());
+	}
 
+	@Transactional
+	public ModifiedCategory modifyClip(Long userId, MoveToastDto updateToastDto){
+		User presentUser =  userRepository.findByUserId(userId).orElseThrow(
+				()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage())
+		);
+		Toast toast = toastRepository.findById(updateToastDto.toastId()).orElseThrow(
+				() -> new BadRequestException(Error.BAD_REQUEST_ID, Error.BAD_REQUEST_ID.getMessage())
+		);
+		if (!presentUser.equals(toast.getUser())){
+			throw new ForbiddenException(Error.UNAUTHORIZED_ACCESS, Error.UNAUTHORIZED_ACCESS.getMessage());
+		}
+		Category category = categoryRepository.findById(updateToastDto.categoryId()).orElseThrow(
+				() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage())
+		);
+		toast.updateCategory(category);
+		return ModifiedCategory.of(updateToastDto.categoryId());
 	}
 
 
