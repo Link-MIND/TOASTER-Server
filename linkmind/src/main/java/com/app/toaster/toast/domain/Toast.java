@@ -1,9 +1,11 @@
-package com.app.toaster.domain;
+package com.app.toaster.toast.domain;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.app.toaster.domain.Category;
+import com.app.toaster.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

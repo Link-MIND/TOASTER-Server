@@ -21,10 +21,10 @@
 // import org.springframework.transaction.annotation.Transactional;
 //
 // import com.app.toaster.config.JpaQueryFactoryConfig;
-// import com.app.toaster.domain.Toast;
+// import com.app.toaster.toast.domain.Toast;
 // import com.app.toaster.fixture.Fixture;
 // import com.app.toaster.infrastructure.CategoryRepository;
-// import com.app.toaster.infrastructure.ToastRepository;
+// import com.app.toaster.toast.infrastructure.ToastRepository;
 // import com.app.toaster.infrastructure.UserRepository;
 // import com.querydsl.core.types.dsl.BooleanExpression;
 // import com.querydsl.jpa.impl.JPAQueryFactory;

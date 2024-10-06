@@ -1,4 +1,4 @@
-package com.app.toaster.controller.request.toast;
+package com.app.toaster.toast.controller.request;
 
 import com.app.toaster.controller.valid.Severity;
 import com.app.toaster.controller.valid.TitleValid;

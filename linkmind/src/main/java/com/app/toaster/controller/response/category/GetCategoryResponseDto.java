@@ -1,11 +1,8 @@
 package com.app.toaster.controller.response.category;
 
-import com.app.toaster.controller.response.auth.TokenResponseDto;
-import com.app.toaster.controller.response.toast.ToastDto;
-import com.app.toaster.domain.Toast;
+import com.app.toaster.toast.controller.response.ToastDto;
 import lombok.Builder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Builder
