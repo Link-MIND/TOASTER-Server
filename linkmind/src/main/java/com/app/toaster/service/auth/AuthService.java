@@ -1,11 +1,13 @@
 package com.app.toaster.service.auth;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.WebRequest;
 
 import com.app.toaster.common.dto.ApiResponse;
 import com.app.toaster.config.jwt.JwtService;
@@ -21,6 +23,8 @@ import com.app.toaster.exception.model.BadRequestException;
 import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.exception.model.UnprocessableEntityException;
+import com.app.toaster.external.client.discord.DiscordMessage;
+import com.app.toaster.external.client.discord.DiscordMessageProvider;
 import com.app.toaster.external.client.slack.SlackApi;
 import com.app.toaster.infrastructure.CategoryRepository;
 import com.app.toaster.infrastructure.TimerRepository;
@@ -48,6 +52,7 @@ public class AuthService {
 	private final PopupManagerRepository popupManagerRepository;
 
 	private final SlackApi slackApi;
+	private final DiscordMessageProvider discordMessageProvider;
 
 
 	private final Long TOKEN_EXPIRATION_TIME_ACCESS =  7*24*60 * 60 * 1000L; //7일
@@ -76,7 +81,8 @@ public class AuthService {
 				.socialType(socialType).build();
 			newUser.updateFcmIsAllowed(true); //신규 유저면 true박고
 			userRepository.save(newUser);
-			slackApi.sendSuccess(Success.LOGIN_SUCCESS);
+			// slackApi.sendSuccess(Success.LOGIN_SUCCESS);
+			discordMessageProvider.sendSignUpNotification();
 		}
 
 		User user = userRepository.findBySocialIdAndSocialType(socialId, socialType)
@@ -166,5 +172,6 @@ public class AuthService {
 	public TokenHealthDto checkHealthOfToken(String refreshToken){
 		return TokenHealthDto.of(jwtService.verifyToken(refreshToken));
 	}
+
 
 }

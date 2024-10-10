@@ -70,6 +70,7 @@ public enum Error {
 	CREATE_PUBLIC_KEY_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "publickey 생성 과정 중 문제가 발생했습니다."),
 	FAIL_TO_SEND_PUSH_ALARM(HttpStatus.INTERNAL_SERVER_ERROR, "다수기기 푸시메시지 전송 실패"),
 	FAIL_TO_SEND_SQS(HttpStatus.INTERNAL_SERVER_ERROR, "sqs 전송 실패"),
+	INVALID_DISCORD_MESSAGE(HttpStatus.INTERNAL_SERVER_ERROR, "디스코드 알림 전송 실패"),
 
 	CREATE_TOAST_PROCCESS_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "토스트 저장 중 문제가 발생했습니다. 카테고리 또는 s3 관련 문제로 예상됩니다.")
 	;
