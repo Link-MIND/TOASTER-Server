@@ -72,4 +72,8 @@ public class Toast {
 		this.updateAt=LocalDateTime.now();
 	}
 
+	public boolean isToastOwner(User presentUser){
+		return this.user.equals(presentUser);
+	}
+
 }

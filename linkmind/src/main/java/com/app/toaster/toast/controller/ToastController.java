@@ -39,6 +39,7 @@ public class ToastController {
 
 	@PostMapping("/og")
 	@ResponseStatus(HttpStatus.OK)
+	@Deprecated
 	public ApiResponse getOgAdvanced(
 		@RequestBody OgRequestDto ogRequestDto
 	) throws IOException {

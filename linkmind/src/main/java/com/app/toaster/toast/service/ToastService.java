@@ -104,7 +104,7 @@ public class ToastService {
 	}
 
 	@Transactional
-	public void deleteToast(Long userId, Long toastId) throws IOException {
+	public void deleteToast(Long userId, Long toastId) {
 		User presentUser =  userRepository.findByUserId(userId).orElseThrow(
 			()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage())
 		);
@@ -150,8 +150,8 @@ public class ToastService {
 	}
 
 	private void isOwnerOfToast(Long userId, Toast toast){
-		User presentUser =  findUser(userId);
-		if (!presentUser.equals(toast.getUser())){
+		User presentUser = findUser(userId);
+		if (!toast.isToastOwner(presentUser)){
 			throw new ForbiddenException(Error.UNAUTHORIZED_ACCESS, Error.UNAUTHORIZED_ACCESS.getMessage());
 		}
 	}
