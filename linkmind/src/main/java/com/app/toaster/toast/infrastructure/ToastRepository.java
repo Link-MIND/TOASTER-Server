@@ -1,4 +1,4 @@
-package com.app.toaster.infrastructure;
+package com.app.toaster.toast.infrastructure;
 
 import com.app.toaster.domain.Category;
 import com.app.toaster.domain.User;
@@ -6,12 +6,9 @@ import com.app.toaster.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.app.toaster.domain.Category;
-import com.app.toaster.domain.Toast;
-import com.app.toaster.domain.User;
+import com.app.toaster.toast.domain.Toast;
 
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
@@ -63,5 +60,7 @@ public interface ToastRepository extends JpaRepository<Toast, Long> {
   Long countAllByUpdateAtThisWeek(@Param("startOfWeek") LocalDateTime startOfWeek,
                                      @Param("endOfWeek") LocalDateTime endOfWeek,
                                         @Param("user") User user);
+
+	List<Toast> findTop3ByUserOrderByCreatedAtDesc(User user);
 
 }

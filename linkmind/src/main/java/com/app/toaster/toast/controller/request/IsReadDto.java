@@ -1,4 +1,4 @@
-package com.app.toaster.controller.request.toast;
+package com.app.toaster.toast.controller.request;
 
 public record IsReadDto(Long toastId, Boolean isRead) {
 }

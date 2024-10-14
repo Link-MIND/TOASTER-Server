@@ -25,6 +25,7 @@ public enum Success {
 	GET_SITES_SUCCESS(HttpStatus.OK, "추천 사이트 조회 성공"),
 	GET_SETTINGS_SUCCESS(HttpStatus.OK, "설정 페이지 조회 성공"),
 	GET_POPUP_SUCCESS(HttpStatus.OK, "팝업 정보 조회 성공"),
+	GET_RECENT_TOAST_SUCCESS(HttpStatus.OK, "최근 저장한 토스트 조회 성공"),
 
 	GET_CATEORIES_SUCCESS(HttpStatus.OK, "전체 카테고리 조회 성공"),
 	GET_CATEORY_SUCCESS(HttpStatus.OK, "세부 카테고리 조회 성공"),
@@ -47,6 +48,7 @@ public enum Success {
 
 	UPDATE_ISREAD_SUCCESS(HttpStatus.OK, "열람여부 수정 완료"),
 	UPDATE_CATEGORY_TITLE_SUCCESS(HttpStatus.OK, "카테고리 수정 완료"),
+	MOVE_CATEGORY_SUCCESS(HttpStatus.OK, "카테고리 이동 성공"),
 	UPDATE_TIMER_DATETIME_SUCCESS(HttpStatus.OK, "타이머 시간/날짜 수정 완료"),
 	UPDATE_TIMER_COMMENT_SUCCESS(HttpStatus.OK, "타이머 코멘트 수정 완료"),
 	CHANGE_TIMER_ALARM_SUCCESS(HttpStatus.OK, "타이머 알람여부 수정 완료"),
