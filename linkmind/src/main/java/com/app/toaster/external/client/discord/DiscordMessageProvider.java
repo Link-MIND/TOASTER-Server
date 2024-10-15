@@ -3,10 +3,12 @@ package com.app.toaster.external.client.discord;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContextException;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
@@ -23,23 +25,23 @@ import lombok.RequiredArgsConstructor;
 @Component
 public class DiscordMessageProvider {
     private final DiscordSingUpClient discordSingUpClient;
-    private final DiscordErrorClient discordErrorClient;
     private final UserRepository userRepository;
-    public void sendSignUpNotification() {
-        try {
-            discordSingUpClient.sendMessage(createSingUpMessage());
-        } catch (FeignException e) {
-            throw new CustomException(Error.INVALID_DISCORD_MESSAGE, Error.INVALID_APPLE_IDENTITY_TOKEN.getMessage());
+    private final Environment environment;
+
+    public void sendNotification(NotificationType type, Exception e, String request) {
+        if (!Arrays.asList(environment.getActiveProfiles()).contains("local")) {
+            try {
+                switch (type){
+                    case ERROR -> discordSingUpClient.sendMessage(createErrorMessage(e,request));
+                    case SINGUP -> discordSingUpClient.sendMessage(createSingUpMessage());
+                }
+            } catch (FeignException error) {
+                throw new CustomException(Error.INVALID_DISCORD_MESSAGE,
+                    Error.INVALID_APPLE_IDENTITY_TOKEN.getMessage());
+            }
         }
     }
 
-    public void sendErrorNotification(Exception e, String request) {
-        try {
-            discordErrorClient.sendMessage(createErrorMessage(e,request));
-        } catch (FeignException error) {
-            throw new CustomException(Error.INVALID_DISCORD_MESSAGE, Error.INVALID_APPLE_IDENTITY_TOKEN.getMessage());
-        }
-    }
     private DiscordMessage createSingUpMessage() {
         return DiscordMessage.builder()
             .content("# 😍 회원가입 이벤트가 발생했습니다.")

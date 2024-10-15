@@ -27,6 +27,7 @@ import com.app.toaster.common.dto.ApiResponse;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.external.client.discord.DiscordMessageProvider;
+import com.app.toaster.external.client.discord.NotificationType;
 import com.app.toaster.external.client.slack.SlackApi;
 
 import io.sentry.Sentry;
@@ -139,7 +140,7 @@ public class ControllerExceptionAdvice {
 		IOException {
 		// slackApi.sendAlert(error, request);
 		Sentry.captureException(error);
-		discordMessageProvider.sendErrorNotification(error,request.getRequestURI());
+		discordMessageProvider.sendNotification(NotificationType.ERROR,error,request.getRequestURI());
 		return ApiResponse.error(Error.INTERNAL_SERVER_ERROR);
 	}
 
