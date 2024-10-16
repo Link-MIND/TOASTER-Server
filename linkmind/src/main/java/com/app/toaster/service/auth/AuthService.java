@@ -39,7 +39,9 @@ import com.app.toaster.service.auth.kakao.LoginResult;
 import com.app.toaster.service.toast.ToastService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -83,7 +85,12 @@ public class AuthService {
 			newUser.updateFcmIsAllowed(true); //신규 유저면 true박고
 			userRepository.save(newUser);
 			// slackApi.sendSuccess(Success.LOGIN_SUCCESS);
-			discordMessageProvider.sendNotification(NotificationType.SINGUP,null,null);
+
+			try {
+				discordMessageProvider.sendNotification(NotificationType.SINGUP,null,null);
+			} catch (Exception e) {
+				log.warn("discord SingUpNotification fail : userId = {}", newUser.getUserId());
+			}
 		}
 
 		User user = userRepository.findBySocialIdAndSocialType(socialId, socialType)
