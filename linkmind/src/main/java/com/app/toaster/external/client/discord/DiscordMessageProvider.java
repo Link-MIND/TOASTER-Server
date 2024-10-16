@@ -33,7 +33,7 @@ public class DiscordMessageProvider {
             try {
                 switch (type){
                     case ERROR -> discordSingUpClient.sendMessage(createErrorMessage(e,request));
-                    case SINGUP -> discordSingUpClient.sendMessage(createSingUpMessage());
+                    case SINGUP -> discordSingUpClient.sendMessage(createSignUpMessage());
                 }
             } catch (FeignException error) {
                 throw new CustomException(Error.INVALID_DISCORD_MESSAGE,
@@ -42,7 +42,7 @@ public class DiscordMessageProvider {
         }
     }
 
-    private DiscordMessage createSingUpMessage() {
+    private DiscordMessage createSignUpMessage() {
         return DiscordMessage.builder()
             .content("# 😍 회원가입 이벤트가 발생했습니다.")
             .embeds(
