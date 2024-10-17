@@ -17,5 +17,5 @@ public @interface TitleValid {
 	String message() default "Invalid title";
 	Class<?>[] groups() default {};
 	Class<? extends Payload>[] payload() default {};
-	String pattern() default "[가-힣|a-z|A-Z|0-9|]";
+	String pattern() default "^[\\S][가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\\s]{0,20}$";
 }
