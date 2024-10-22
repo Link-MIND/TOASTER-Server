@@ -10,6 +10,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContextException;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 
@@ -28,6 +32,7 @@ public class DiscordMessageProvider {
     private final UserRepository userRepository;
     private final Environment environment;
 
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void sendNotification(NotificationType type, Exception e, String request) {
         if (!Arrays.asList(environment.getActiveProfiles()).contains("local")) {
             try {

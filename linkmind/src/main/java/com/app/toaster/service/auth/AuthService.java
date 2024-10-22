@@ -84,13 +84,8 @@ public class AuthService {
 				.socialType(socialType).build();
 			newUser.updateFcmIsAllowed(true); //신규 유저면 true박고
 			userRepository.save(newUser);
-			// slackApi.sendSuccess(Success.LOGIN_SUCCESS);
 
-			try {
-				discordMessageProvider.sendNotification(NotificationType.SINGUP,null,null);
-			} catch (Exception e) {
-				log.warn("discord SingUpNotification fail : userId = {}", newUser.getUserId());
-			}
+			discordMessageProvider.sendNotification(NotificationType.SINGUP,null,null);
 		}
 
 		User user = userRepository.findBySocialIdAndSocialType(socialId, socialType)
