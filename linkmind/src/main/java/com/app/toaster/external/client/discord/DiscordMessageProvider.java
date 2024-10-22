@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Component
 public class DiscordMessageProvider {
-    private final DiscordSingUpClient discordSingUpClient;
+    private final DiscordSingUpClient discordSignUpClient;
     private final UserRepository userRepository;
     private final Environment environment;
 
@@ -32,8 +32,8 @@ public class DiscordMessageProvider {
         if (!Arrays.asList(environment.getActiveProfiles()).contains("local")) {
             try {
                 switch (type){
-                    case ERROR -> discordSingUpClient.sendMessage(createErrorMessage(e,request));
-                    case SINGUP -> discordSingUpClient.sendMessage(createSignUpMessage());
+                    case ERROR -> discordSignUpClient.sendMessage(createErrorMessage(e,request));
+                    case SINGUP -> discordSignUpClient.sendMessage(createSignUpMessage());
                 }
             } catch (FeignException error) {
                 throw new CustomException(Error.INVALID_DISCORD_MESSAGE,
