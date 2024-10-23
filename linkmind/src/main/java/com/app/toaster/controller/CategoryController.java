@@ -4,8 +4,7 @@ import com.app.toaster.common.dto.ApiResponse;
 import com.app.toaster.config.UserId;
 import com.app.toaster.controller.request.category.*;
 import com.app.toaster.controller.response.category.CategoriesResponse;
-import com.app.toaster.controller.response.toast.ToastFilter;
-import com.app.toaster.controller.response.category.CategoryResponse;
+import com.app.toaster.toast.controller.response.ToastFilter;
 import com.app.toaster.controller.response.category.GetCategoryResponseDto;
 import com.app.toaster.controller.valid.Severity;
 import com.app.toaster.controller.valid.TitleValid;
@@ -14,14 +13,12 @@ import com.app.toaster.service.category.CategoryService;
 import com.app.toaster.service.search.SearchService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/category")

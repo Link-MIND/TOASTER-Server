@@ -14,7 +14,7 @@ import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.BadRequestException;
 import com.app.toaster.exception.model.NotFoundException;
-import com.app.toaster.infrastructure.ToastRepository;
+import com.app.toaster.toast.infrastructure.ToastRepository;
 import com.app.toaster.infrastructure.UserRepository;
 
 // import com.app.toaster.infrastructure.querydsl.CustomToastRepository;

@@ -1,18 +1,17 @@
 package com.app.toaster.controller.valid;
 
-
-import com.app.toaster.exception.Error;
-import com.app.toaster.exception.model.CustomException;
-
+import com.app.toaster.controller.valid.marker.ToastValidationGroup;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 public class TitleValidator implements ConstraintValidator<TitleValid, String> {
 
-	public String pattern;
+	private String pattern;
+	private Class<?>[] groups;
 	@Override
 	public void initialize(TitleValid constraintAnnotation) {
 		this.pattern = constraintAnnotation.pattern();
+		this.groups = constraintAnnotation.groups();
 	}
 
 	@Override
@@ -39,18 +38,27 @@ public class TitleValidator implements ConstraintValidator<TitleValid, String> {
 			return false;
 		}
 
-		if(title.length()>15){
+		if(!isGroupActive(ToastValidationGroup.class) && title.length()>15){ //토스트쪽이 아니면 검증을 합니다.
 			context.buildConstraintViolationWithTemplate("이름은 최대 15자까지 입력 가능해요")
 					.addConstraintViolation();
 			return false;
 		}
 
-		if(!title.matches("^[\\S][가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9\\s]{0,20}$")){
+		if(!title.matches(pattern)){
 			context.buildConstraintViolationWithTemplate("특수 문자로는 검색할 수 없어요.")
 				.addConstraintViolation();
 			return false;
 		}
 
 		return true;
+	}
+
+	private boolean isGroupActive(Class<?> targetGroup) {
+		for (Class<?> group : groups) {
+			if (group.equals(targetGroup)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

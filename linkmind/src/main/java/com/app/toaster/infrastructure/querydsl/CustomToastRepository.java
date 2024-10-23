@@ -14,7 +14,7 @@
 // import com.app.toaster.domain.Category;
 // import com.app.toaster.domain.QToast;
 // import com.app.toaster.domain.QUser;
-// import com.app.toaster.domain.Toast;
+// import com.app.toaster.toast.domain.Toast;
 // import com.app.toaster.domain.User;
 // import com.querydsl.core.types.Path;
 // import com.querydsl.core.types.dsl.BooleanExpression;

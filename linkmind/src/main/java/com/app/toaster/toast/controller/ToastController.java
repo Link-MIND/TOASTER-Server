@@ -1,12 +1,11 @@
-package com.app.toaster.controller;
+package com.app.toaster.toast.controller;
 
 import java.io.IOException;
 import java.util.List;
 
-import com.app.toaster.controller.request.toast.UpdateToastDto;
-import com.app.toaster.controller.response.toast.ModifiedTitle;
-import com.app.toaster.controller.response.toast.WeekLinkDto;
 import com.app.toaster.service.link.LinkService;
+import com.app.toaster.toast.controller.request.*;
+import com.app.toaster.toast.controller.response.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,13 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.app.toaster.common.dto.ApiResponse;
 // import com.app.toaster.config.UserId;
 import com.app.toaster.config.UserId;
-import com.app.toaster.controller.request.toast.IsReadDto;
-import com.app.toaster.controller.request.toast.OgRequestDto;
-import com.app.toaster.controller.request.toast.SaveToastDto;
-import com.app.toaster.controller.response.toast.IsReadResponse;
 import com.app.toaster.exception.Success;
 import com.app.toaster.service.parse.ParsingService;
-import com.app.toaster.service.toast.ToastService;
+import com.app.toaster.toast.service.ToastService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +39,7 @@ public class ToastController {
 
 	@PostMapping("/og")
 	@ResponseStatus(HttpStatus.OK)
+	@Deprecated
 	public ApiResponse getOgAdvanced(
 		@RequestBody OgRequestDto ogRequestDto
 	) throws IOException {
@@ -89,6 +85,14 @@ public class ToastController {
 		return ApiResponse.success(Success.GET_LINKS_SUCCESS, linkService.getWeekLinks());
 	}
 
+	@GetMapping("/recent-saved")
+	@ResponseStatus(HttpStatus.OK)
+	public ApiResponse<List<ToastDto>> getRecentSavedLinks(
+			@UserId Long userId
+	) {
+		return ApiResponse.success(Success.GET_RECENT_TOAST_SUCCESS, toastService.getToastTop3_savedRecently(userId));
+	}
+
 	@PatchMapping("/title")
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse<ModifiedTitle> modifyTitle(
@@ -98,5 +102,13 @@ public class ToastController {
 		return ApiResponse.success(Success.UPDATE_TOAST_TITLE_SUCCESS, toastService.modifyTitle(userId,updateToastDto));
 	}
 
+	@PatchMapping("/category")
+	@ResponseStatus(HttpStatus.OK)
+	public ApiResponse<ModifiedCategory> modifyCategory(
+			@UserId Long userId,
+			@Valid @RequestBody MoveToastDto updateToastDto
+	){
+		return ApiResponse.success(Success.MOVE_CATEGORY_SUCCESS, toastService.modifyClip(userId,updateToastDto));
+	}
 
 }

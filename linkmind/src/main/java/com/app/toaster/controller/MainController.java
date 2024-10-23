@@ -4,11 +4,8 @@ import com.app.toaster.config.UserId;
 import org.springframework.web.bind.annotation.*;
 
 import com.app.toaster.common.dto.ApiResponse;
-import com.app.toaster.config.UserId;
 import com.app.toaster.controller.valid.TitleValid;
-import com.app.toaster.service.UserService;
 import com.app.toaster.service.search.SearchService;
-import com.app.toaster.service.toast.ToastService;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.app.toaster.controller.response.toast;
+package com.app.toaster.toast.controller.response;
 
 public record IsReadResponse(Boolean isRead) {
 	public static IsReadResponse of(Boolean isRead){
