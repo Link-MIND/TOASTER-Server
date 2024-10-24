@@ -8,24 +8,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.app.toaster.common.dto.ApiResponse;
 import com.app.toaster.controller.response.search.CategoryResult;
-import com.app.toaster.controller.response.search.SearchCategoryResult;
 import com.app.toaster.controller.response.search.SearchMainResult;
-import com.app.toaster.controller.response.search.ToastResult;
-import com.app.toaster.controller.response.toast.ToastDto;
+import com.app.toaster.toast.controller.response.ToastDto;
 import com.app.toaster.domain.Category;
-import com.app.toaster.domain.Toast;
+import com.app.toaster.toast.domain.Toast;
 import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.Success;
 import com.app.toaster.exception.model.BadRequestException;
-import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.infrastructure.CategoryRepository;
-import com.app.toaster.infrastructure.ToastRepository;
+import com.app.toaster.toast.infrastructure.ToastRepository;
 import com.app.toaster.infrastructure.UserRepository;
-import com.google.protobuf.Api;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 @Service

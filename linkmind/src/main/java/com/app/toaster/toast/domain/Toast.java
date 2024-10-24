@@ -1,9 +1,11 @@
-package com.app.toaster.domain;
+package com.app.toaster.toast.domain;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.app.toaster.domain.Category;
+import com.app.toaster.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,9 +17,10 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Toast {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long Id;
+	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
@@ -68,6 +71,10 @@ public class Toast {
 
 	public void setUpdateAt(){
 		this.updateAt=LocalDateTime.now();
+	}
+
+	public boolean isToastOwner(User presentUser){
+		return this.user.equals(presentUser);
 	}
 
 }

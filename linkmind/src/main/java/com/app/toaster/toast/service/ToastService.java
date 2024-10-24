@@ -1,38 +1,37 @@
-package com.app.toaster.service.toast;
+package com.app.toaster.toast.service;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.app.toaster.toast.controller.request.MoveToastDto;
+import com.app.toaster.toast.controller.response.ModifiedCategory;
+import com.app.toaster.toast.controller.response.ToastDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.app.toaster.controller.request.toast.IsReadDto;
-import com.app.toaster.controller.request.toast.SaveToastDto;
-import com.app.toaster.controller.request.toast.UpdateToastDto;
+import com.app.toaster.toast.controller.request.IsReadDto;
+import com.app.toaster.toast.controller.request.SaveToastDto;
+import com.app.toaster.toast.controller.request.UpdateToastDto;
 import com.app.toaster.controller.response.parse.OgResponse;
-import com.app.toaster.controller.response.toast.IsReadResponse;
-import com.app.toaster.controller.response.toast.ModifiedTitle;
+import com.app.toaster.toast.controller.response.IsReadResponse;
+import com.app.toaster.toast.controller.response.ModifiedTitle;
 import com.app.toaster.domain.Category;
-import com.app.toaster.domain.Toast;
+import com.app.toaster.toast.domain.Toast;
 import com.app.toaster.domain.User;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.BadRequestException;
 import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.exception.model.ForbiddenException;
 import com.app.toaster.exception.model.NotFoundException;
-import com.app.toaster.external.client.aws.ImagePresignedUrlResponse;
-import com.app.toaster.external.client.aws.PresignedUrlVO;
 import com.app.toaster.external.client.aws.S3Service;
 import com.app.toaster.infrastructure.CategoryRepository;
-import com.app.toaster.infrastructure.ToastRepository;
+import com.app.toaster.toast.infrastructure.ToastRepository;
 import com.app.toaster.infrastructure.UserRepository;
 import com.app.toaster.service.parse.ParsingService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import software.amazon.awssdk.utils.Logger;
 
 @Service
 @RequiredArgsConstructor
@@ -43,8 +42,6 @@ public class ToastService {
 	private final CategoryRepository categoryRepository;
 	private final S3Service s3Service;
 	private final ParsingService parsingService;
-	private static final String TOAST_IMAGE_FOLDER_NAME = "toast/";
-	private static Logger logger;
 
 	@Value("${static-image.root}")
 	private String BASIC_ROOT;
@@ -53,9 +50,7 @@ public class ToastService {
 	@Transactional
 	public void createToast(Long userId, SaveToastDto saveToastDto){
 		//해당 유저 탐색
-		User presentUser =  userRepository.findByUserId(userId).orElseThrow(
-			()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage())
-		);
+		User presentUser = findUser(userId);
 		//토스트 생성
 		try {
 			System.out.println(saveToastDto.linkUrl());
@@ -85,15 +80,8 @@ public class ToastService {
 	}
 	@Transactional
 	public IsReadResponse readToast(Long userId, IsReadDto isReadDto){
-		User presentUser =  userRepository.findByUserId(userId).orElseThrow(
-			()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage())
-		);
-		Toast toast = toastRepository.findById(isReadDto.toastId()).orElseThrow(
-			() -> new NotFoundException(Error.NOT_FOUND_TOAST_EXCEPTION, Error.NOT_FOUND_TOAST_EXCEPTION.getMessage())
-		);
-		if (!presentUser.equals(toast.getUser())){
-			throw new ForbiddenException(Error.INVALID_USER_ACCESS, Error.INVALID_USER_ACCESS.getMessage());
-		}
+		Toast toast = findToast(isReadDto.toastId());
+		isOwnerOfToast(userId,toast);
 		if (isReadDto.isRead() && toast.getIsRead() || !isReadDto.isRead() && !toast.getIsRead()){
 			throw new BadRequestException(Error.BAD_REQUEST_ISREAD, Error.BAD_REQUEST_ISREAD.getMessage());
 		}
@@ -106,8 +94,17 @@ public class ToastService {
 		return IsReadResponse.of(isReadDto.isRead());
 	}
 
+	@Transactional(readOnly = true)
+	public List<ToastDto> getToastTop3_savedRecently(Long userId){
+		User presentUser =  findUser(userId);
+        return toastRepository.findTop3ByUserOrderByCreatedAtDesc(presentUser)
+				.stream()
+				.map(ToastDto::of)
+				.toList();
+	}
+
 	@Transactional
-	public void deleteToast(Long userId, Long toastId) throws IOException {
+	public void deleteToast(Long userId, Long toastId) {
 		User presentUser =  userRepository.findByUserId(userId).orElseThrow(
 			()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage())
 		);
@@ -137,18 +134,44 @@ public class ToastService {
 
 	@Transactional
 	public ModifiedTitle modifyTitle(Long userId, UpdateToastDto updateToastDto){
-		User presentUser =  userRepository.findByUserId(userId).orElseThrow(
-			()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage())
-		);
-		Toast toast = toastRepository.findById(updateToastDto.toastId()).orElseThrow(
-			() -> new BadRequestException(Error.BAD_REQUEST_ID, Error.BAD_REQUEST_ID.getMessage())
-		);
-		if (!presentUser.equals(toast.getUser())){
-			throw new ForbiddenException(Error.UNAUTHORIZED_ACCESS, Error.UNAUTHORIZED_ACCESS.getMessage());
-		}
+		Toast toast = findToast(updateToastDto.toastId());
+		isOwnerOfToast(userId,toast);
 		toast.updateTitle(updateToastDto.title());
 		return ModifiedTitle.of(updateToastDto.title());
+	}
 
+	@Transactional
+	public ModifiedCategory modifyClip(Long userId, MoveToastDto updateToastDto){
+		Toast toast = findToast(updateToastDto.toastId());
+		isOwnerOfToast(userId, toast);
+		Category category = findCategory(updateToastDto.categoryId());
+		toast.updateCategory(category);
+		return ModifiedCategory.of(updateToastDto.categoryId());
+	}
+
+	private void isOwnerOfToast(Long userId, Toast toast){
+		User presentUser = findUser(userId);
+		if (!toast.isToastOwner(presentUser)){
+			throw new ForbiddenException(Error.UNAUTHORIZED_ACCESS, Error.UNAUTHORIZED_ACCESS.getMessage());
+		}
+	}
+
+	private User findUser(Long userId){
+		return userRepository.findByUserId(userId).orElseThrow(
+				()-> new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage())
+		);
+	}
+
+	private Toast findToast(Long toastId){
+		return toastRepository.findById(toastId).orElseThrow(
+				() -> new BadRequestException(Error.BAD_REQUEST_ID, Error.BAD_REQUEST_ID.getMessage())
+		);
+	}
+
+	private Category findCategory(Long categoryId){
+		return categoryRepository.findById(categoryId).orElseThrow(
+				() -> new NotFoundException(Error.NOT_FOUND_CATEGORY_EXCEPTION, Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage())
+		);
 	}
 
 
@@ -162,42 +185,6 @@ public class ToastService {
 					Error.NOT_FOUND_CATEGORY_EXCEPTION.getMessage()));
 			toast.updateCategory(foundCategory);
 		}
-	}
-	// presigned url로 저장하는 로직
-	private void convertToBytes(){
-		// RestClient restClient = RestClient.create(BASIC_ROOT+res.imageAdvanced());
-		// Response response = restClient.get();
-		// byte[] imageBytes = response.content().asByteArray();
-	}
-
-	public ImagePresignedUrlResponse getUploadPreSignedUrl(String filename) {
-		try {
-
-			PresignedUrlVO presignedUrlVO = s3Service.getUploadPreSignedUrl(filename ,TOAST_IMAGE_FOLDER_NAME);
-			return new ImagePresignedUrlResponse(
-				presignedUrlVO.fileName(),
-				presignedUrlVO.url()
-			);
-		} catch (Exception e) {
-
-			System.out.println(e.getMessage());
-			System.out.println(String.valueOf(e.getCause()));
-			System.out.println(Arrays.toString(e.getStackTrace()));
-			throw e;
-		}
-	}
-	// presign url로 요청 보내는 api
-	private void requestPreSignedUrl(){
-		// HttpHeaders headers = new HttpHeaders();
-		// headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-		// final String imageUrl = TOAST_IMAGE_FOLDER_NAME+realRes.fileName();
-		// s3Service.getURL(imageUrl);
-		//
-		// HttpEntity<byte[]> entity = new HttpEntity<>(bytes, headers);
-		//
-		// // RestTemplate을 사용하여 PUT 요청을 보낸다.
-		// RestTemplate restTemplate = new RestTemplate();
-		// restTemplate.put(realRes.preSignedUrl(), entity);
 	}
 
 	private String checkIsBasicImage(String imageUrl){

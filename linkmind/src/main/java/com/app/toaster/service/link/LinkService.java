@@ -1,6 +1,6 @@
 package com.app.toaster.service.link;
 
-import com.app.toaster.controller.response.toast.WeekLinkDto;
+import com.app.toaster.toast.controller.response.WeekLinkDto;
 import com.app.toaster.domain.Link;
 import com.app.toaster.infrastructure.LinkRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,10 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
