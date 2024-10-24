@@ -25,6 +25,7 @@ import com.app.toaster.exception.model.NotFoundException;
 import com.app.toaster.exception.model.UnprocessableEntityException;
 import com.app.toaster.external.client.discord.DiscordMessage;
 import com.app.toaster.external.client.discord.DiscordMessageProvider;
+import com.app.toaster.external.client.discord.NotificationDto;
 import com.app.toaster.external.client.discord.NotificationType;
 import com.app.toaster.external.client.slack.SlackApi;
 import com.app.toaster.infrastructure.CategoryRepository;
@@ -85,7 +86,7 @@ public class AuthService {
 			newUser.updateFcmIsAllowed(true); //신규 유저면 true박고
 			userRepository.save(newUser);
 
-			discordMessageProvider.sendNotification(NotificationType.SINGUP,null,null);
+			discordMessageProvider.sendNotification(new NotificationDto(NotificationType.SIGNUP,null,null));
 		}
 
 		User user = userRepository.findBySocialIdAndSocialType(socialId, socialType)

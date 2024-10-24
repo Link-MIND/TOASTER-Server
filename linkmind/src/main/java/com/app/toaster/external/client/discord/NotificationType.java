@@ -2,5 +2,5 @@ package com.app.toaster.external.client.discord;
 
 public enum NotificationType {
 	ERROR,
-	SINGUP
+	SIGNUP
 }

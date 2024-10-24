@@ -2,16 +2,14 @@ package com.app.toaster.external.client.discord;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContextException;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -24,25 +22,33 @@ import com.app.toaster.infrastructure.UserRepository;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class DiscordMessageProvider {
-    private final DiscordSingUpClient discordSignUpClient;
+    private final DiscordClient discordClient;
     private final UserRepository userRepository;
     private final Environment environment;
 
+    @Value("${discord.webhook-url-error}")
+    private String webhookUrlError;
+
+
+    @Value("${discord.webhook-url-sign}")
+    private String webhookUrlSign;
+
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void sendNotification(NotificationType type, Exception e, String request) {
+    public void sendNotification(NotificationDto notification) {
         if (!Arrays.asList(environment.getActiveProfiles()).contains("local")) {
             try {
-                switch (type){
-                    case ERROR -> discordSignUpClient.sendMessage(createErrorMessage(e,request));
-                    case SINGUP -> discordSignUpClient.sendMessage(createSignUpMessage());
+                switch (notification.type()){
+                    case ERROR -> discordClient.sendMessage(URI.create(webhookUrlError), createErrorMessage(notification.e(), notification.request()));
+                    case SIGNUP -> discordClient.sendMessage(URI.create(webhookUrlSign), createSignUpMessage());
                 }
-            } catch (FeignException error) {
-                throw new CustomException(Error.INVALID_DISCORD_MESSAGE,
-                    Error.INVALID_APPLE_IDENTITY_TOKEN.getMessage());
+            } catch (Exception error) {
+                log.warn("discord notification fail : " + error);
             }
         }
     }
