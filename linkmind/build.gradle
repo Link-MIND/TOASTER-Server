@@ -79,6 +79,15 @@ dependencies {
 
 	implementation 'io.sentry:sentry-spring-boot-starter:5.7.0'
 
+	// openfeign
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+}
+
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.3")
+	}
 }
 //sourceSets {
 //	main {
