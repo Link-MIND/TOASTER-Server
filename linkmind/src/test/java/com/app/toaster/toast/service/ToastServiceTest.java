@@ -2,7 +2,6 @@ package com.app.toaster.toast.service;
 
 import com.app.toaster.category.domain.Category;
 import com.app.toaster.category.infrastructure.CategoryRepository;
-import com.app.toaster.category.service.CategoryService;
 import com.app.toaster.exception.Error;
 import com.app.toaster.exception.model.CustomException;
 import com.app.toaster.parse.controller.response.OgResponse;
@@ -112,7 +111,7 @@ class ToastServiceTest {
         CustomException exception = assertThrows(CustomException.class,
                 () -> toastService.createToast(userId, invalidDto));
 
-        assertThat(exception.getError()).isEqualTo(Error.EMPTY_URL);
+        assertThat(exception.getError()).isEqualTo(Error.BAD_REQUEST_EMPTY_URL);
     }
 
     @Test
@@ -133,8 +132,8 @@ class ToastServiceTest {
         CustomException exception2 = assertThrows(CustomException.class,
                 () -> toastService.createToast(userId, invalidDto2));
 
-        assertThat(exception1.getError()).isEqualTo(Error.EMPTY_URL);
-        assertThat(exception2.getError()).isEqualTo(Error.EMPTY_URL);
+        assertThat(exception1.getError()).isEqualTo(Error.BAD_REQUEST_EMPTY_URL);
+        assertThat(exception2.getError()).isEqualTo(Error.BAD_REQUEST_EMPTY_URL);
 
     }
 

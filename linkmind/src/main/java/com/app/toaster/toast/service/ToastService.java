@@ -52,7 +52,7 @@ public class ToastService {
 		//해당 유저 탐색
 		User presentUser = findUser(userId);
 		if (saveToastDto.linkUrl() ==null || saveToastDto.linkUrl().isBlank()){
-			throw new CustomException(Error.EMPTY_URL, Error.EMPTY_URL.getMessage());
+			throw new CustomException(Error.BAD_REQUEST_EMPTY_URL, Error.BAD_REQUEST_EMPTY_URL.getMessage());
 		}
 		//토스트 생성
 		try {

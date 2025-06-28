@@ -28,7 +28,7 @@ public enum Error {
 	 */
 	BAD_REQUEST_ISREAD(HttpStatus.BAD_REQUEST, "isRead 값이 잘못요청 되었습니다."),
 	BAD_REQUEST_ID(HttpStatus.BAD_REQUEST, "잘못된 id값입니다."),
-	EMPTY_URL(HttpStatus.BAD_REQUEST, "빈 url로는 저장할 수 없습니다."),
+	BAD_REQUEST_EMPTY_URL(HttpStatus.BAD_REQUEST, "빈 url로는 저장할 수 없습니다."),
 
 	BAD_REQUEST_VALIDATION(HttpStatus.BAD_REQUEST, "유효한 값으로 요청을 다시 보내주세요."),
 	BAD_REQUEST_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "파일형식이 잘못된 것 같습니다."),
