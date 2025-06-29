@@ -51,9 +51,11 @@ public class ToastService {
 	public void createToast(Long userId, SaveToastDto saveToastDto){
 		//해당 유저 탐색
 		User presentUser = findUser(userId);
+		if (saveToastDto.linkUrl() ==null || saveToastDto.linkUrl().isBlank()){
+			throw new CustomException(Error.BAD_REQUEST_EMPTY_URL, Error.BAD_REQUEST_EMPTY_URL.getMessage());
+		}
 		//토스트 생성
 		try {
-			System.out.println(saveToastDto.linkUrl());
 			OgResponse res = parsingService.getOg(saveToastDto.linkUrl());
 			//byte 배열로 읽어들임.
 			log.info(res.titleAdvanced());
@@ -62,6 +64,7 @@ public class ToastService {
 			// // ImagePresignedUrlResponse realRes = getUploadPreSignedUrl(res.imageAdvanced());
 			// log.info(realRes.fileName());
 			// log.info(realRes.preSignedUrl());
+
 
 			//presigned url
 			Toast toast = Toast.builder()
