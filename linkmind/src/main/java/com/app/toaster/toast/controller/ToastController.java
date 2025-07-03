@@ -42,7 +42,7 @@ public class ToastController {
 	@Deprecated
 	public ApiResponse getOgAdvanced(
 		@RequestBody OgRequestDto ogRequestDto
-	) throws IOException {
+	) {
 		return ApiResponse.success(Success.PARSING_OG_SUCCESS, parsingService.getOg(ogRequestDto.linkUrl()));
 	}
 
@@ -72,7 +72,7 @@ public class ToastController {
 	public ApiResponse deleteToast(		//나중에 softDelete로 변경
 		@UserId Long userId,
 		@RequestParam Long toastId
-	) throws IOException {
+	) {
 		toastService.deleteToast(userId, toastId);
 		return ApiResponse.success(Success.DELETE_TOAST_SUCCESS);
 	}
