@@ -54,7 +54,12 @@ public class ParsingService {
 
 	private String getTitle(String linkUrl) throws IOException {
 		try {
-			Document doc = Jsoup.connect(linkUrl).get();
+			Document doc = Jsoup.connect(linkUrl)
+				.followRedirects(true)  // 리다이렉션 자동 따라가기
+				.maxBodySize(1024*1024)  // 페이지 크기 제한 없음
+				.timeout(10000)
+				.userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+				.get();
 			Elements ogTitleElements = doc.select("meta[property=og:title]");
 			Elements titleElements = doc.select("head").select("title");
 			if (ogTitleElements.isEmpty() && titleElements.isEmpty()) {
@@ -69,7 +74,13 @@ public class ParsingService {
 
 	private String getImage(String linkUrl){
 		try {
-			Document doc = Jsoup.connect(linkUrl).get();
+			Document doc = Jsoup.connect(linkUrl)
+				.followRedirects(true)  // 리다이렉션 자동 따라가기
+				.maxBodySize(1024*1024)  // 페이지 크기 제한 없음
+				.timeout(10000)
+				.userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+				.get();
+
 			Elements iframes = doc.select("iframe");
 			Elements ogBlogImage = new Elements();
 			if (!iframes.isEmpty()){
