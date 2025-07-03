@@ -71,7 +71,7 @@ class ToastServiceTest {
 
     @Test
     @DisplayName("Toast 생성 성공 테스트")
-    void createToast_Success() throws IOException {
+    void createToast_Success() {
         // given
         Long userId = 1L;
 
