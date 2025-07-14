@@ -27,6 +27,7 @@ public class Toast {
 	@JoinColumn(name = "category_id")
 	private Category category;
 
+	@Column(columnDefinition = "TEXT")
 	private String title;
 
 	@Column(columnDefinition = "TEXT")
