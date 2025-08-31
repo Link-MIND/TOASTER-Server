@@ -2,6 +2,7 @@ package com.app.toaster.auth.controller;
 
 import java.io.IOException;
 
+import jakarta.annotation.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,9 +34,10 @@ public class AuthController {
 	@ResponseStatus(HttpStatus.OK)
 	public ApiResponse<SignInResponseDto> signIn(
 		@RequestHeader("Authorization") String socialAccessToken,
+		@RequestHeader("TOASTER-OS") @Nullable String os,
 		@RequestBody SignInRequestDto requestDto
 	) throws IOException {
-		return ApiResponse.success(Success.LOGIN_SUCCESS, authService.signIn(socialAccessToken, requestDto));
+		return ApiResponse.success(Success.LOGIN_SUCCESS, authService.signIn(socialAccessToken, requestDto, os));
 	}
 
 	@PostMapping("/token")

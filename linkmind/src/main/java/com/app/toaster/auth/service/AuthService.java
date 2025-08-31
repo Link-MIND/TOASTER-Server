@@ -63,7 +63,7 @@ public class AuthService {
 	private final TimerRepository timerRepository;
 
 	@Transactional
-	public SignInResponseDto signIn(String socialAccessToken, SignInRequestDto requestDto) throws IOException {
+	public SignInResponseDto signIn(String socialAccessToken, SignInRequestDto requestDto, String os) throws IOException {
 		SocialType socialType = SocialType.valueOf(requestDto.socialType());
 		LoginResult loginResult = login(socialType, socialAccessToken);
 		String socialId = loginResult.id();
@@ -99,8 +99,14 @@ public class AuthService {
 		if (nickname!=null){		//탈퇴 안했던 유저들도 수정될 수 있도록 변경
 			user.updateNickname(nickname);
 		}
-		return SignInResponseDto.of(user.getUserId(), accessToken, refreshToken, fcmToken, isRegistered,user.getFcmIsAllowed(),
-			user.getProfile());
+		System.out.println(os);
+
+		if (os != null && os.equals("IOS")){
+			user.updateOs(os);
+		}
+
+		return SignInResponseDto.of(user.getUserId(), accessToken, refreshToken, fcmToken, isRegistered, user.getFcmIsAllowed(),
+			user.getProfile(), user.getOs());
 	}
 
 	@Transactional
