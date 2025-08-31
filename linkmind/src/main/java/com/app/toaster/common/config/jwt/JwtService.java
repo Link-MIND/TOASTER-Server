@@ -62,10 +62,12 @@ public class JwtService {
 	// JWT 토큰 검증
 	public boolean verifyToken(String token) {
 		try {
+			System.out.println(token);
 			final Claims claims = getBody(token);
 			return true;
 		} catch (RuntimeException e) {
 			if (e instanceof ExpiredJwtException) {
+				System.out.println("여기1");
 				throw new UnauthorizedException(Error.TOKEN_TIME_EXPIRED_EXCEPTION, Error.TOKEN_TIME_EXPIRED_EXCEPTION.getMessage());
 			}
 			throw new NotFoundException(Error.NOT_FOUND_USER_EXCEPTION, Error.NOT_FOUND_USER_EXCEPTION.getMessage());

@@ -110,7 +110,7 @@ public class AuthService {
 	}
 
 	@Transactional
-	public TokenResponseDto issueToken(String refreshToken) {
+	public TokenResponseDto issueToken(String refreshToken, String os) {
 		jwtService.verifyToken(refreshToken);
 
 		User user = userRepository.findByRefreshToken(refreshToken)
@@ -122,6 +122,9 @@ public class AuthService {
 
 		user.updateRefreshToken(newRefreshToken);
 
+		if (os != null && os.equals("IOS")){
+			user.updateOs(os);
+		}
 		return TokenResponseDto.of(newAccessToken, newRefreshToken);
 	}
 
