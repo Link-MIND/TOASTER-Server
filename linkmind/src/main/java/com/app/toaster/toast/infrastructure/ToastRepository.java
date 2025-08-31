@@ -20,6 +20,8 @@ public interface ToastRepository extends JpaRepository<Toast, Long> {
 
 	ArrayList<Toast> findByIsReadAndCategory(Boolean isRead, Category category);
 
+	ArrayList<Toast> findByUser(User user);
+
 	ArrayList<Toast> getAllByUser(User user);
 
 	List<Toast> getAllByUserOrderByCreatedAtDesc(User user);
