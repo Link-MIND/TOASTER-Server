@@ -51,31 +51,25 @@ public class ToastService {
 	public void createToast(Long userId, SaveToastDto saveToastDto){
 		//해당 유저 탐색
 		User presentUser = findUser(userId);
-		//토스트 생성
-		try {
-			System.out.println(saveToastDto.linkUrl());
-			OgResponse res = parsingService.getOg(saveToastDto.linkUrl());
-			//byte 배열로 읽어들임.
-			log.info(res.titleAdvanced());
-			log.info(res.imageAdvanced());
-			String imageString = checkIsBasicImage(res.imageAdvanced());
-			// // ImagePresignedUrlResponse realRes = getUploadPreSignedUrl(res.imageAdvanced());
-			// log.info(realRes.fileName());
-			// log.info(realRes.preSignedUrl());
-
-			//presigned url
-			Toast toast = Toast.builder()
-				.user(presentUser)
-				.linkUrl(saveToastDto.linkUrl())
-				.title(res.titleAdvanced())
-				.thumbnailUrl(imageString)
-				.build();
-			// 만약 유저에게 만들어져있는 카테고리가 없는지 확인하고
-			checkCategoryIsEmpty(toast, saveToastDto.categoryId());
-			toastRepository.save(toast);
-		} catch (IOException e ) {	//여기서 에러 발생 시 외부 s3 문제일 수 도 있으므로 500으로 에러 예상 범위 알림.
-			throw new CustomException(Error.CREATE_TOAST_PROCCESS_EXCEPTION, Error.CREATE_TOAST_PROCCESS_EXCEPTION.getMessage());
+		if (saveToastDto.linkUrl() ==null || saveToastDto.linkUrl().isBlank()){
+			throw new CustomException(Error.BAD_REQUEST_EMPTY_URL, Error.BAD_REQUEST_EMPTY_URL.getMessage());
 		}
+		//토스트 생성
+		OgResponse res = parsingService.getOg(saveToastDto.linkUrl());
+		//byte 배열로 읽어들임.
+		log.info(res.titleAdvanced());
+		log.info(res.imageAdvanced());
+		String imageString = checkIsBasicImage(res.imageAdvanced());
+
+		Toast toast = Toast.builder()
+			.user(presentUser)
+			.linkUrl(saveToastDto.linkUrl())
+			.title(res.titleAdvanced())
+			.thumbnailUrl(imageString)
+			.build();
+		// 만약 유저에게 만들어져있는 카테고리가 없는지 확인하고
+		checkCategoryIsEmpty(toast, saveToastDto.categoryId());
+		toastRepository.save(toast);
 
 	}
 	@Transactional

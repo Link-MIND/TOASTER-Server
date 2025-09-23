@@ -22,11 +22,14 @@ public enum Error {
 	NOT_FOUND_TIMER(HttpStatus.NOT_FOUND, "찾을 수 없는 타이머입니다."),
 	NOT_FOUND_POPUP_EXCEPTION(HttpStatus.NOT_FOUND, "유효하지 않은 팝업입니다."),
 
+
 	/**
 	 * 400 BAD REQUEST EXCEPTION
 	 */
 	BAD_REQUEST_ISREAD(HttpStatus.BAD_REQUEST, "isRead 값이 잘못요청 되었습니다."),
 	BAD_REQUEST_ID(HttpStatus.BAD_REQUEST, "잘못된 id값입니다."),
+	BAD_REQUEST_EMPTY_URL(HttpStatus.BAD_REQUEST, "빈 url로는 저장할 수 없습니다."),
+
 	BAD_REQUEST_VALIDATION(HttpStatus.BAD_REQUEST, "유효한 값으로 요청을 다시 보내주세요."),
 	BAD_REQUEST_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "파일형식이 잘못된 것 같습니다."),
 	BAD_REQUEST_FILE_SIZE(HttpStatus.BAD_REQUEST, "파일크기가 잘못된 것 같습니다. 최대 5MB"),

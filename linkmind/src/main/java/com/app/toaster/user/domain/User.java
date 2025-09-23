@@ -45,6 +45,9 @@ public class User {
 	@Column(nullable = true)
 	private String profile;
 
+	@Column(nullable = true)
+	private String os;
+
 	@Builder
 	public User(String nickname, String socialId, SocialType socialType) {
 		this.nickname = nickname;
@@ -73,6 +76,10 @@ public class User {
 
 	public void updateProfile(String profile){
 		this.profile = profile;
+	}
+
+	public void updateOs(String os){
+		this.os = os;
 	}
 
 }
